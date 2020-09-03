@@ -7,6 +7,7 @@ import java.util.List;
 public class Deck {
     private final List<Tile> deck;
     private List<Tile> drawn;
+    private int tiles = 136;
 
     public Deck() {
         this.deck = new ArrayList<>();
@@ -18,10 +19,15 @@ public class Deck {
         return this.deck;
     }
 
+    public int getTiles() {
+        return tiles;
+    }
+
     public Tile draw() {
         if (!this.deck.isEmpty()) {
             Tile tile = this.deck.remove(0);
             this.drawn.add(tile);
+            this.tiles--;
             return tile;
         }
         return null;
@@ -36,6 +42,7 @@ public class Deck {
     public void shuffle() {
         this.deck.addAll(this.drawn);
         this.drawn.clear();
+        this.tiles = 136;
         Collections.shuffle(this.deck);
     }
 
