@@ -1,11 +1,20 @@
 package Mahjong;
 
-public abstract class Tile {
+import java.util.Comparator;
+
+public abstract class Tile implements Comparable<Tile>{
 
     int number;
     String suit;
     boolean isRed;
     boolean isDora;
+
+    @Override
+    public int compareTo(Tile o) {
+        return Comparator.comparing(Tile::getSuit)
+                .thenComparingInt(Tile::getNumber)
+                .compare(this, o);
+    }
 
     public abstract boolean isDragon();
 

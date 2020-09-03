@@ -3,6 +3,7 @@ package Mahjong;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Hand {
     private List<Tile> hand;
@@ -27,6 +28,7 @@ public class Hand {
     }
 
     public void draw(Tile tile) {
+        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         this.hand.add(tile);
     }
 

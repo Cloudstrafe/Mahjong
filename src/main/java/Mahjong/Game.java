@@ -12,6 +12,7 @@ public class Game {
     private int round;
     private Deck deck;
     private Queue<Player> turnQueue;
+    private boolean isRoundOver;
 
     public Game() {
         this.playerOne = new Player("East", true, 1);
@@ -22,6 +23,7 @@ public class Game {
         this.round = 1;
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
+        this.isRoundOver = false;
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
@@ -45,9 +47,14 @@ public class Game {
     private void playRound() {
         while (!deck.getDeck().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            System.out.println(currentPlayer.getName() + "'s turn");
+            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles());
             currentPlayer.getHand().takeTurn(deck.draw());
             turnQueue.add(currentPlayer);
+        }
+        if (!isRoundOver) {
+            System.out.println("Deck empty, starting new hand");
+            setupRound();
+            playRound();
         }
     }
 
