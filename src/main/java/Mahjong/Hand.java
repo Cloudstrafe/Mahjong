@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 
 public class Hand {
     private List<Tile> hand;
+    private List<Meld> melds;
     private final int startingHandSize = 13;
     private List<Tile> discard;
 
     public Hand() {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
+        this.melds = new ArrayList<>();
     }
 
     public List<Tile> getHand() {
@@ -27,9 +29,39 @@ public class Hand {
         return discard;
     }
 
-    public void draw(Tile tile) {
+    public void draw(Deck deck) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
+        Tile tile = deck.draw();
         this.hand.add(tile);
+        displayHandAndMelds();
+        if (isKan(tile)) {
+            draw(deck);
+        }
+    }
+
+    public void initialDraw(Deck deck) {
+        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
+        Tile tile = deck.draw();
+        this.hand.add(tile);
+    }
+
+    private boolean isKan(Tile tile) {
+        if (this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 4) {
+            while (true) {
+                System.out.println("Kan? (Y/N)");
+                Scanner myScanner = new Scanner(System.in);
+                String input = myScanner.nextLine();
+                if ("N".equals(input.toUpperCase())) {
+                    return false;
+                } else if ("Y".equals(input.toUpperCase())) {
+                    List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+                    this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+                    this.melds.add(new Meld(newMeld, false));
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void discard(int index) {
@@ -37,24 +69,23 @@ public class Hand {
         this.discard.add(tile);
     }
 
-    public void takeTurn(Tile tile) {
-        draw(tile);
+    public void takeTurn(Deck deck) {
+        draw(deck);
         Scanner myScanner = new Scanner(System.in);
         while (true) {
-            System.out.println(getHandAsString());
-            System.out.println("Discard which tile? (1 - 14)");
+            System.out.println("Discard which tile? (1 - " + hand.size() + ")");
             String input = myScanner.nextLine();
             try {
                 int value = Integer.parseInt(input);
-                if (value >= 1 && value <= 14) {
+                if (value >= 1 && value <= hand.size()) {
                     discard(value - 1);
                     break;
                 }
             } catch (NumberFormatException ignored) {
             }
             System.out.println("Input a valid tile");
+            displayHandAndMelds();
         }
-
     }
 
     public void reset() {
@@ -77,6 +108,24 @@ public class Hand {
         return str.toString();
     }
 
+    public String getMeldsAsString() {
+        StringBuilder str = new StringBuilder();
+        for (Meld meld : this.melds) {
+            for (Tile tile : meld.getTiles()) {
+                if (tile.getNumber() != 0) {
+                    str.append(tile.getNumber());
+                    str.append(" ");
+                }
+                str.append(tile.getSuit());
+                str.append(", ");
+            }
+            int length = str.length();
+            str.delete(length - 2, length);
+            str.append("; ");
+        }
+        return str.toString();
+    }
+
     public String getDiscardAsString() {
         StringBuilder str = new StringBuilder();
         for (Tile tile : this.discard) {
@@ -90,5 +139,10 @@ public class Hand {
         int length = str.length();
         str.delete(length - 2, length);
         return str.toString();
+    }
+
+    private void displayHandAndMelds() {
+        System.out.println("Hand: " + getHandAsString());
+        System.out.println("Melds: " + getMeldsAsString());
     }
 }

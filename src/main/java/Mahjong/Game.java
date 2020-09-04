@@ -37,10 +37,10 @@ public class Game {
         this.playerThree.getHand().reset();
         this.playerFour.getHand().reset();
         for (int i = 0; i < playerOne.getHand().getStartingHandSize(); i++) {
-            playerOne.getHand().draw(deck.draw());
-            playerTwo.getHand().draw(deck.draw());
-            playerThree.getHand().draw(deck.draw());
-            playerFour.getHand().draw(deck.draw());
+            playerOne.getHand().initialDraw(deck);
+            playerTwo.getHand().initialDraw(deck);
+            playerThree.getHand().initialDraw(deck);
+            playerFour.getHand().initialDraw(deck);
         }
     }
 
@@ -48,7 +48,7 @@ public class Game {
         while (!deck.getDeck().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
             System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles());
-            currentPlayer.getHand().takeTurn(deck.draw());
+            currentPlayer.getHand().takeTurn(deck);
             turnQueue.add(currentPlayer);
         }
         if (!isRoundOver) {
