@@ -54,9 +54,7 @@ public class Hand {
                 if ("N".equals(input.toUpperCase())) {
                     return false;
                 } else if ("Y".equals(input.toUpperCase())) {
-                    List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-                    this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-                    this.melds.add(new Meld(newMeld, false));
+                    meldKan(tile, false);
                     return true;
                 }
             }
@@ -64,14 +62,57 @@ public class Hand {
         return false;
     }
 
+    public void meldKan(Tile tile, boolean isOpen) {
+        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+        this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+        newMeld.add(tile);
+        this.melds.add(new Meld(newMeld, isOpen));
+    }
+
+    public void meldPon(Tile tile, boolean isOpen) {
+        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+        this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+        if (newMeld.size() == 3) {
+            this.hand.add(newMeld.remove(0));
+        }
+        newMeld.add(tile);
+        this.melds.add(new Meld(newMeld, isOpen));
+    }
+
     public void discard(int index) {
         Tile tile = this.hand.remove(index);
         this.discard.add(tile);
     }
 
+    public boolean isOpenKan(Tile tile) {
+        return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 3;
+    }
+
+    public boolean isOpenPon(Tile tile) {
+        return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() >= 2;
+    }
+
+    public Tile getLastDiscard() {
+        if (this.discard.isEmpty()) {
+            return null;
+        }
+        return this.discard.get(this.discard.size() - 1);
+    }
+
+    public void removeLastDiscard() {
+        discard.remove(discard.size() - 1);
+    }
+
     public void takeTurn(Deck deck) {
         draw(deck);
+        makeDiscardSelection(false);
+    }
+
+    public void makeDiscardSelection(boolean displayHand) {
         Scanner myScanner = new Scanner(System.in);
+        if (displayHand) {
+            displayHandAndMelds();
+        }
         while (true) {
             System.out.println("Discard which tile? (1 - " + hand.size() + ")");
             String input = myScanner.nextLine();
