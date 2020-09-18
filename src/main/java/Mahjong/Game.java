@@ -1,6 +1,7 @@
 package Mahjong;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -108,6 +109,62 @@ public class Game {
             turnQueue.add(player);
         }
         turnQueue.add(turnQueue.remove());
+        checkChi(currentPlayer);
+    }
+
+    private void checkChi(Player currentPlayer) {
+        Player nextPlayer = turnQueue.peek();
+        Tile discarded = currentPlayer.getHand().getLastDiscard();
+        List<List<Tile>> possibleChi = nextPlayer.getHand().isOpenChi(discarded);
+        if (!possibleChi.isEmpty()) {
+            String response = "";
+            while (!"C".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
+                System.out.println(nextPlayer.getName() + "'s Hand");
+                System.out.println(nextPlayer.getHand().getHandAsString());
+                System.out.println(nextPlayer.getName() + ", would you like to Chi? (C, N)");
+                Scanner myScanner = new Scanner(System.in);
+                response = myScanner.nextLine();
+                if ("C".equalsIgnoreCase(response)) {
+                    if (possibleChi.size() > 1) {
+                        while (true) {
+                            System.out.println("Which tiles would you like to use? (1 - " + possibleChi.size() + ")");
+                            printChiOptions(possibleChi);
+                            response = myScanner.nextLine();
+                            try {
+                                int value = Integer.parseInt(response);
+                                if (value >= 1 && value <= possibleChi.size()) {
+                                    nextPlayer.getHand().meldChi(discarded, possibleChi.get(value - 1), true);
+                                    callHandler(currentPlayer, nextPlayer);
+                                    return;
+                                }
+                            } catch (NumberFormatException ignored) {
+                            }
+                            System.out.println("Input a valid selection");
+                        }
+                    } else {
+                        nextPlayer.getHand().meldChi(discarded, possibleChi.get(0), true);
+                        callHandler(currentPlayer, nextPlayer);
+                        return;
+                    }
+                } else if ("N".equalsIgnoreCase(response)) {
+                } else {
+                    System.out.println("Please input a valid choice");
+                }
+            }
+        }
+    }
+
+    private void printChiOptions(List<List<Tile>> combinations) {
+        for (List<Tile> combination : combinations) {
+            StringBuilder str = new StringBuilder();
+            for (Tile tile : combination) {
+                str.append(tile.getTileAsString());
+                str.append(", ");
+            }
+            int length = str.length();
+            str.delete(length - 2, length);
+            System.out.println(str.toString());
+        }
     }
 
     private void callHandler(Player currentPlayer, Player callingPlayer) {
