@@ -49,4 +49,14 @@ public abstract class Tile implements Comparable<Tile>{
     public boolean getIsRed() {
         return isRed;
     }
+
+    public String getTileAsString() {
+        StringBuilder str = new StringBuilder();
+        if (number != 0) {
+            str.append(number);
+            str.append(" ");
+        }
+        str.append(suit);
+        return str.toString();
+    }
 }

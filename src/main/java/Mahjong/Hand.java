@@ -1,6 +1,7 @@
 package Mahjong;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -40,9 +41,9 @@ public class Hand {
     }
 
     public void initialDraw(Deck deck) {
-        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
         this.hand.add(tile);
+        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
     }
 
     private boolean isKan(Tile tile) {
@@ -79,6 +80,14 @@ public class Hand {
         this.melds.add(new Meld(newMeld, isOpen));
     }
 
+    public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
+        this.hand.remove(newMeld.get(0));
+        this.hand.remove(newMeld.get(1));
+        newMeld.add(discarded);
+        newMeld = newMeld.stream().sorted().collect(Collectors.toList());
+        this.melds.add(new Meld(newMeld, isOpen));
+    }
+
     public void discard(int index) {
         Tile tile = this.hand.remove(index);
         this.discard.add(tile);
@@ -90,6 +99,33 @@ public class Hand {
 
     public boolean isOpenPon(Tile tile) {
         return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() >= 2;
+    }
+
+    public List<List<Tile>> isOpenChi(Tile tile) {
+        if (!tile.isHonor()) {
+            List<List<Tile>> combinations = new ArrayList<>();
+            List<Tile> minusTwoTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() - 2 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+            List<Tile> minusOneTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() - 1 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+            List<Tile> plusOneTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() + 1 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+            List<Tile> plusTwoTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() + 2 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+            List<List<Tile>> chiTiles = new ArrayList<>();
+            chiTiles.add(minusTwoTiles);
+            chiTiles.add(minusOneTiles);
+            chiTiles.add(plusOneTiles);
+            chiTiles.add(plusTwoTiles);
+            for (int i = 0; i < 3; i++) {
+                for (Tile firstTile : chiTiles.get(i)) {
+                    for (Tile secondTile : chiTiles.get(i + 1)) {
+                        List<Tile> newCombination = new ArrayList<>();
+                        newCombination.add(firstTile);
+                        newCombination.add(secondTile);
+                        combinations.add(newCombination);
+                    }
+                }
+            }
+            return combinations.stream().distinct().collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     public Tile getLastDiscard() {
