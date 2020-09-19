@@ -1,15 +1,8 @@
-package Mahjong;
+package mahjong;
 
-public class WindTile extends Tile {
+public class DragonTile extends Tile {
 
-    public WindTile() {
-        this.number = 0;
-        this.suit = "";
-        this.isRed = false;
-        this.isDora = false;
-    }
-
-    public WindTile(String suit) {
+    public DragonTile(String suit) {
         this.number = 0;
         this.suit = suit;
         this.isRed = false;
@@ -18,24 +11,22 @@ public class WindTile extends Tile {
 
     @Override
     public boolean isDragon() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isWind() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isPrevailingWind() {
         return false;
-        //return dealerWind == this.suit;
     }
 
     @Override
     public boolean isSeatWind() {
         return false;
-        //return thisSeatWind == this.suit;
     }
 
     @Override

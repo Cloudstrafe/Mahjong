@@ -1,16 +1,10 @@
-package Mahjong;
+package mahjong;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Meld {
     private List<Tile> tiles;
     private boolean isOpen;
-
-    public Meld() {
-        this.tiles = new ArrayList<>();
-        this.isOpen = true;
-    }
 
     public Meld(List<Tile> tiles, boolean isOpen) {
         this.tiles = tiles;

@@ -1,19 +1,12 @@
-package Mahjong;
+package mahjong;
 
-public class NumberTile extends Tile {
+public class WindTile extends Tile {
 
-    public NumberTile() {
+    public WindTile(String suit) {
         this.number = 0;
-        this.suit = "";
+        this.suit = suit;
         this.isRed = false;
         this.isDora = false;
-    }
-
-    public NumberTile(int number, String suit, boolean isRed) {
-        this.number = number;
-        this.suit = suit;
-        this.isRed = isRed;
-        this.isDora = isRed;
     }
 
     @Override
@@ -23,17 +16,19 @@ public class NumberTile extends Tile {
 
     @Override
     public boolean isWind() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isPrevailingWind() {
         return false;
+        //TODO return dealerWind == this.suit;
     }
 
     @Override
     public boolean isSeatWind() {
         return false;
+        //TODO return thisSeatWind == this.suit;
     }
 
     @Override
@@ -48,6 +43,6 @@ public class NumberTile extends Tile {
 
     @Override
     public boolean isHonor() {
-        return false;
+        return true;
     }
 }
