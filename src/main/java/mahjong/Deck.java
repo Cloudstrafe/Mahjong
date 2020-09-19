@@ -7,12 +7,19 @@ import java.util.List;
 public class Deck {
     private final List<Tile> wall;
     private List<Tile> drawn;
-    private int tiles = 136;
+    private int tiles;
 
     public Deck() {
         this.wall = new ArrayList<>();
         this.drawn = new ArrayList<>();
+        this.tiles = 136;
         buildDeck();
+    }
+
+    public Deck(List<Tile> tiles) {
+        this.wall = tiles;
+        this.drawn = new ArrayList<>();
+        this.tiles = 4;
     }
 
     public List<Tile> getWall() {

@@ -30,13 +30,13 @@ public class PlayArea {
         return discard;
     }
 
-    public void draw(Deck deck) {
+    public void draw(Deck deck, Deadwall deadwall) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
         this.hand.add(tile);
         displayHandAndMelds();
         if (isKan(tile)) {
-            draw(deck);
+            draw(deadwall.getDrawTiles(), deadwall);
         }
     }
 
@@ -139,8 +139,13 @@ public class PlayArea {
         discard.remove(discard.size() - 1);
     }
 
-    public void takeTurn(Deck deck) {
-        draw(deck);
+    public void takeTurn(Deck deck, Deadwall deadwall) {
+        draw(deck, deadwall);
+        makeDiscardSelection(false);
+    }
+
+    public void takeTurnAfterKan(Deadwall deadwall) {
+        draw(deadwall.getDrawTiles(), deadwall);
         makeDiscardSelection(false);
     }
 

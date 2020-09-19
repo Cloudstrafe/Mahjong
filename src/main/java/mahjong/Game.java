@@ -1,9 +1,6 @@
 package mahjong;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
     private Player playerOne;
@@ -12,6 +9,7 @@ public class Game {
     private Player playerFour;
     private Deck deck;
     private Queue<Player> turnQueue;
+    private Deadwall deadwall;
     private boolean isRoundOver;
     private static final String S_HAND = "'s Hand";
     private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
@@ -24,6 +22,7 @@ public class Game {
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
+        this.deadwall = new Deadwall();
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
@@ -42,20 +41,20 @@ public class Game {
             playerThree.getPlayArea().initialDraw(deck);
             playerFour.getPlayArea().initialDraw(deck);
         }
+        deadwall.setup(deck);
     }
 
     private void playRound() {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles());
-            currentPlayer.getPlayArea().takeTurn(deck);
+            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
+            currentPlayer.getPlayArea().takeTurn(deck, deadwall);
             turnQueue.add(currentPlayer);
             checkOpenKansAndPons(currentPlayer);
         }
         if (!isRoundOver) {
             System.out.println("Deck empty, starting new hand");
-            setupRound();
-            playRound();
+            beginNewRound();
         }
     }
 
@@ -86,11 +85,14 @@ public class Game {
             response = myScanner.nextLine();
             if ("K".equalsIgnoreCase(response)) {
                 player.getPlayArea().meldKan(discarded, true);
-                callHandler(currentPlayer, player);
+                if (deadwall.isRoundOver()) {
+                    beginNewRound();
+                }
+                callHandler(currentPlayer, player, true);
                 return true;
             } else if ("P".equalsIgnoreCase(response)) {
                 player.getPlayArea().meldPon(discarded, true);
-                callHandler(currentPlayer, player);
+                callHandler(currentPlayer, player, false);
                 return true;
             } else if ("N".equalsIgnoreCase(response)) {
                 break;
@@ -111,7 +113,7 @@ public class Game {
             response = myScanner.nextLine();
             if ("P".equalsIgnoreCase(response)) {
                 player.getPlayArea().meldPon(discarded, true);
-                callHandler(currentPlayer, player);
+                callHandler(currentPlayer, player, false);
                 return true;
             } else if ("N".equalsIgnoreCase(response)) {
                 break;
@@ -149,7 +151,7 @@ public class Game {
                             int value = Integer.parseInt(response);
                             if (value >= 1 && value <= possibleChi.size()) {
                                 nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(value - 1), true);
-                                callHandler(currentPlayer, nextPlayer);
+                                callHandler(currentPlayer, nextPlayer, false);
                                 return;
                             }
                         } catch (NumberFormatException ignored) {
@@ -159,7 +161,7 @@ public class Game {
                     }
                 } else {
                     nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(0), true);
-                    callHandler(currentPlayer, nextPlayer);
+                    callHandler(currentPlayer, nextPlayer, false);
                     return;
                 }
             } else if ("N".equalsIgnoreCase(response)) {
@@ -183,15 +185,21 @@ public class Game {
         }
     }
 
-    private void callHandler(Player currentPlayer, Player callingPlayer) {
+    private void callHandler(Player currentPlayer, Player callingPlayer, boolean isKan) {
         currentPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
-        callingPlayer.getPlayArea().makeDiscardSelection(true);
+        if (!isKan) {
+            callingPlayer.getPlayArea().makeDiscardSelection(true);
+        }
+        if (isKan) {
+            callingPlayer.getPlayArea().takeTurnAfterKan(deadwall);
+            deadwall.setRevealed(deadwall.getRevealed() + 1);
+        }
         checkOpenKansAndPons(callingPlayer);
         //TODO debug back to back kan/pons
     }
 
-    public void startGame() {
+    public void beginNewRound() {
         setupRound();
         playRound();
     }
