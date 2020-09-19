@@ -1,22 +1,22 @@
-package Mahjong;
+package mahjong;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-    private final List<Tile> deck;
+    private final List<Tile> wall;
     private List<Tile> drawn;
     private int tiles = 136;
 
     public Deck() {
-        this.deck = new ArrayList<>();
+        this.wall = new ArrayList<>();
         this.drawn = new ArrayList<>();
         buildDeck();
     }
 
-    public List<Tile> getDeck() {
-        return this.deck;
+    public List<Tile> getWall() {
+        return this.wall;
     }
 
     public int getTiles() {
@@ -24,8 +24,8 @@ public class Deck {
     }
 
     public Tile draw() {
-        if (!this.deck.isEmpty()) {
-            Tile tile = this.deck.remove(0);
+        if (!this.wall.isEmpty()) {
+            Tile tile = this.wall.remove(0);
             this.drawn.add(tile);
             this.tiles--;
             return tile;
@@ -34,20 +34,20 @@ public class Deck {
     }
 
     public void buildDeck() {
-        createDragonTiles(this.deck);
-        createWindTiles(this.deck);
-        createNumberTiles(this.deck);
+        createDragonTiles(this.wall);
+        createWindTiles(this.wall);
+        createNumberTiles(this.wall);
     }
 
     public void shuffle() {
-        this.deck.addAll(this.drawn);
+        this.wall.addAll(this.drawn);
         this.drawn.clear();
         this.tiles = 136;
-        Collections.shuffle(this.deck);
+        Collections.shuffle(this.wall);
     }
 
     private void createDragonTiles(List<Tile> deck) {
-        List<String> suits = new ArrayList<String>();
+        List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.RED_DRAGON);
         suits.add(SuitConstants.WHITE_DRAGON);
         suits.add(SuitConstants.GREEN_DRAGON);
@@ -60,7 +60,7 @@ public class Deck {
     }
 
     private void createWindTiles(List<Tile> deck) {
-        List<String> suits = new ArrayList<String>();
+        List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.EAST_WIND);
         suits.add(SuitConstants.SOUTH_WIND);
         suits.add(SuitConstants.WEST_WIND);
@@ -74,7 +74,7 @@ public class Deck {
     }
 
     private void createNumberTiles(List<Tile> deck) {
-        List<String> suits = new ArrayList<String>();
+        List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.BAMBOO);
         suits.add(SuitConstants.CHARACTERS);
         suits.add(SuitConstants.DOTS);

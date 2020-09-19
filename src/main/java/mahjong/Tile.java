@@ -1,4 +1,4 @@
-package Mahjong;
+package mahjong;
 
 import java.util.Comparator;
 
@@ -14,6 +14,16 @@ public abstract class Tile implements Comparable<Tile>{
         return Comparator.comparing(Tile::getSuit)
                 .thenComparingInt(Tile::getNumber)
                 .compare(this, o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || o.getClass() != this.getClass()) {
+            return false;
+        }
+        return Comparator.comparing(Tile::getSuit)
+                .thenComparingInt(Tile::getNumber)
+                .compare(this, (Tile) o) == 0;
     }
 
     public abstract boolean isDragon();

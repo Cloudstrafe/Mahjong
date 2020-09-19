@@ -1,23 +1,17 @@
-package Mahjong;
+package mahjong;
 
 import java.util.Scanner;
 
 public class Player {
-    private Hand hand;
+    private PlayArea playArea;
     private String seat;
     private int points;
     private boolean isDealer;
     private String name;
     private int playerNumber;
 
-    public Player() {
-        this.hand = new Hand();
-        this.points = 25000;
-        this.isDealer = false;
-    }
-
     public Player(String seat, boolean isDealer, int playerNumber) {
-        this.hand = new Hand();
+        this.playArea = new PlayArea();
         this.seat = seat;
         this.points = 25000;
         this.isDealer = isDealer;
@@ -27,12 +21,12 @@ public class Player {
         this.playerNumber = playerNumber;
     }
 
-    public Hand getHand() {
-        return hand;
+    public PlayArea getPlayArea() {
+        return playArea;
     }
 
-    public void setHand(Hand hand) {
-        this.hand = hand;
+    public void setPlayArea(PlayArea playArea) {
+        this.playArea = playArea;
     }
 
     public String getSeat() {

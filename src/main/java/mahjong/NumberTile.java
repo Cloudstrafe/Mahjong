@@ -1,24 +1,17 @@
-package Mahjong;
+package mahjong;
 
-public class DragonTile extends Tile {
+public class NumberTile extends Tile {
 
-    public DragonTile() {
-        this.number = 0;
-        this.suit = "";
-        this.isRed = false;
-        this.isDora = false;
-    }
-
-    public DragonTile(String suit) {
-        this.number = 0;
+    public NumberTile(int number, String suit, boolean isRed) {
+        this.number = number;
         this.suit = suit;
-        this.isRed = false;
-        this.isDora = false;
+        this.isRed = isRed;
+        this.isDora = isRed;
     }
 
     @Override
     public boolean isDragon() {
-        return true;
+        return false;
     }
 
     @Override
@@ -48,6 +41,6 @@ public class DragonTile extends Tile {
 
     @Override
     public boolean isHonor() {
-        return true;
+        return false;
     }
 }

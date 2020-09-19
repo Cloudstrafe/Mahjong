@@ -1,4 +1,4 @@
-package Mahjong;
+package mahjong;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Hand {
+public class PlayArea {
     private List<Tile> hand;
-    private List<Meld> melds;
-    private final int startingHandSize = 13;
-    private List<Tile> discard;
+    private final List<Meld> melds;
+    private static final int STARTING_HAND_SIZE = 13;
+    private final List<Tile> discard;
 
-    public Hand() {
+    public PlayArea() {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
         this.melds = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Hand {
     }
 
     public int getStartingHandSize() {
-        return startingHandSize;
+        return STARTING_HAND_SIZE;
     }
 
     public List<Tile> getDiscard() {
@@ -52,9 +52,9 @@ public class Hand {
                 System.out.println("Kan? (Y/N)");
                 Scanner myScanner = new Scanner(System.in);
                 String input = myScanner.nextLine();
-                if ("N".equals(input.toUpperCase())) {
+                if ("N".equalsIgnoreCase(input)) {
                     return false;
-                } else if ("Y".equals(input.toUpperCase())) {
+                } else if ("Y".equalsIgnoreCase(input)) {
                     meldKan(tile, false);
                     return true;
                 }
@@ -156,9 +156,10 @@ public class Hand {
                 int value = Integer.parseInt(input);
                 if (value >= 1 && value <= hand.size()) {
                     discard(value - 1);
-                    break;
+                    return;
                 }
             } catch (NumberFormatException ignored) {
+                continue;
             }
             System.out.println("Input a valid tile");
             displayHandAndMelds();
