@@ -8,10 +8,11 @@ import java.util.stream.Collectors;
 
 public class PlayArea {
     private List<Tile> hand;
+
     private final List<Meld> melds;
+
     private static final int STARTING_HAND_SIZE = 13;
     private final List<Tile> discard;
-
     public PlayArea() {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
@@ -227,5 +228,9 @@ public class PlayArea {
     private void displayHandAndMelds() {
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
+    }
+
+    public List<Meld> getMelds() {
+        return melds;
     }
 }

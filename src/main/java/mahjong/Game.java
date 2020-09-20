@@ -1,6 +1,10 @@
 package mahjong;
 
+import mahjong.yaku.RoundWindYaku;
+
 import java.util.*;
+
+import static mahjong.SuitConstants.*;
 
 public class Game {
     private Player playerOne;
@@ -15,10 +19,10 @@ public class Game {
     private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
 
     public Game() {
-        this.playerOne = new Player("East", true, 1);
-        this.playerTwo = new Player("South", false, 2);
-        this.playerThree = new Player("West", false, 3);
-        this.playerFour = new Player("North", false, 4);
+        this.playerOne = new Player(EAST_WIND, true, 1);
+        this.playerTwo = new Player(SOUTH_WIND, false, 2);
+        this.playerThree = new Player(WEST_WIND, false, 3);
+        this.playerFour = new Player(NORTH_WIND, false, 4);
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
@@ -30,6 +34,7 @@ public class Game {
     }
 
     private void setupRound() {
+        RoundWindYaku.setRoundWind(EAST_WIND);
         this.deck.shuffle();
         this.playerOne.getPlayArea().reset();
         this.playerTwo.getPlayArea().reset();
