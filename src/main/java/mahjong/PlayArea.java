@@ -230,6 +230,14 @@ public class PlayArea {
         System.out.println("Melds: " + getMeldsAsString());
     }
 
+    public List<Tile> getCombineHandAndMelds() {
+        List<Tile> combined = hand;
+        for (Meld m : melds) {
+            combined.addAll(m.getTiles());
+        }
+        return combined;
+    }
+
     public List<Meld> getMelds() {
         return melds;
     }
