@@ -40,4 +40,14 @@ public class RoundWindYaku extends Yaku {
     public static void setRoundWind(String roundWind) {
         RoundWindYaku.roundWind = roundWind;
     }
+
+    @Override
+    public boolean isYakuman() {
+        return false;
+    }
+
+    @Override
+    public boolean isDoubleYakuman() {
+        return false;
+    }
 }

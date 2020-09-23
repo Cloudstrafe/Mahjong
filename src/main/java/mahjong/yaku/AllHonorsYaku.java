@@ -6,7 +6,7 @@ import mahjong.Tile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllTripletsYaku extends Yaku {
+public class AllHonorsYaku extends Yaku {
     @Override
     public boolean isMangan() {
         return false;
@@ -14,12 +14,12 @@ public class AllTripletsYaku extends Yaku {
 
     @Override
     public int getClosedPoints() {
-        return 2;
+        return 0;
     }
 
     @Override
     public int getOpenPoints() {
-        return 2;
+        return 0;
     }
 
     @Override
@@ -30,11 +30,13 @@ public class AllTripletsYaku extends Yaku {
     @Override
     public boolean isValid(Player player) {
         List<Tile> combined = player.getPlayArea().getCombineHandAndMelds();
-        List<Tile> unique = combined.stream().filter(distinctByKey(t -> t.getNumber() + t.getSuit())).distinct().collect(Collectors.toList());
-        if (unique.size() == 5) {
-            List<Long> counts = unique.stream().map(t -> combined.stream().filter(i -> i.getSuit().equals(t.getSuit()) && i.getNumber() == t.getNumber()).count()).sorted().collect(Collectors.toList());
-            if (counts.get(0) == 2) {
-                return counts.get(1) > 2;
+        if (combined.stream().allMatch(Tile::isHonor)) {
+            List<Tile> unique = combined.stream().filter(distinctByKey(t -> t.getNumber() + t.getSuit())).distinct().collect(Collectors.toList());
+            if (unique.size() == 5) {
+                List<Long> counts = unique.stream().map(t -> combined.stream().filter(i -> i.getSuit().equals(t.getSuit()) && i.getNumber() == t.getNumber()).count()).sorted().collect(Collectors.toList());
+                if (counts.get(0) == 2) {
+                    return counts.get(1) > 2;
+                }
             }
         }
         return false;
@@ -42,12 +44,12 @@ public class AllTripletsYaku extends Yaku {
 
     @Override
     public boolean isStackable() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isYakuman() {
-        return false;
+        return true;
     }
 
     @Override

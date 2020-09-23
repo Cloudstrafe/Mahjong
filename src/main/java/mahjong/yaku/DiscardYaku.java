@@ -32,4 +32,14 @@ public class DiscardYaku extends Yaku {
     public boolean isStackable() {
         return false;
     }
+
+    @Override
+    public boolean isYakuman() {
+        return false;
+    }
+
+    @Override
+    public boolean isDoubleYakuman() {
+        return false;
+    }
 }

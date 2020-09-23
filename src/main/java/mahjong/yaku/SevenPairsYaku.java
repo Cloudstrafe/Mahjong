@@ -55,4 +55,14 @@ public class SevenPairsYaku extends Yaku{
     public boolean isStackable() {
         return true;
     }
+
+    @Override
+    public boolean isYakuman() {
+        return false;
+    }
+
+    @Override
+    public boolean isDoubleYakuman() {
+        return false;
+    }
 }
