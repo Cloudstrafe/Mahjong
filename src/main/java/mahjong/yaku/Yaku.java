@@ -1,8 +1,14 @@
 package mahjong.yaku;
 
+import mahjong.HandDetail;
 import mahjong.Player;
+import mahjong.Tile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -28,5 +34,32 @@ public abstract class Yaku {
     protected static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
+    public boolean hasAPairAndFourSetsOrRuns(Player player) {
+        List<HandDetail> handDetails = getHandDetails(player);
+        return false;
+    }
+
+    private List<HandDetail> getHandDetails(Player player) {
+        List<HandDetail> handDetails = new ArrayList<>();
+        List<Tile> hand = player.getPlayArea().getHand();
+        for (int i = 0; i < hand.size() - 1; i++) {
+            for (int j = i + 1; j < hand.size(); j++) {
+                if (hand.get(i).getSuit().equals(hand.get(j).getSuit()) && hand.get(i).getNumber() == hand.get(j).getNumber()) {
+                    List<Tile> pair = new ArrayList<>();
+                    List<Tile> rest = new ArrayList<>();
+                    pair.add(hand.get(i));
+                    pair.add(hand.get(j));
+                    for (int k = 0; k < hand.size(); k++) {
+                        if (k != i && k !=j) {
+                            rest.add(hand.get(k));
+                        }
+                    }
+                    handDetails.add(new HandDetail(pair, rest, 4 - player.getPlayArea().getMelds().size()));
+                }
+            }
+        }
+        return handDetails;
     }
 }

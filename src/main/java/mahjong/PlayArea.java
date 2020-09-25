@@ -8,11 +8,10 @@ import java.util.stream.Collectors;
 
 public class PlayArea {
     private List<Tile> hand;
-
     private final List<Meld> melds;
-
     private static final int STARTING_HAND_SIZE = 13;
     private final List<Tile> discard;
+
     public PlayArea() {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
@@ -68,7 +67,7 @@ public class PlayArea {
         List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
         this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
         newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen));
+        this.melds.add(new Meld(newMeld, isOpen, false));
     }
 
     public void meldPon(Tile tile, boolean isOpen) {
@@ -78,7 +77,7 @@ public class PlayArea {
             this.hand.add(newMeld.remove(0));
         }
         newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen));
+        this.melds.add(new Meld(newMeld, isOpen, false));
     }
 
     public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
@@ -86,7 +85,7 @@ public class PlayArea {
         this.hand.remove(newMeld.get(1));
         newMeld.add(discarded);
         newMeld = newMeld.stream().sorted().collect(Collectors.toList());
-        this.melds.add(new Meld(newMeld, isOpen));
+        this.melds.add(new Meld(newMeld, isOpen, true));
     }
 
     public void discard(int index) {
@@ -170,6 +169,10 @@ public class PlayArea {
             System.out.println("Input a valid tile");
             displayHandAndMelds();
         }
+    }
+
+    public boolean isHandOpen() {
+        return !this.melds.isEmpty();
     }
 
     public void reset() {
