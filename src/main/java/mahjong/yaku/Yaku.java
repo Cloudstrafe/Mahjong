@@ -5,10 +5,8 @@ import mahjong.Player;
 import mahjong.Tile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -38,7 +36,7 @@ public abstract class Yaku {
 
     public boolean hasAPairAndFourSetsOrRuns(Player player) {
         List<HandDetail> handDetails = getHandDetails(player);
-        return false;
+        return !handDetails.isEmpty() && !handDetails.stream().allMatch(h -> h.getValidHands().isEmpty());
     }
 
     private List<HandDetail> getHandDetails(Player player) {
@@ -56,7 +54,7 @@ public abstract class Yaku {
                             rest.add(hand.get(k));
                         }
                     }
-                    handDetails.add(new HandDetail(pair, rest, 4 - player.getPlayArea().getMelds().size()));
+                    handDetails.add(new HandDetail(pair, rest, 4 - player.getPlayArea().getMelds().size(), player.getPlayArea().getMelds()));
                 }
             }
         }
