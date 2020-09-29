@@ -14,6 +14,7 @@ public class TestHandDetail {
 
     @Test
     public void happyPathNoMeldsMixOfRunsAndSets() {
+        //Given
         Tile t1 = new NumberTile(1, SuitConstants.BAMBOO, false);
         Tile t2 = new NumberTile(1, SuitConstants.BAMBOO, false);
         List<Tile> pair = new ArrayList<>(Arrays.asList(t1, t2));
@@ -37,7 +38,10 @@ public class TestHandDetail {
         Meld meld = new Meld(tiles, true, false);
         List<Meld> melds = new ArrayList<>(Collections.singletonList(meld));
 
+        //When
         HandDetail handDetail = new HandDetail(pair, remainder, 3, melds);
+
+        //Then
         assertEquals(pair, handDetail.getPair());
         assertEquals(remainder, handDetail.getRemainder());
         assertEquals(3, handDetail.getSetsAndRunsLeft());
