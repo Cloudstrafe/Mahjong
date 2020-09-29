@@ -31,8 +31,9 @@ public class HandDetail {
     }
 
     private void generateValidHands() {
-        List<Meld> combined = sets;
+        List<Meld> combined = new ArrayList<>();
         combined.addAll(runs);
+        combined.addAll(sets);
         List<Meld> result = new ArrayList<>();
         getAllValidCombinations(combined, setsAndRunsLeft, 0, result);
     }
@@ -46,7 +47,7 @@ public class HandDetail {
             return;
         }
         for (int i = startPosition; i <= combined.size() - setsAndRunsLeft; i++) {
-            result.set(result.size() - setsAndRunsLeft, combined.get(i));
+            result.add(combined.get(i));
             getAllValidCombinations(combined, setsAndRunsLeft - 1, i + 1, result);
         }
     }
@@ -103,6 +104,30 @@ public class HandDetail {
                 }
             }
         }
+    }
+
+    public List<Tile> getPair() {
+        return pair;
+    }
+
+    public List<Meld> getRuns() {
+        return runs;
+    }
+
+    public List<Meld> getSets() {
+        return sets;
+    }
+
+    public List<Tile> getRemainder() {
+        return remainder;
+    }
+
+    public int getSetsAndRunsLeft() {
+        return setsAndRunsLeft;
+    }
+
+    public List<Meld> getMelds() {
+        return melds;
     }
 
 }
