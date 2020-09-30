@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 public class PlayArea {
     private List<Tile> hand;
-    private final List<Meld> melds;
+    private List<Meld> melds;
     private static final int STARTING_HAND_SIZE = 13;
-    private final List<Tile> discard;
+    private List<Tile> discard;
 
     public PlayArea() {
         this.hand = new ArrayList<>();
@@ -243,5 +243,17 @@ public class PlayArea {
 
     public List<Meld> getMelds() {
         return melds;
+    }
+
+    public void setHand(List<Tile> hand) {
+        this.hand = hand;
+    }
+
+    public void setMelds(List<Meld> melds) {
+        this.melds = melds;
+    }
+
+    public void setDiscard(List<Tile> discard) {
+        this.discard = discard;
     }
 }

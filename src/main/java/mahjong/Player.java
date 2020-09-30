@@ -21,6 +21,15 @@ public class Player {
         this.playerNumber = playerNumber;
     }
 
+    public Player(String seat, boolean isDealer, int playerNumber, String name) {
+        this.playArea = new PlayArea();
+        this.seat = seat;
+        this.points = 25000;
+        this.isDealer = isDealer;
+        this.name = name;
+        this.playerNumber = playerNumber;
+    }
+
     public PlayArea getPlayArea() {
         return playArea;
     }
