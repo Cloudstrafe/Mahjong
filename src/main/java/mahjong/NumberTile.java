@@ -31,12 +31,12 @@ public class NumberTile extends Tile {
 
     @Override
     public boolean isNumber() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isTerminal() {
-        return false;
+        return number == 1 || number == 9;
     }
 
     @Override
