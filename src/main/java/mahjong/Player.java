@@ -1,6 +1,10 @@
 package mahjong;
 
+import mahjong.yaku.YakuHandler;
+
 import java.util.Scanner;
+
+import static java.lang.System.exit;
 
 public class Player {
     private PlayArea playArea;
@@ -28,6 +32,32 @@ public class Player {
         this.isDealer = isDealer;
         this.name = name;
         this.playerNumber = playerNumber;
+    }
+
+    public void takeTurn(Deck deck, Deadwall deadwall) {
+        playArea.draw(deck, deadwall);
+        if (YakuHandler.isTsumo(this)) {
+            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
+            Scanner myScanner = new Scanner(System.in);
+            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
+                System.out.println("You Win!!");
+                exit(0);
+            }
+        }
+        playArea.makeDiscardSelection(false);
+    }
+
+    public void takeTurnAfterKan(Deadwall deadwall) {
+        playArea.draw(deadwall.getDrawTiles(), deadwall);
+        if (YakuHandler.isTsumo(this)) {
+            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
+            Scanner myScanner = new Scanner(System.in);
+            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
+                System.out.println("You Win!!");
+                exit(0);
+            }
+        }
+        playArea.makeDiscardSelection(false);
     }
 
     public PlayArea getPlayArea() {

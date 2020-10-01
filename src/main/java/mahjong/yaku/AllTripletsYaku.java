@@ -6,7 +6,7 @@ import mahjong.Tile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AllTripletsYaku extends Yaku {
+public class AllTripletsYaku extends AbstractYaku {
     @Override
     public boolean isMangan() {
         return false;
@@ -34,7 +34,7 @@ public class AllTripletsYaku extends Yaku {
         if (unique.size() == 5) {
             List<Long> counts = unique.stream().map(t -> combined.stream().filter(i -> i.getSuit().equals(t.getSuit()) && i.getNumber() == t.getNumber()).count()).sorted().collect(Collectors.toList());
             if (counts.get(0) == 2) {
-                return counts.get(1) > 2;
+                return counts.get(1) > 2 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
             }
         }
         return false;

@@ -2,7 +2,7 @@ package mahjong.yaku;
 
 import mahjong.Player;
 
-public class RoundWindYaku extends Yaku {
+public class RoundWindYaku extends AbstractYaku {
 
     private static String roundWind;
 
@@ -29,7 +29,7 @@ public class RoundWindYaku extends Yaku {
 
     @Override
     public boolean isValid(Player player) {
-        return getCurrentPoints(player) > 0;
+        return getCurrentPoints(player) > 0 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
     }
 
     @Override

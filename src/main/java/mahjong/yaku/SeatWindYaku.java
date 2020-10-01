@@ -2,7 +2,7 @@ package mahjong.yaku;
 
 import mahjong.Player;
 
-public class SeatWindYaku extends Yaku {
+public class SeatWindYaku extends AbstractYaku {
 
     @Override
     public boolean isMangan() {
@@ -28,7 +28,7 @@ public class SeatWindYaku extends Yaku {
 
     @Override
     public boolean isValid(Player player) {
-        return getCurrentPoints(player) > 0;
+        return getCurrentPoints(player) > 0 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
     }
 
     @Override

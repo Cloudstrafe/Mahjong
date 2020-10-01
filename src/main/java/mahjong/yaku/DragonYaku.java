@@ -4,7 +4,7 @@ import mahjong.Player;
 
 import static mahjong.SuitConstants.*;
 
-public class DragonYaku extends Yaku {
+public class DragonYaku extends AbstractYaku {
 
     @Override
     public boolean isMangan() {
@@ -32,7 +32,7 @@ public class DragonYaku extends Yaku {
 
     @Override
     public boolean isValid(Player player) {
-        return getCurrentPoints(player) > 0;
+        return getCurrentPoints(player) > 0 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
     }
 
     @Override

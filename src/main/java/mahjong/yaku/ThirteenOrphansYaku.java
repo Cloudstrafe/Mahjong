@@ -6,7 +6,7 @@ import mahjong.Tile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ThirteenOrphansYaku extends Yaku {
+public class ThirteenOrphansYaku extends AbstractYaku {
     @Override
     public boolean isMangan() {
         return false;

@@ -2,7 +2,7 @@ package mahjong.yaku;
 
 import mahjong.Player;
 
-public class DiscardYaku extends Yaku {
+public class DiscardYaku extends AbstractYaku {
     @Override
     public boolean isMangan() {
         return true;
@@ -25,7 +25,7 @@ public class DiscardYaku extends Yaku {
 
     @Override
     public boolean isValid(Player player) {
-        return player.getPlayArea().getDiscard().stream().allMatch(t -> t.isHonor() || t.isTerminal());
+        return player.getPlayArea().getDiscard().stream().allMatch(t -> t.isHonor() || t.isTerminal()) && YakuHandler.hasAPairAndFourSetsOrRuns(player);
     }
 
     @Override

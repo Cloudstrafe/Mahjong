@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SevenPairsYaku extends Yaku{
+public class SevenPairsYaku extends AbstractYaku{
     @Override
     public boolean isMangan() {
         return false;

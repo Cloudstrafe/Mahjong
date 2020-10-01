@@ -139,16 +139,6 @@ public class PlayArea {
         discard.remove(discard.size() - 1);
     }
 
-    public void takeTurn(Deck deck, Deadwall deadwall) {
-        draw(deck, deadwall);
-        makeDiscardSelection(false);
-    }
-
-    public void takeTurnAfterKan(Deadwall deadwall) {
-        draw(deadwall.getDrawTiles(), deadwall);
-        makeDiscardSelection(false);
-    }
-
     public void makeDiscardSelection(boolean displayHand) {
         Scanner myScanner = new Scanner(System.in);
         if (displayHand) {

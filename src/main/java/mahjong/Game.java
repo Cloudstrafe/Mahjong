@@ -2,7 +2,10 @@ package mahjong;
 
 import mahjong.yaku.RoundWindYaku;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Scanner;
 
 import static mahjong.SuitConstants.*;
 
@@ -53,7 +56,7 @@ public class Game {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
             System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
-            currentPlayer.getPlayArea().takeTurn(deck, deadwall);
+            currentPlayer.takeTurn(deck, deadwall);
             turnQueue.add(currentPlayer);
             checkOpenKansAndPons(currentPlayer);
         }
@@ -197,7 +200,7 @@ public class Game {
             callingPlayer.getPlayArea().makeDiscardSelection(true);
         }
         if (isKan) {
-            callingPlayer.getPlayArea().takeTurnAfterKan(deadwall);
+            callingPlayer.takeTurnAfterKan(deadwall);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
         }
         checkOpenKansAndPons(callingPlayer);
