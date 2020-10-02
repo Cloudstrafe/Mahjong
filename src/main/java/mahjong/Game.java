@@ -87,7 +87,7 @@ public class Game {
         String response = "";
         while (!"K".equalsIgnoreCase(response) && !"P".equalsIgnoreCase(response.toUpperCase()) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
-            System.out.println(player.getPlayArea().getHandAsString());
+            player.getPlayArea().displayHandAndMelds();
             System.out.println(player.getName() + ", would you like to Kan or Pon? (K, P, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -115,7 +115,7 @@ public class Game {
         String response = "";
         while (!"P".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
-            System.out.println(player.getPlayArea().getHandAsString());
+            player.getPlayArea().displayHandAndMelds();
             System.out.println(player.getName() + ", would you like to Pon? (P, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -145,11 +145,12 @@ public class Game {
         String response = "";
         while (!"C".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(nextPlayer.getName() + S_HAND);
-            System.out.println(nextPlayer.getPlayArea().getHandAsString());
+            nextPlayer.getPlayArea().displayHandAndMelds();
             System.out.println(nextPlayer.getName() + ", would you like to Chi? (C, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
             if ("C".equalsIgnoreCase(response)) {
+                turnQueue.remove();
                 if (possibleChi.size() > 1) {
                     while (true) {
                         System.out.println("Which tiles would you like to use? (1 - " + possibleChi.size() + ")");

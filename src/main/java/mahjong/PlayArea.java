@@ -218,13 +218,13 @@ public class PlayArea {
         return str.toString();
     }
 
-    private void displayHandAndMelds() {
+    public void displayHandAndMelds() {
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
     }
 
     public List<Tile> getCombineHandAndMelds() {
-        List<Tile> combined = hand;
+        List<Tile> combined = new ArrayList<>(hand);
         for (Meld m : melds) {
             combined.addAll(m.getTiles());
         }
