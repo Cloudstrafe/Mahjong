@@ -34,7 +34,6 @@ public class TestDragonYaku {
 
     @Test
     public void happyPathGreenDragonIsValid() {
-        //TODO: Figure out why this test is breaking
         //Given
         Tile t1 = new WindTile(SuitConstants.EAST_WIND);
         Tile t2 = new WindTile(SuitConstants.EAST_WIND);

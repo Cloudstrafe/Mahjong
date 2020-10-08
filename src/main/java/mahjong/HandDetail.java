@@ -47,8 +47,9 @@ public class HandDetail {
             return;
         }
         for (int i = startPosition; i <= combined.size() - setsAndRunsLeft; i++) {
-            result.add(combined.get(i));
-            getAllValidCombinations(combined, setsAndRunsLeft - 1, i + 1, result);
+            List<Meld> copyResult = new ArrayList<>(result);
+            copyResult.add(combined.get(i));
+            getAllValidCombinations(combined, setsAndRunsLeft - 1, i + 1, copyResult);
         }
     }
 

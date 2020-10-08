@@ -42,7 +42,7 @@ public class YakuHandler {
 
     public static boolean hasAPairAndFourSetsOrRuns(Player player) {
         List<HandDetail> handDetails = getHandDetails(player);
-        return !handDetails.isEmpty() && !handDetails.stream().allMatch(h -> h.getValidHands().isEmpty());
+        return !handDetails.isEmpty() && handDetails.stream().anyMatch(h -> !h.getValidHands().isEmpty());
     }
 
     public static List<HandDetail> getHandDetails(Player player) {

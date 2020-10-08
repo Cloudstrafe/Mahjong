@@ -197,6 +197,7 @@ public class Game {
     private void callHandler(Player currentPlayer, Player callingPlayer, boolean isKan) {
         currentPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
+        System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true);
         }
@@ -205,7 +206,6 @@ public class Game {
             deadwall.setRevealed(deadwall.getRevealed() + 1);
         }
         checkOpenKansAndPons(callingPlayer);
-        //TODO debug back to back kan/pons
     }
 
     public void beginNewRound() {
