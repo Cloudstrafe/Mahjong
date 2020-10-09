@@ -9,7 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class YakuHandler {
-    public static boolean isTsumo(Player player) {
+
+    public static boolean hasValidYaku(Player player) {
         AllHonorsYaku allHonorsYaku = new AllHonorsYaku();
         AllSimplesYaku allSimplesYaku = new AllSimplesYaku();
         AllTerminalsAndHonorsYaku allTerminalsAndHonorsYaku = new AllTerminalsAndHonorsYaku();

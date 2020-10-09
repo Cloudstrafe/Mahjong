@@ -1,12 +1,14 @@
 package mahjong;
 
 import mahjong.yaku.RoundWindYaku;
+import mahjong.yaku.YakuHandler;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
+import static java.lang.System.exit;
 import static mahjong.SuitConstants.*;
 
 public class Game {
@@ -58,12 +60,45 @@ public class Game {
             System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
             currentPlayer.takeTurn(deck, deadwall);
             turnQueue.add(currentPlayer);
-            checkOpenKansAndPons(currentPlayer);
+            checkRons(currentPlayer);
         }
         if (!isRoundOver) {
             System.out.println("Deck empty, starting new hand");
             beginNewRound();
         }
+    }
+
+    private void checkRons(Player currentPlayer) {
+        Tile discarded = currentPlayer.getPlayArea().getLastDiscard();
+        while (turnQueue.peek() != currentPlayer) {
+            Player player = turnQueue.remove();
+            player.getPlayArea().getHand().add(discarded);
+            if (YakuHandler.hasValidYaku(player)) {
+                player.getPlayArea().getHand().remove(discarded);
+                String response = "";
+                while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
+                    System.out.println(player.getName() + S_HAND);
+                    player.getPlayArea().displayHandAndMelds();
+                    System.out.println(player.getName() + ", would you like to Ron the " + discarded.getTileAsString() + "? (Y, N)");
+                    Scanner myScanner = new Scanner(System.in);
+                    response = myScanner.nextLine();
+                    if ("Y".equalsIgnoreCase(response)) {
+                        player.getPlayArea().getHand().add(discarded);
+                        System.out.println("You Win!!");
+                        exit(0);
+                    } else if ("N".equalsIgnoreCase(response)) {
+                        break;
+                    } else {
+                        System.out.println(INPUT_VALID_CHOICE);
+                    }
+                }
+            } else {
+                player.getPlayArea().getHand().remove(discarded);
+            }
+            turnQueue.add(player);
+        }
+        turnQueue.add(turnQueue.remove());
+        checkOpenKansAndPons(currentPlayer);
     }
 
     private void checkOpenKansAndPons(Player currentPlayer) {
@@ -88,7 +123,7 @@ public class Game {
         while (!"K".equalsIgnoreCase(response) && !"P".equalsIgnoreCase(response.toUpperCase()) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
             player.getPlayArea().displayHandAndMelds();
-            System.out.println(player.getName() + ", would you like to Kan or Pon? (K, P, N)");
+            System.out.println(player.getName() + ", would you like to Kan or Pon the " + discarded.getTileAsString() + "? (K, P, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
             if ("K".equalsIgnoreCase(response)) {
@@ -113,13 +148,13 @@ public class Game {
 
     private boolean ponOnly(Player currentPlayer, Tile discarded, Player player) {
         String response = "";
-        while (!"P".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
+        while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
             player.getPlayArea().displayHandAndMelds();
-            System.out.println(player.getName() + ", would you like to Pon? (P, N)");
+            System.out.println(player.getName() + ", would you like to Pon the " + discarded.getTileAsString() + "? (Y, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
-            if ("P".equalsIgnoreCase(response)) {
+            if ("Y".equalsIgnoreCase(response)) {
                 player.getPlayArea().meldPon(discarded, true);
                 callHandler(currentPlayer, player, false);
                 return true;
@@ -143,13 +178,13 @@ public class Game {
 
     private void chi(Player currentPlayer, Player nextPlayer, Tile discarded, List<List<Tile>> possibleChi) {
         String response = "";
-        while (!"C".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
+        while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(nextPlayer.getName() + S_HAND);
             nextPlayer.getPlayArea().displayHandAndMelds();
-            System.out.println(nextPlayer.getName() + ", would you like to Chi? (C, N)");
+            System.out.println(nextPlayer.getName() + ", would you like to Chi the " + discarded.getTileAsString() + "? (Y, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
-            if ("C".equalsIgnoreCase(response)) {
+            if ("Y".equalsIgnoreCase(response)) {
                 turnQueue.remove();
                 if (possibleChi.size() > 1) {
                     while (true) {
@@ -205,7 +240,7 @@ public class Game {
             callingPlayer.takeTurnAfterKan(deadwall);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
         }
-        checkOpenKansAndPons(callingPlayer);
+        checkRons(callingPlayer);
     }
 
     public void beginNewRound() {

@@ -172,13 +172,14 @@ public class PlayArea {
 
     public String getHandAsString() {
         StringBuilder str = new StringBuilder();
+        int i = 1;
         for (Tile tile : this.hand) {
+            str.append("(").append(i).append(") ");
             if (tile.getNumber() != 0) {
-                str.append(tile.getNumber());
-                str.append(" ");
+                str.append(tile.getNumber()).append(" ");
             }
-            str.append(tile.getSuit());
-            str.append(", ");
+            str.append(tile.getSuit()).append(", ");
+            i++;
         }
         int length = str.length();
         str.delete(length - 2, length);
@@ -190,11 +191,9 @@ public class PlayArea {
         for (Meld meld : this.melds) {
             for (Tile tile : meld.getTiles()) {
                 if (tile.getNumber() != 0) {
-                    str.append(tile.getNumber());
-                    str.append(" ");
+                    str.append(tile.getNumber()).append(" ");
                 }
-                str.append(tile.getSuit());
-                str.append(", ");
+                str.append(tile.getSuit()).append(", ");
             }
             int length = str.length();
             str.delete(length - 2, length);
@@ -219,6 +218,7 @@ public class PlayArea {
     }
 
     public void displayHandAndMelds() {
+        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
     }
