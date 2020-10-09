@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 public class PlayArea {
     private List<Tile> hand;
-    private final List<Meld> melds;
+    private List<Meld> melds;
     private static final int STARTING_HAND_SIZE = 13;
-    private final List<Tile> discard;
+    private List<Tile> discard;
 
     public PlayArea() {
         this.hand = new ArrayList<>();
@@ -67,7 +67,7 @@ public class PlayArea {
         List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
         this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
         newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen));
+        this.melds.add(new Meld(newMeld, isOpen, false));
     }
 
     public void meldPon(Tile tile, boolean isOpen) {
@@ -77,7 +77,7 @@ public class PlayArea {
             this.hand.add(newMeld.remove(0));
         }
         newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen));
+        this.melds.add(new Meld(newMeld, isOpen, false));
     }
 
     public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
@@ -85,7 +85,7 @@ public class PlayArea {
         this.hand.remove(newMeld.get(1));
         newMeld.add(discarded);
         newMeld = newMeld.stream().sorted().collect(Collectors.toList());
-        this.melds.add(new Meld(newMeld, isOpen));
+        this.melds.add(new Meld(newMeld, isOpen, true));
     }
 
     public void discard(int index) {
@@ -139,16 +139,6 @@ public class PlayArea {
         discard.remove(discard.size() - 1);
     }
 
-    public void takeTurn(Deck deck, Deadwall deadwall) {
-        draw(deck, deadwall);
-        makeDiscardSelection(false);
-    }
-
-    public void takeTurnAfterKan(Deadwall deadwall) {
-        draw(deadwall.getDrawTiles(), deadwall);
-        makeDiscardSelection(false);
-    }
-
     public void makeDiscardSelection(boolean displayHand) {
         Scanner myScanner = new Scanner(System.in);
         if (displayHand) {
@@ -169,6 +159,10 @@ public class PlayArea {
             System.out.println("Input a valid tile");
             displayHandAndMelds();
         }
+    }
+
+    public boolean isHandOpen() {
+        return !this.melds.isEmpty();
     }
 
     public void reset() {
@@ -224,8 +218,32 @@ public class PlayArea {
         return str.toString();
     }
 
-    private void displayHandAndMelds() {
+    public void displayHandAndMelds() {
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
+    }
+
+    public List<Tile> getCombineHandAndMelds() {
+        List<Tile> combined = new ArrayList<>(hand);
+        for (Meld m : melds) {
+            combined.addAll(m.getTiles());
+        }
+        return combined;
+    }
+
+    public List<Meld> getMelds() {
+        return melds;
+    }
+
+    public void setHand(List<Tile> hand) {
+        this.hand = hand;
+    }
+
+    public void setMelds(List<Meld> melds) {
+        this.melds = melds;
+    }
+
+    public void setDiscard(List<Tile> discard) {
+        this.discard = discard;
     }
 }

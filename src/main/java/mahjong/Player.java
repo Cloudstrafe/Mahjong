@@ -1,6 +1,10 @@
 package mahjong;
 
+import mahjong.yaku.YakuHandler;
+
 import java.util.Scanner;
+
+import static java.lang.System.exit;
 
 public class Player {
     private PlayArea playArea;
@@ -19,6 +23,41 @@ public class Player {
         System.out.println("Player " + playerNumber + "'s Name:");
         this.name = myScanner.nextLine();
         this.playerNumber = playerNumber;
+    }
+
+    public Player(String seat, boolean isDealer, int playerNumber, String name) {
+        this.playArea = new PlayArea();
+        this.seat = seat;
+        this.points = 25000;
+        this.isDealer = isDealer;
+        this.name = name;
+        this.playerNumber = playerNumber;
+    }
+
+    public void takeTurn(Deck deck, Deadwall deadwall) {
+        playArea.draw(deck, deadwall);
+        if (YakuHandler.isTsumo(this)) {
+            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
+            Scanner myScanner = new Scanner(System.in);
+            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
+                System.out.println("You Win!!");
+                exit(0);
+            }
+        }
+        playArea.makeDiscardSelection(false);
+    }
+
+    public void takeTurnAfterKan(Deadwall deadwall) {
+        playArea.draw(deadwall.getDrawTiles(), deadwall);
+        if (YakuHandler.isTsumo(this)) {
+            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
+            Scanner myScanner = new Scanner(System.in);
+            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
+                System.out.println("You Win!!");
+                exit(0);
+            }
+        }
+        playArea.makeDiscardSelection(false);
     }
 
     public PlayArea getPlayArea() {

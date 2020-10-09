@@ -1,6 +1,13 @@
 package mahjong;
 
-import java.util.*;
+import mahjong.yaku.RoundWindYaku;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Scanner;
+
+import static mahjong.SuitConstants.*;
 
 public class Game {
     private Player playerOne;
@@ -15,10 +22,10 @@ public class Game {
     private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
 
     public Game() {
-        this.playerOne = new Player("East", true, 1);
-        this.playerTwo = new Player("South", false, 2);
-        this.playerThree = new Player("West", false, 3);
-        this.playerFour = new Player("North", false, 4);
+        this.playerOne = new Player(EAST_WIND, true, 1);
+        this.playerTwo = new Player(SOUTH_WIND, false, 2);
+        this.playerThree = new Player(WEST_WIND, false, 3);
+        this.playerFour = new Player(NORTH_WIND, false, 4);
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
@@ -30,6 +37,7 @@ public class Game {
     }
 
     private void setupRound() {
+        RoundWindYaku.setRoundWind(EAST_WIND);
         this.deck.shuffle();
         this.playerOne.getPlayArea().reset();
         this.playerTwo.getPlayArea().reset();
@@ -48,7 +56,7 @@ public class Game {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
             System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
-            currentPlayer.getPlayArea().takeTurn(deck, deadwall);
+            currentPlayer.takeTurn(deck, deadwall);
             turnQueue.add(currentPlayer);
             checkOpenKansAndPons(currentPlayer);
         }
@@ -79,7 +87,7 @@ public class Game {
         String response = "";
         while (!"K".equalsIgnoreCase(response) && !"P".equalsIgnoreCase(response.toUpperCase()) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
-            System.out.println(player.getPlayArea().getHandAsString());
+            player.getPlayArea().displayHandAndMelds();
             System.out.println(player.getName() + ", would you like to Kan or Pon? (K, P, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -107,7 +115,7 @@ public class Game {
         String response = "";
         while (!"P".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
-            System.out.println(player.getPlayArea().getHandAsString());
+            player.getPlayArea().displayHandAndMelds();
             System.out.println(player.getName() + ", would you like to Pon? (P, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -137,11 +145,12 @@ public class Game {
         String response = "";
         while (!"C".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(nextPlayer.getName() + S_HAND);
-            System.out.println(nextPlayer.getPlayArea().getHandAsString());
+            nextPlayer.getPlayArea().displayHandAndMelds();
             System.out.println(nextPlayer.getName() + ", would you like to Chi? (C, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
             if ("C".equalsIgnoreCase(response)) {
+                turnQueue.remove();
                 if (possibleChi.size() > 1) {
                     while (true) {
                         System.out.println("Which tiles would you like to use? (1 - " + possibleChi.size() + ")");
@@ -188,15 +197,15 @@ public class Game {
     private void callHandler(Player currentPlayer, Player callingPlayer, boolean isKan) {
         currentPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
+        System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true);
         }
         if (isKan) {
-            callingPlayer.getPlayArea().takeTurnAfterKan(deadwall);
+            callingPlayer.takeTurnAfterKan(deadwall);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
         }
         checkOpenKansAndPons(callingPlayer);
-        //TODO debug back to back kan/pons
     }
 
     public void beginNewRound() {
