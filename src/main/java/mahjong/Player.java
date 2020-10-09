@@ -36,7 +36,7 @@ public class Player {
 
     public void takeTurn(Deck deck, Deadwall deadwall) {
         playArea.draw(deck, deadwall);
-        if (YakuHandler.isTsumo(this)) {
+        if (YakuHandler.hasValidYaku(this)) {
             System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
             Scanner myScanner = new Scanner(System.in);
             if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
@@ -49,7 +49,7 @@ public class Player {
 
     public void takeTurnAfterKan(Deadwall deadwall) {
         playArea.draw(deadwall.getDrawTiles(), deadwall);
-        if (YakuHandler.isTsumo(this)) {
+        if (YakuHandler.hasValidYaku(this)) {
             System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
             Scanner myScanner = new Scanner(System.in);
             if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
