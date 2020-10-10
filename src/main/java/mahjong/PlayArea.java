@@ -1,5 +1,7 @@
 package mahjong;
 
+import mahjong.tile.Tile;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -2,7 +2,7 @@ package mahjong.yaku;
 
 import mahjong.HandDetail;
 import mahjong.Player;
-import mahjong.Tile;
+import mahjong.tile.Tile;
 
 import java.util.ArrayList;
 import java.util.Arrays;

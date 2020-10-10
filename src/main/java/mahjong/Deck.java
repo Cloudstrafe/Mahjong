@@ -1,5 +1,10 @@
 package mahjong;
 
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
+import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,7 +93,12 @@ public class Deck {
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 9; j++) {
                 for (String suit : suits) {
-                    NumberTile tile = new NumberTile(j, suit, false);
+                    NumberTile tile;
+                    if ((j == 5 && i == 0) || (j == 5 && i == 1 && SuitConstants.DOTS.equals(suit))) {
+                        tile = new NumberTile(j, suit, true);
+                    } else {
+                        tile = new NumberTile(j, suit, false);
+                    }
                     deck.add(tile);
                 }
             }

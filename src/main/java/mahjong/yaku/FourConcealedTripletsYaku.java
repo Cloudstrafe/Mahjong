@@ -1,7 +1,7 @@
 package mahjong.yaku;
 
 import mahjong.Player;
-import mahjong.Tile;
+import mahjong.tile.Tile;
 
 import java.util.List;
 import java.util.stream.Collectors;

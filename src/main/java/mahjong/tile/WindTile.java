@@ -1,4 +1,4 @@
-package mahjong;
+package mahjong.tile;
 
 public class WindTile extends Tile {
 
@@ -7,6 +7,7 @@ public class WindTile extends Tile {
         this.suit = suit;
         this.isRed = false;
         this.isDora = false;
+        setImageFilePaths();
     }
 
     @Override
