@@ -1,5 +1,9 @@
 package mahjong;
 
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
+import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
 import org.junit.Test;
 
 import java.util.ArrayList;

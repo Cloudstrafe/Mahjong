@@ -1,4 +1,4 @@
-package mahjong;
+package mahjong.tile;
 
 import java.util.Comparator;
 
@@ -8,6 +8,24 @@ public abstract class Tile implements Comparable<Tile>{
     String suit;
     boolean isRed;
     boolean isDora;
+    String smallTilePath;
+    String mediumTilePath;
+    String largeTilePath;
+    
+    protected void setImageFilePaths() {
+        StringBuilder str = new StringBuilder();
+        if (this.number != 0) {
+            str.append(this.number);
+        }
+        str.append(this.suit);
+        if (this.isRed) {
+            str.append("red");
+        }
+        str.append(".png");
+        this.smallTilePath = "images/international/small/" + str.toString();
+        this.mediumTilePath = "images/international/medium/" + str.toString();
+        this.largeTilePath = "images/international/large/" + str.toString();    //TODO may have to escape these names
+    }
 
     @Override
     public int compareTo(Tile o) {
@@ -60,11 +78,22 @@ public abstract class Tile implements Comparable<Tile>{
         return isRed;
     }
 
+    public String getSmallTilePath() {
+        return smallTilePath;
+    }
+
+    public String getMediumTilePath() {
+        return mediumTilePath;
+    }
+
+    public String getLargeTilePath() {
+        return largeTilePath;
+    }
+
     public String getTileAsString() {
         StringBuilder str = new StringBuilder();
         if (number != 0) {
-            str.append(number);
-            str.append(" ");
+            str.append(number).append(" ");
         }
         str.append(suit);
         return str.toString();

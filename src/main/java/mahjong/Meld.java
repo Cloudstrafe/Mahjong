@@ -1,5 +1,7 @@
 package mahjong;
 
+import mahjong.tile.Tile;
+
 import java.util.List;
 
 public class Meld {

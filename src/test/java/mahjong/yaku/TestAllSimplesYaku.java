@@ -1,6 +1,13 @@
 package mahjong.yaku;
 
-import mahjong.*;
+import mahjong.Meld;
+import mahjong.PlayArea;
+import mahjong.Player;
+import mahjong.SuitConstants;
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
+import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
 import org.junit.Before;
 import org.junit.Test;
 

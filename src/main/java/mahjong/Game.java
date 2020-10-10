@@ -1,5 +1,6 @@
 package mahjong;
 
+import mahjong.tile.Tile;
 import mahjong.yaku.RoundWindYaku;
 import mahjong.yaku.YakuHandler;
 

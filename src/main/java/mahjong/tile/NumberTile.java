@@ -1,17 +1,18 @@
-package mahjong;
+package mahjong.tile;
 
-public class DragonTile extends Tile {
+public class NumberTile extends Tile {
 
-    public DragonTile(String suit) {
-        this.number = 0;
+    public NumberTile(int number, String suit, boolean isRed) {
+        this.number = number;
         this.suit = suit;
-        this.isRed = false;
-        this.isDora = false;
+        this.isRed = isRed;
+        this.isDora = isRed;
+        setImageFilePaths();
     }
 
     @Override
     public boolean isDragon() {
-        return true;
+        return false;
     }
 
     @Override
@@ -31,16 +32,16 @@ public class DragonTile extends Tile {
 
     @Override
     public boolean isNumber() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isTerminal() {
-        return false;
+        return number == 1 || number == 9;
     }
 
     @Override
     public boolean isHonor() {
-        return true;
+        return false;
     }
 }
