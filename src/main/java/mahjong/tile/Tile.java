@@ -1,5 +1,9 @@
 package mahjong.tile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Comparator;
 
 public abstract class Tile implements Comparable<Tile>{
@@ -10,9 +14,16 @@ public abstract class Tile implements Comparable<Tile>{
     boolean isDora;
     String smallTilePath;
     String mediumTilePath;
-    String largeTilePath;
-    
-    protected void setImageFilePaths() {
+    BufferedImage smallTileFacingDown;
+    BufferedImage smallTileFacingRight;
+    BufferedImage smallTileFacingUp;
+    BufferedImage smallTileFacingLeft;
+    BufferedImage mediumTileFacingDown;
+    BufferedImage mediumTileFacingRight;
+    BufferedImage mediumTileFacingUp;
+    BufferedImage mediumTileFacingLeft;
+
+    protected void setImages() {
         StringBuilder str = new StringBuilder();
         if (this.number != 0) {
             str.append(this.number);
@@ -22,9 +33,20 @@ public abstract class Tile implements Comparable<Tile>{
             str.append("red");
         }
         str.append(".png");
-        this.smallTilePath = "images/international/small/" + str.toString();
-        this.mediumTilePath = "images/international/medium/" + str.toString();
-        this.largeTilePath = "images/international/large/" + str.toString();    //TODO may have to escape these names
+        this.smallTilePath = "src/main/java/mahjong/tile/images/international/small/" + str.toString();
+        this.mediumTilePath = "src/main/java/mahjong/tile/images/international/medium/" + str.toString();
+        try {
+            this.smallTileFacingDown = ImageIO.read(new File(smallTilePath));
+            this.mediumTileFacingDown = ImageIO.read(new File(mediumTilePath));
+        } catch (IOException e) {
+            System.out.println("Failed to load image " + str.toString());
+        }
+        this.smallTileFacingLeft = RotateTile.rotate(smallTileFacingDown,90.0d);
+        this.smallTileFacingUp = RotateTile.rotate(smallTileFacingDown, 180.0d);
+        this.smallTileFacingRight = RotateTile.rotate(smallTileFacingDown, 270.0d);
+        this.mediumTileFacingLeft = RotateTile.rotate(mediumTileFacingDown,90.0d);
+        this.mediumTileFacingUp = RotateTile.rotate(mediumTileFacingDown, 180.0d);
+        this.mediumTileFacingRight = RotateTile.rotate(mediumTileFacingDown, 270.0d);
     }
 
     @Override
@@ -78,16 +100,36 @@ public abstract class Tile implements Comparable<Tile>{
         return isRed;
     }
 
-    public String getSmallTilePath() {
-        return smallTilePath;
+    public BufferedImage getSmallTileFacingDown() {
+        return smallTileFacingDown;
     }
 
-    public String getMediumTilePath() {
-        return mediumTilePath;
+    public BufferedImage getSmallTileFacingRight() {
+        return smallTileFacingRight;
     }
 
-    public String getLargeTilePath() {
-        return largeTilePath;
+    public BufferedImage getSmallTileFacingUp() {
+        return smallTileFacingUp;
+    }
+
+    public BufferedImage getSmallTileFacingLeft() {
+        return smallTileFacingLeft;
+    }
+
+    public BufferedImage getMediumTileFacingDown() {
+        return mediumTileFacingDown;
+    }
+
+    public BufferedImage getMediumTileFacingRight() {
+        return mediumTileFacingRight;
+    }
+
+    public BufferedImage getMediumTileFacingUp() {
+        return mediumTileFacingUp;
+    }
+
+    public BufferedImage getMediumTileFacingLeft() {
+        return mediumTileFacingLeft;
     }
 
     public String getTileAsString() {

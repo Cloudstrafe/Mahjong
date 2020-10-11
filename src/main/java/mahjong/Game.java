@@ -1,5 +1,6 @@
 package mahjong;
 
+import mahjong.gui.SampleWindow;
 import mahjong.tile.Tile;
 import mahjong.yaku.RoundWindYaku;
 import mahjong.yaku.YakuHandler;
@@ -20,6 +21,7 @@ public class Game {
     private Deck deck;
     private Queue<Player> turnQueue;
     private Deadwall deadwall;
+    private SampleWindow window;
     private boolean isRoundOver;
     private static final String S_HAND = "'s Hand";
     private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
@@ -33,6 +35,7 @@ public class Game {
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
         this.deadwall = new Deadwall();
+        this.window = new SampleWindow();
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
@@ -59,7 +62,7 @@ public class Game {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
             System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
-            currentPlayer.takeTurn(deck, deadwall);
+            currentPlayer.takeTurn(deck, deadwall, window);
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
         }
@@ -79,7 +82,7 @@ public class Game {
                 String response = "";
                 while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
                     System.out.println(player.getName() + S_HAND);
-                    player.getPlayArea().displayHandAndMelds();
+                    player.getPlayArea().displayHandAndMelds(window);
                     System.out.println(player.getName() + ", would you like to Ron the " + discarded.getTileAsString() + "? (Y, N)");
                     Scanner myScanner = new Scanner(System.in);
                     response = myScanner.nextLine();
@@ -123,7 +126,7 @@ public class Game {
         String response = "";
         while (!"K".equalsIgnoreCase(response) && !"P".equalsIgnoreCase(response.toUpperCase()) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
-            player.getPlayArea().displayHandAndMelds();
+            player.getPlayArea().displayHandAndMelds(window);
             System.out.println(player.getName() + ", would you like to Kan or Pon the " + discarded.getTileAsString() + "? (K, P, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -151,7 +154,7 @@ public class Game {
         String response = "";
         while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(player.getName() + S_HAND);
-            player.getPlayArea().displayHandAndMelds();
+            player.getPlayArea().displayHandAndMelds(window);
             System.out.println(player.getName() + ", would you like to Pon the " + discarded.getTileAsString() + "? (Y, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -181,7 +184,7 @@ public class Game {
         String response = "";
         while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
             System.out.println(nextPlayer.getName() + S_HAND);
-            nextPlayer.getPlayArea().displayHandAndMelds();
+            nextPlayer.getPlayArea().displayHandAndMelds(window);
             System.out.println(nextPlayer.getName() + ", would you like to Chi the " + discarded.getTileAsString() + "? (Y, N)");
             Scanner myScanner = new Scanner(System.in);
             response = myScanner.nextLine();
@@ -235,10 +238,10 @@ public class Game {
         turnQueue.add(callingPlayer);
         System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
-            callingPlayer.getPlayArea().makeDiscardSelection(true);
+            callingPlayer.getPlayArea().makeDiscardSelection(true, window);
         }
         if (isKan) {
-            callingPlayer.takeTurnAfterKan(deadwall);
+            callingPlayer.takeTurnAfterKan(deadwall, window);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
         }
         checkRons(callingPlayer);

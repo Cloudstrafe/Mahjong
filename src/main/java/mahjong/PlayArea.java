@@ -1,5 +1,6 @@
 package mahjong;
 
+import mahjong.gui.SampleWindow;
 import mahjong.tile.Tile;
 
 import java.util.ArrayList;
@@ -32,13 +33,13 @@ public class PlayArea {
         return discard;
     }
 
-    public void draw(Deck deck, Deadwall deadwall) {
+    public void draw(Deck deck, Deadwall deadwall, SampleWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
         this.hand.add(tile);
-        displayHandAndMelds();
+        displayHandAndMelds(window);
         if (isKan(tile)) {
-            draw(deadwall.getDrawTiles(), deadwall);
+            draw(deadwall.getDrawTiles(), deadwall, window);
         }
     }
 
@@ -141,10 +142,10 @@ public class PlayArea {
         discard.remove(discard.size() - 1);
     }
 
-    public void makeDiscardSelection(boolean displayHand) {
+    public void makeDiscardSelection(boolean displayHand, SampleWindow window) {
         Scanner myScanner = new Scanner(System.in);
         if (displayHand) {
-            displayHandAndMelds();
+            displayHandAndMelds(window);
         }
         while (true) {
             System.out.println("Discard which tile? (1 - " + hand.size() + ")");
@@ -159,7 +160,7 @@ public class PlayArea {
                 continue;
             }
             System.out.println("Input a valid tile");
-            displayHandAndMelds();
+            displayHandAndMelds(window);
         }
     }
 
@@ -219,10 +220,11 @@ public class PlayArea {
         return str.toString();
     }
 
-    public void displayHandAndMelds() {
+    public void displayHandAndMelds(SampleWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
+        window.displayHand(this);
     }
 
     public List<Tile> getCombineHandAndMelds() {

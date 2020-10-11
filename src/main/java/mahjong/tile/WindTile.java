@@ -2,12 +2,12 @@ package mahjong.tile;
 
 public class WindTile extends Tile {
 
-    public WindTile(String suit) {
+    public WindTile(String suit)  {
         this.number = 0;
         this.suit = suit;
         this.isRed = false;
         this.isDora = false;
-        setImageFilePaths();
+        setImages();
     }
 
     @Override

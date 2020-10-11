@@ -2,12 +2,12 @@ package mahjong.tile;
 
 public class DragonTile extends Tile {
 
-    public DragonTile(String suit) {
+    public DragonTile(String suit)  {
         this.number = 0;
         this.suit = suit;
         this.isRed = false;
         this.isDora = false;
-        setImageFilePaths();
+        setImages();
     }
 
     @Override
