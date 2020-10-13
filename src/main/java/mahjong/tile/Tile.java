@@ -8,20 +8,35 @@ import java.util.Comparator;
 
 public abstract class Tile implements Comparable<Tile>{
 
-    int number;
-    String suit;
-    boolean isRed;
-    boolean isDora;
-    String smallTilePath;
-    String mediumTilePath;
-    BufferedImage smallTileFacingDown;
-    BufferedImage smallTileFacingRight;
-    BufferedImage smallTileFacingUp;
-    BufferedImage smallTileFacingLeft;
-    BufferedImage mediumTileFacingDown;
-    BufferedImage mediumTileFacingRight;
-    BufferedImage mediumTileFacingUp;
-    BufferedImage mediumTileFacingLeft;
+    protected int number;
+    protected String suit;
+    protected boolean isRed;
+    protected boolean isDora;
+    protected String smallTilePath;
+    protected String mediumTilePath;
+    protected BufferedImage smallTileFacingDown;
+    protected BufferedImage smallTileFacingRight;
+    protected BufferedImage smallTileFacingUp;
+    protected BufferedImage smallTileFacingLeft;
+    protected BufferedImage mediumTileFacingDown;
+    protected BufferedImage mediumTileFacingRight;
+    protected BufferedImage mediumTileFacingUp;
+    protected BufferedImage mediumTileFacingLeft;
+    protected static final BufferedImage BACK_OF_TILE_SMALL;
+    protected static final BufferedImage BACK_OF_TILE_MEDIUM;
+    static {
+        BufferedImage BACK_OF_TILE_MEDIUM1;
+        BufferedImage BACK_OF_TILE_SMALL1;
+        try {
+            BACK_OF_TILE_SMALL1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/small/back.png"));
+            BACK_OF_TILE_MEDIUM1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/medium/back.png"));
+        } catch (IOException e) {
+            BACK_OF_TILE_SMALL1 = null;
+            BACK_OF_TILE_MEDIUM1 = null;
+        }
+        BACK_OF_TILE_MEDIUM = BACK_OF_TILE_MEDIUM1;
+        BACK_OF_TILE_SMALL = BACK_OF_TILE_SMALL1;
+    }
 
     protected void setImages() {
         StringBuilder str = new StringBuilder();
@@ -130,6 +145,14 @@ public abstract class Tile implements Comparable<Tile>{
 
     public BufferedImage getMediumTileFacingLeft() {
         return mediumTileFacingLeft;
+    }
+
+    public static BufferedImage getBackOfTileSmall() {
+        return BACK_OF_TILE_SMALL;
+    }
+
+    public static BufferedImage getBackOfTileMedium() {
+        return BACK_OF_TILE_MEDIUM;
     }
 
     public String getTileAsString() {
