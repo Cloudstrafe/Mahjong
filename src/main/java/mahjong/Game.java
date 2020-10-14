@@ -58,7 +58,7 @@ public class Game {
     private void playRound() {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
+            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTotalTiles() + ", Dora: " + deadwall.getDoraAsString());
             currentPlayer.takeTurn(deck, deadwall);
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
@@ -233,7 +233,7 @@ public class Game {
     private void callHandler(Player currentPlayer, Player callingPlayer, boolean isKan) {
         currentPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
-        System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
+        System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTotalTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true);
         }
