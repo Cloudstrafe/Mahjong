@@ -12,34 +12,34 @@ import java.util.List;
 public class Deck {
     private final List<Tile> wall;
     private List<Tile> drawn;
-    private int tiles;
+    private int totalTiles;
 
     public Deck() {
         this.wall = new ArrayList<>();
         this.drawn = new ArrayList<>();
-        this.tiles = 136;
+        this.totalTiles = 136;
         buildDeck();
     }
 
     public Deck(List<Tile> tiles) {
         this.wall = tiles;
         this.drawn = new ArrayList<>();
-        this.tiles = 4;
+        this.totalTiles = 4;
     }
 
     public List<Tile> getWall() {
         return this.wall;
     }
 
-    public int getTiles() {
-        return tiles;
+    public int getTotalTiles() {
+        return totalTiles;
     }
 
     public Tile draw() {
         if (!this.wall.isEmpty()) {
             Tile tile = this.wall.remove(0);
             this.drawn.add(tile);
-            this.tiles--;
+            this.totalTiles--;
             return tile;
         }
         return null;
@@ -54,7 +54,7 @@ public class Deck {
     public void shuffle() {
         this.wall.addAll(this.drawn);
         this.drawn.clear();
-        this.tiles = 136;
+        this.totalTiles = 136;
         Collections.shuffle(this.wall);
     }
 
