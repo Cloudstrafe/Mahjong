@@ -27,6 +27,7 @@ public class Game {
     private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
 
     public Game() {
+        this.window = new SampleWindow();
         this.playerOne = new Player(EAST_WIND, true, 1);
         this.playerTwo = new Player(SOUTH_WIND, false, 2);
         this.playerThree = new Player(WEST_WIND, false, 3);
@@ -35,11 +36,18 @@ public class Game {
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
         this.deadwall = new Deadwall();
-        this.window = new SampleWindow();
+        setupWindow();
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
         turnQueue.add(playerFour);
+    }
+
+    private void setupWindow() {
+        window.addPanels(playerOne);
+        window.addPanels(playerTwo);
+        window.addPanels(playerThree);
+        window.addPanels(playerFour);
     }
 
     private void setupRound() {

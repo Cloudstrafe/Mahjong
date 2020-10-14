@@ -1,5 +1,8 @@
 package mahjong;
 
+import mahjong.gui.DiscardPanelHolder;
+import mahjong.gui.HandPanelHolder;
+import mahjong.gui.MeldPanelHolder;
 import mahjong.gui.SampleWindow;
 import mahjong.tile.Tile;
 
@@ -12,13 +15,19 @@ import java.util.stream.Collectors;
 public class PlayArea {
     private List<Tile> hand;
     private List<Meld> melds;
-    private static final int STARTING_HAND_SIZE = 13;
     private List<Tile> discard;
+    private static final int STARTING_HAND_SIZE = 13;
+    private HandPanelHolder handPanelHolder;
+    private MeldPanelHolder meldPanelHolder;
+    private DiscardPanelHolder discardPanelHolder;
 
     public PlayArea() {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
         this.melds = new ArrayList<>();
+        this.handPanelHolder = new HandPanelHolder(1, 14);
+        this.meldPanelHolder = new MeldPanelHolder(4,4);
+        this.discardPanelHolder = new DiscardPanelHolder(4, 6);
     }
 
     public List<Tile> getHand() {
@@ -66,21 +75,23 @@ public class PlayArea {
         return false;
     }
 
-    public void meldKan(Tile tile, boolean isOpen) {
-        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-        this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-        newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen, false));
+    public void meldKan(Tile discarded, boolean isOpen) {
+        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+        this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+        newMeld.add(discarded);
+        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+        this.melds.add(new Meld(newMeld, isOpen, false, calledTileIndex));
     }
 
-    public void meldPon(Tile tile, boolean isOpen) {
-        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-        this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+    public void meldPon(Tile discarded, boolean isOpen) {
+        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+        this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
         if (newMeld.size() == 3) {
             this.hand.add(newMeld.remove(0));
         }
-        newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen, false));
+        newMeld.add(discarded);
+        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+        this.melds.add(new Meld(newMeld, isOpen, false, calledTileIndex));
     }
 
     public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
@@ -88,7 +99,8 @@ public class PlayArea {
         this.hand.remove(newMeld.get(1));
         newMeld.add(discarded);
         newMeld = newMeld.stream().sorted().collect(Collectors.toList());
-        this.melds.add(new Meld(newMeld, isOpen, true));
+        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+        this.melds.add(new Meld(newMeld, isOpen, true, calledTileIndex));
     }
 
     public void discard(int index) {
@@ -224,7 +236,7 @@ public class PlayArea {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
-        window.displayHand(this);
+        this.handPanelHolder.displayHand(this);
     }
 
     public List<Tile> getCombineHandAndMelds() {
@@ -249,5 +261,17 @@ public class PlayArea {
 
     public void setDiscard(List<Tile> discard) {
         this.discard = discard;
+    }
+
+    public HandPanelHolder getHandPanelHolder() {
+        return handPanelHolder;
+    }
+
+    public MeldPanelHolder getMeldPanelHolder() {
+        return meldPanelHolder;
+    }
+
+    public DiscardPanelHolder getDiscardPanelHolder() {
+        return discardPanelHolder;
     }
 }

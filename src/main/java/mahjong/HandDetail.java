@@ -77,7 +77,7 @@ public class HandDetail {
                             run.add(first);
                             run.add(second);
                             run.add(third);
-                            Meld meld = new Meld(run, false, false);
+                            Meld meld = new Meld(run, false, false, -1);
                             allSets.add(meld);
                         }
                     }
@@ -100,7 +100,7 @@ public class HandDetail {
                             run.add(first);
                             run.add(second);
                             run.add(third);
-                            Meld meld = new Meld(run, false, true);
+                            Meld meld = new Meld(run, false, true, -1);
                             allRuns.add(meld);
                         }
                     }

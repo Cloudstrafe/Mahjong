@@ -85,7 +85,7 @@ public class TestSeatWindYaku {
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t12, t13, t14));
         PlayArea playArea = new PlayArea();
         List<Tile> meldTiles = new ArrayList<>(Arrays.asList(t9, t10, t11));
-        Meld meld = new Meld(meldTiles, true,false);
+        Meld meld = new Meld(meldTiles, true, false, -1);
         playArea.setHand(hand);
         playArea.getMelds().add(meld);
         player.setPlayArea(playArea);
@@ -114,7 +114,7 @@ public class TestSeatWindYaku {
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t12, t13, t14));
         PlayArea playArea = new PlayArea();
         List<Tile> meldTiles = new ArrayList<>(Arrays.asList(t9, t10, t11));
-        Meld meld = new Meld(meldTiles, true,false);
+        Meld meld = new Meld(meldTiles, true, false, -1);
         playArea.setHand(hand);
         playArea.getMelds().add(meld);
         player.setPlayArea(playArea);

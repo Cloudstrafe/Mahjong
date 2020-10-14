@@ -110,7 +110,7 @@ public class TestFourConcealedTripletsYaku {
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11));
         List<Tile> meldTiles = new ArrayList<>(Arrays.asList(t12, t13, t14));
-        Meld meld = new Meld(meldTiles, true,false);
+        Meld meld = new Meld(meldTiles, true, false, -1);
         PlayArea playArea = new PlayArea();
         playArea.setHand(hand);
         playArea.getMelds().add(meld);

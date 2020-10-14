@@ -1,24 +1,24 @@
 package mahjong.gui;
 
-import mahjong.PlayArea;
+import mahjong.Player;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SampleWindow {
-    private JFrame window = new JFrame("Mahjong");
-    private JPanel handPanel = new JPanel();
-    private HandPanelHolder playerHand;
+    private final JFrame window = new JFrame("Mahjong");
 
     public SampleWindow() {
-        playerHand = new HandPanelHolder(1, 14);
-        window.add(playerHand.getMainPanel());
-        window.setSize(1280, 720);
+        window.setSize(1920, 1080);
         window.setLocationRelativeTo(null);
         window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        window.setLayout(new GridLayout(12,1));
         window.setVisible(true);
     }
 
-    public void displayHand(PlayArea playArea) {
-        playerHand.displayHand(playArea);
+    public void addPanels(Player player) {
+        window.add(player.getPlayArea().getHandPanelHolder().getMainPanel());
+        window.add(player.getPlayArea().getMeldPanelHolder().getMainPanel());
+        window.add(player.getPlayArea().getDiscardPanelHolder().getMainPanel());
     }
 }
