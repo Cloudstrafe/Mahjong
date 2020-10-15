@@ -17,14 +17,14 @@ public class Deck {
     public Deck() {
         this.wall = new ArrayList<>();
         this.drawn = new ArrayList<>();
-        this.totalTiles = 136;
         buildDeck();
+        this.totalTiles = this.wall.size();
     }
 
     public Deck(List<Tile> tiles) {
         this.wall = tiles;
         this.drawn = new ArrayList<>();
-        this.totalTiles = 4;
+        this.totalTiles = this.wall.size();
     }
 
     public List<Tile> getWall() {
@@ -33,6 +33,10 @@ public class Deck {
 
     public int getTotalTiles() {
         return totalTiles;
+    }
+
+    public List<Tile> getDrawn() {
+        return drawn;
     }
 
     public Tile draw() {
@@ -54,7 +58,7 @@ public class Deck {
     public void shuffle() {
         this.wall.addAll(this.drawn);
         this.drawn.clear();
-        this.totalTiles = 136;
+        this.totalTiles = this.wall.size();
         Collections.shuffle(this.wall);
     }
 
