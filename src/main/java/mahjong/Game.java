@@ -53,16 +53,10 @@ public class Game {
     private void setupRound() {
         RoundWindYaku.setRoundWind(EAST_WIND);
         this.deck.shuffle();
-        this.playerOne.getPlayArea().reset();
-        this.playerTwo.getPlayArea().reset();
-        this.playerThree.getPlayArea().reset();
-        this.playerFour.getPlayArea().reset();
-        for (int i = 0; i < playerOne.getPlayArea().getStartingHandSize(); i++) {
-            playerOne.getPlayArea().initialDraw(deck);
-            playerTwo.getPlayArea().initialDraw(deck);
-            playerThree.getPlayArea().initialDraw(deck);
-            playerFour.getPlayArea().initialDraw(deck);
-        }
+        this.playerOne.getPlayArea().setup(deck);
+        this.playerTwo.getPlayArea().setup(deck);
+        this.playerThree.getPlayArea().setup(deck);
+        this.playerFour.getPlayArea().setup(deck);
         deadwall.setup(deck);
     }
 
@@ -241,8 +235,8 @@ public class Game {
         }
     }
 
-    private void callHandler(Player currentPlayer, Player callingPlayer, boolean isKan) {
-        currentPlayer.getPlayArea().removeLastDiscard();
+    private void callHandler(Player discardingPlayer, Player callingPlayer, boolean isKan) {
+        discardingPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
         System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {

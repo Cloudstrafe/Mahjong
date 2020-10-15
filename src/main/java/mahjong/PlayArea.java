@@ -52,7 +52,15 @@ public class PlayArea {
         }
     }
 
-    public void initialDraw(Deck deck) {
+    public void setup(Deck deck) {
+        reset();
+        for (int i = 0; i < getStartingHandSize(); i++) {
+            initialDraw(deck);
+        }
+        handPanelHolder.displayHand(this);
+    }
+
+    private void initialDraw(Deck deck) {
         Tile tile = deck.draw();
         this.hand.add(tile);
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
@@ -80,7 +88,9 @@ public class PlayArea {
         this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
         newMeld.add(discarded);
         int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
-        this.melds.add(new Meld(newMeld, isOpen, false, calledTileIndex));
+        Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
+        this.melds.add(meld);
+        this.meldPanelHolder.displayMeld(meld);
     }
 
     public void meldPon(Tile discarded, boolean isOpen) {
@@ -91,7 +101,9 @@ public class PlayArea {
         }
         newMeld.add(discarded);
         int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
-        this.melds.add(new Meld(newMeld, isOpen, false, calledTileIndex));
+        Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
+        this.melds.add(meld);
+        this.meldPanelHolder.displayMeld(meld);
     }
 
     public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
@@ -100,12 +112,16 @@ public class PlayArea {
         newMeld.add(discarded);
         newMeld = newMeld.stream().sorted().collect(Collectors.toList());
         int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
-        this.melds.add(new Meld(newMeld, isOpen, true, calledTileIndex));
+        Meld meld = new Meld(newMeld, isOpen, true, calledTileIndex);
+        this.melds.add(meld);
+        this.meldPanelHolder.displayMeld(meld);
     }
 
     public void discard(int index) {
         Tile tile = this.hand.remove(index);
         this.discard.add(tile);
+        this.handPanelHolder.displayHand(this);
+        this.discardPanelHolder.displayDiscard(tile);
     }
 
     public boolean isOpenKan(Tile tile) {
@@ -152,6 +168,7 @@ public class PlayArea {
 
     public void removeLastDiscard() {
         discard.remove(discard.size() - 1);
+        discardPanelHolder.removeLastDiscard();
     }
 
     public void makeDiscardSelection(boolean displayHand, SampleWindow window) {
