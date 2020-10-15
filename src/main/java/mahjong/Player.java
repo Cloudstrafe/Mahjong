@@ -16,7 +16,7 @@ public class Player {
     private int playerNumber;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
-        this.playArea = new PlayArea();
+        this.playArea = new PlayArea(playerNumber);
         this.seat = seat;
         this.points = 25000;
         this.isDealer = isDealer;
@@ -27,7 +27,7 @@ public class Player {
     }
 
     public Player(String seat, boolean isDealer, int playerNumber, String name) {
-        this.playArea = new PlayArea();
+        this.playArea = new PlayArea(playerNumber);
         this.seat = seat;
         this.points = 25000;
         this.isDealer = isDealer;

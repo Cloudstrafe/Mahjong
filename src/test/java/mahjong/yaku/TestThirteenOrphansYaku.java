@@ -56,7 +56,7 @@ public class TestThirteenOrphansYaku {
         Tile t13 = new WindTile(SuitConstants.SOUTH_WIND);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -82,7 +82,7 @@ public class TestThirteenOrphansYaku {
         Tile t13 = new WindTile(SuitConstants.SOUTH_WIND);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -108,7 +108,7 @@ public class TestThirteenOrphansYaku {
         Tile t13 = new WindTile(SuitConstants.SOUTH_WIND);
         Tile t14 = new NumberTile(2, SuitConstants.BAMBOO, false);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 

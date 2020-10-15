@@ -4,12 +4,14 @@ import mahjong.PlayArea;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
 
 public class HandPanelHolder extends PanelHolder {
 
-    public HandPanelHolder(int rows, int cols) {
-        super(rows, cols);
-        this.mainPanel.setBorder(new TitledBorder("Hand"));
+    public HandPanelHolder(int rows, int cols, int playerNumber) {
+        super(rows, cols, playerNumber);
+        this.mainPanel.setBorder(new TitledBorder("Player " + playerNumber + "'s Hand"));
+        this.mainPanel.setLayout(new GridLayout(rows, cols));
     }
 
     public void displayHand(PlayArea playArea) {

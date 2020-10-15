@@ -3,7 +3,6 @@ package mahjong.gui;
 import mahjong.Player;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class SampleWindow {
     private final JFrame window = new JFrame("Mahjong");
@@ -12,7 +11,7 @@ public class SampleWindow {
         window.setSize(1920, 1080);
         window.setLocationRelativeTo(null);
         window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        window.setLayout(new GridLayout(12,1));
+        //window.setLayout(null);
         window.setVisible(true);
     }
 

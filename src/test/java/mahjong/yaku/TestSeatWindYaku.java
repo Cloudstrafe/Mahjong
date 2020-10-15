@@ -57,7 +57,7 @@ public class TestSeatWindYaku {
         Tile t13 = new DragonTile(SuitConstants.RED_DRAGON);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -83,7 +83,7 @@ public class TestSeatWindYaku {
         Tile t13 = new DragonTile(SuitConstants.RED_DRAGON);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         List<Tile> meldTiles = new ArrayList<>(Arrays.asList(t9, t10, t11));
         Meld meld = new Meld(meldTiles, true, false, -1);
         playArea.setHand(hand);
@@ -112,7 +112,7 @@ public class TestSeatWindYaku {
         Tile t13 = new DragonTile(SuitConstants.RED_DRAGON);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         List<Tile> meldTiles = new ArrayList<>(Arrays.asList(t9, t10, t11));
         Meld meld = new Meld(meldTiles, true, false, -1);
         playArea.setHand(hand);

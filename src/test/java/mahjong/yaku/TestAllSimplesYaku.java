@@ -64,7 +64,7 @@ public class TestAllSimplesYaku {
         List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
         List<Tile> hand = new ArrayList<>(Arrays.asList(t7, t8, t9, t10, t11, t12, t13, t14));
 
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         playArea.setMelds(melds);
         player.setPlayArea(playArea);
@@ -91,7 +91,7 @@ public class TestAllSimplesYaku {
         Tile t13 = new DragonTile(SuitConstants.RED_DRAGON);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -120,7 +120,7 @@ public class TestAllSimplesYaku {
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11));
         List<Tile> meldTiles = new ArrayList<>(Arrays.asList(t12, t13, t14));
         Meld meld = new Meld(meldTiles, true, false, -1);
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         playArea.getMelds().add(meld);
         player.setPlayArea(playArea);
@@ -154,7 +154,7 @@ public class TestAllSimplesYaku {
         Tile t14 = new NumberTile(8, SuitConstants.BAMBOO, false);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t7, t8, t9, t10, t11, t12, t13, t14));
 
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         playArea.setMelds(melds);
         player.setPlayArea(playArea);

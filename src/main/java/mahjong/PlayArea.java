@@ -21,13 +21,37 @@ public class PlayArea {
     private MeldPanelHolder meldPanelHolder;
     private DiscardPanelHolder discardPanelHolder;
 
-    public PlayArea() {
+    public PlayArea(int playerNumber) {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
         this.melds = new ArrayList<>();
-        this.handPanelHolder = new HandPanelHolder(1, 14);
-        this.meldPanelHolder = new MeldPanelHolder(4,4);
-        this.discardPanelHolder = new DiscardPanelHolder(4, 6);
+        this.handPanelHolder = new HandPanelHolder(1, 14, playerNumber);
+        this.meldPanelHolder = new MeldPanelHolder(4,4, playerNumber);
+        this.discardPanelHolder = new DiscardPanelHolder(4, 6, getDiscardXCoordinate(playerNumber), getDiscardYCoordinate(playerNumber), playerNumber);
+    }
+
+    private int getDiscardXCoordinate(int playerNumber) {
+        if (playerNumber == 1) {
+            return 760;
+        } else if (playerNumber == 2) {
+            return 1120;
+        } else if (playerNumber == 3) {
+            return 760;
+        } else {
+            return 600;
+        }
+    }
+
+    private int getDiscardYCoordinate(int playerNumber) {
+        if (playerNumber == 1) {
+            return 760;
+        } else if (playerNumber == 2) {
+            return 540;
+        } else if (playerNumber == 3) {
+            return 280;
+        } else {
+            return 540;
+        }
     }
 
     public List<Tile> getHand() {

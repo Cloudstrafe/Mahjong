@@ -55,7 +55,7 @@ public class TestAllTerminalsYaku {
         Tile t13 = new NumberTile(9, SuitConstants.CHARACTERS, false);
         Tile t14 = new NumberTile(9, SuitConstants.CHARACTERS, false);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -81,7 +81,7 @@ public class TestAllTerminalsYaku {
         Tile t13 = new DragonTile(SuitConstants.RED_DRAGON);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -107,7 +107,7 @@ public class TestAllTerminalsYaku {
         Tile t13 = new NumberTile(1, SuitConstants.CHARACTERS, false);
         Tile t14 = new NumberTile(9, SuitConstants.CHARACTERS, false);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 
@@ -133,7 +133,7 @@ public class TestAllTerminalsYaku {
         Tile t13 = new NumberTile(9, SuitConstants.BAMBOO, false);
         Tile t14 = new NumberTile(9, SuitConstants.CHARACTERS, false);
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14));
-        PlayArea playArea = new PlayArea();
+        PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);
         player.setPlayArea(playArea);
 

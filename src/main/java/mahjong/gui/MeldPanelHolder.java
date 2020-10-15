@@ -5,14 +5,16 @@ import mahjong.tile.Tile;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
 
 public class MeldPanelHolder extends PanelHolder {
     private int currentRow;
 
-    public MeldPanelHolder(int rows, int cols) {
-        super(rows, cols);
+    public MeldPanelHolder(int rows, int cols, int playerNumber) {
+        super(rows, cols, playerNumber);
         this.currentRow = 0;
-        this.mainPanel.setBorder(new TitledBorder("Melds"));
+        this.mainPanel.setBorder(new TitledBorder("Player " + playerNumber + "'s Melds"));
+        this.mainPanel.setLayout(new GridLayout(rows, cols));
     }
 
 //TODO: kanning a pon

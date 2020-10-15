@@ -5,13 +5,15 @@ import javax.swing.*;
 public class PanelHolder {
     protected int rows;
     protected int cols;
+    protected int playerNumber;
     protected JLabel[][] labels;
     protected JPanel[][] panels;
     protected JPanel mainPanel;
 
-    public PanelHolder(int rows, int cols) {
+    public PanelHolder(int rows, int cols, int playerNumber) {
         this.rows = rows;
         this.cols = cols;
+        this.playerNumber = playerNumber;
         this.labels = new JLabel[rows][cols];
         this.mainPanel = new JPanel();
         this.panels = new JPanel[rows][cols];
