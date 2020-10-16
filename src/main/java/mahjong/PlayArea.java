@@ -20,37 +20,91 @@ public class PlayArea {
     private HandPanelHolder handPanelHolder;
     private MeldPanelHolder meldPanelHolder;
     private DiscardPanelHolder discardPanelHolder;
+    private volatile boolean isDiscardSelected;
+    private volatile int discardIndex;
+    private boolean isMyTurn;
 
     public PlayArea(int playerNumber) {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
         this.melds = new ArrayList<>();
-        this.handPanelHolder = new HandPanelHolder(1, 14, playerNumber);
-        this.meldPanelHolder = new MeldPanelHolder(4,4, playerNumber);
+        this.isDiscardSelected = false;
+        this.discardIndex = -1;
+        this.handPanelHolder = new HandPanelHolder(1, 14, playerNumber, getHandXCoordinate(playerNumber), getHandYCoordinate(playerNumber), this);
+        this.meldPanelHolder = new MeldPanelHolder(4,4, playerNumber, getMeldsXCoordinate(playerNumber), getMeldsYCoordingate(playerNumber));
         this.discardPanelHolder = new DiscardPanelHolder(4, 6, getDiscardXCoordinate(playerNumber), getDiscardYCoordinate(playerNumber), playerNumber);
+        this.isMyTurn = false;
+    }
+
+    private int getHandXCoordinate(int playerNumber) {
+        if (playerNumber == 1) {
+            return 0;
+        } else if (playerNumber == 2) {
+            return 0;
+        } else if (playerNumber == 3) {
+            return 0;
+        } else {
+            return 0;
+        }
+    }
+
+    private int getMeldsXCoordinate(int playerNumber) {
+        if (playerNumber == 1) {
+            return 1120;
+        } else if (playerNumber == 2) {
+            return 1120;
+        } else if (playerNumber == 3) {
+            return 1120;
+        } else {
+            return 1120;
+        }
     }
 
     private int getDiscardXCoordinate(int playerNumber) {
         if (playerNumber == 1) {
-            return 760;
+            return 1298;
         } else if (playerNumber == 2) {
-            return 1120;
+            return 1298;
         } else if (playerNumber == 3) {
-            return 760;
+            return 1298;
         } else {
-            return 600;
+            return 1298;
+        }
+    }
+
+    private int getHandYCoordinate(int playerNumber) {
+        if (playerNumber == 1) {
+            return 0;
+        } else if (playerNumber == 2) {
+            return 230;
+        } else if (playerNumber == 3) {
+            return 460;
+        } else {
+            return 690;
+        }
+    }
+
+    private int getMeldsYCoordingate(int playerNumber) {
+        if (playerNumber == 1) {
+            return 0;
+        } else if (playerNumber == 2) {
+            return 230;
+        } else if (playerNumber == 3) {
+            return 460;
+        } else {
+            return 690;
         }
     }
 
     private int getDiscardYCoordinate(int playerNumber) {
         if (playerNumber == 1) {
-            return 760;
+            return 0;
         } else if (playerNumber == 2) {
-            return 540;
+            return 230;
         } else if (playerNumber == 3) {
-            return 280;
+            return 460;
         } else {
-            return 540;
+            return 690;
         }
     }
 
@@ -142,10 +196,14 @@ public class PlayArea {
     }
 
     public void discard(int index) {
+        this.handPanelHolder.displayNotMyTurnBorder();
+        this.handPanelHolder.getMainPanel().repaint();
         Tile tile = this.hand.remove(index);
         this.discard.add(tile);
         this.handPanelHolder.displayHand(this);
         this.discardPanelHolder.displayDiscard(tile);
+        this.isDiscardSelected = false;
+        this.setDiscardIndex(-1);
     }
 
     public boolean isOpenKan(Tile tile) {
@@ -196,25 +254,16 @@ public class PlayArea {
     }
 
     public void makeDiscardSelection(boolean displayHand, SampleWindow window) {
-        Scanner myScanner = new Scanner(System.in);
         if (displayHand) {
             displayHandAndMelds(window);
         }
-        while (true) {
-            System.out.println("Discard which tile? (1 - " + hand.size() + ")");
-            String input = myScanner.nextLine();
-            try {
-                int value = Integer.parseInt(input);
-                if (value >= 1 && value <= hand.size()) {
-                    discard(value - 1);
-                    return;
-                }
-            } catch (NumberFormatException ignored) {
-                continue;
-            }
-            System.out.println("Input a valid tile");
-            displayHandAndMelds(window);
+        isMyTurn = true;
+        this.handPanelHolder.displayMyTurnBorder();
+        this.handPanelHolder.getMainPanel().repaint();
+        while (!isDiscardSelected) {
+            //Waiting for the player to click on the tile they want to discard
         }
+        discard(discardIndex);
     }
 
     public boolean isHandOpen() {
@@ -224,6 +273,22 @@ public class PlayArea {
     public void reset() {
         this.hand.clear();
         this.discard.clear();
+    }
+
+    public void setDiscardSelected(boolean discardSelected) {
+        isDiscardSelected = discardSelected;
+    }
+
+    public void setDiscardIndex(int discardIndex) {
+        this.discardIndex = discardIndex;
+    }
+
+    public boolean isMyTurn() {
+        return isMyTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        isMyTurn = myTurn;
     }
 
     public String getHandAsString() {

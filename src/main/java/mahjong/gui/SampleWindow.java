@@ -19,5 +19,6 @@ public class SampleWindow {
         window.add(player.getPlayArea().getHandPanelHolder().getMainPanel());
         window.add(player.getPlayArea().getMeldPanelHolder().getMainPanel());
         window.add(player.getPlayArea().getDiscardPanelHolder().getMainPanel());
+        window.add(new JPanel());
     }
 }

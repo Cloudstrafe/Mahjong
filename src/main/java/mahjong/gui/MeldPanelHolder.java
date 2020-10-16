@@ -9,12 +9,15 @@ import java.awt.*;
 
 public class MeldPanelHolder extends PanelHolder {
     private int currentRow;
+    private static final int PANEL_WIDTH = 178;
+    private static final int PANEL_HEIGHT = 230;
 
-    public MeldPanelHolder(int rows, int cols, int playerNumber) {
+    public MeldPanelHolder(int rows, int cols, int playerNumber, int x, int y) {
         super(rows, cols, playerNumber);
         this.currentRow = 0;
         this.mainPanel.setBorder(new TitledBorder("Player " + playerNumber + "'s Melds"));
         this.mainPanel.setLayout(new GridLayout(rows, cols));
+        this.mainPanel.setBounds(x, y, PANEL_WIDTH, PANEL_HEIGHT);
     }
 
 //TODO: kanning a pon
