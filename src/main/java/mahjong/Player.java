@@ -1,8 +1,10 @@
 package mahjong;
 
-import mahjong.gui.SampleWindow;
+import mahjong.gui.GameWindow;
 import mahjong.yaku.YakuHandler;
 
+import javax.swing.*;
+import java.text.MessageFormat;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -35,28 +37,20 @@ public class Player {
         this.playerNumber = playerNumber;
     }
 
-    public void takeTurn(Deck deck, Deadwall deadwall, SampleWindow window) {
+    public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window) {
         playArea.draw(deck, deadwall, window);
-        if (YakuHandler.hasValidYaku(this)) {
-            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
-            Scanner myScanner = new Scanner(System.in);
-            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
-                System.out.println("You Win!!");
-                exit(0);
-            }
+        if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
+            JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
+            exit(0);
         }
         playArea.makeDiscardSelection(false, window);
     }
 
-    public void takeTurnAfterKan(Deadwall deadwall, SampleWindow window) {
+    public void takeTurnAfterKan(Deadwall deadwall, GameWindow window) {
         playArea.draw(deadwall.getDrawTiles(), deadwall, window);
-        if (YakuHandler.hasValidYaku(this)) {
-            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
-            Scanner myScanner = new Scanner(System.in);
-            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
-                System.out.println("You Win!!");
-                exit(0);
-            }
+        if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
+            JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
+            exit(0);
         }
         playArea.makeDiscardSelection(false, window);
     }

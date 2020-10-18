@@ -1,9 +1,9 @@
 package mahjong;
 
 import mahjong.gui.DiscardPanelHolder;
+import mahjong.gui.GameWindow;
 import mahjong.gui.HandPanelHolder;
 import mahjong.gui.MeldPanelHolder;
-import mahjong.gui.SampleWindow;
 import mahjong.tile.Tile;
 
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class PlayArea {
         return discard;
     }
 
-    public void draw(Deck deck, Deadwall deadwall, SampleWindow window) {
+    public void draw(Deck deck, Deadwall deadwall, GameWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
         this.hand.add(tile);
@@ -167,7 +167,7 @@ public class PlayArea {
         newMeld.add(discarded);
         int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
         Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
-        this.melds.add(meld);
+        this.melds.add(meld);   //TODO: fix closed kan logic
         this.meldPanelHolder.displayMeld(meld);
     }
 
@@ -253,7 +253,7 @@ public class PlayArea {
         discardPanelHolder.removeLastDiscard();
     }
 
-    public void makeDiscardSelection(boolean displayHand, SampleWindow window) {
+    public void makeDiscardSelection(boolean displayHand, GameWindow window) {
         if (displayHand) {
             displayHandAndMelds(window);
         }
@@ -338,7 +338,7 @@ public class PlayArea {
         return str.toString();
     }
 
-    public void displayHandAndMelds(SampleWindow window) {
+    public void displayHandAndMelds(GameWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         System.out.println("Hand: " + getHandAsString());
         System.out.println("Melds: " + getMeldsAsString());
