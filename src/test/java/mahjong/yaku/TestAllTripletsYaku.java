@@ -23,7 +23,7 @@ public class TestAllTripletsYaku {
     @Before
     public void setUp() {
         allTripletsYaku = new AllTripletsYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

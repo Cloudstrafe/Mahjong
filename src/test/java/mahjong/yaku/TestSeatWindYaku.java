@@ -24,7 +24,7 @@ public class TestSeatWindYaku {
     @Before
     public void setUp() {
         seatWindYaku = new SeatWindYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

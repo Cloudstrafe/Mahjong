@@ -24,7 +24,7 @@ public class TestSevenPairsYaku {
     @Before
     public void setUp() {
         sevenPairsYaku = new SevenPairsYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

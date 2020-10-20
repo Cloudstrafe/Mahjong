@@ -24,7 +24,7 @@ public class TestFourConcealedTripletsYaku {
     @Before
     public void setUp() {
         fourConcealedTripletsYaku = new FourConcealedTripletsYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

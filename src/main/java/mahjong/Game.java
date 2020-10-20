@@ -10,7 +10,6 @@ import java.text.MessageFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
 
 import static java.lang.System.exit;
 import static mahjong.SuitConstants.*;
@@ -67,7 +66,7 @@ public class Game {
     private void playRound() {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
+            System.out.println(currentPlayer.getPlayerNumber() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
             currentPlayer.takeTurn(deck, deadwall, window);
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
@@ -85,7 +84,7 @@ public class Game {
             player.getPlayArea().getHand().add(discarded);
             if (YakuHandler.hasValidYaku(player)) {
                 player.getPlayArea().getHand().remove(discarded);
-                player.getPlayArea().displayHandAndMelds(window);
+                player.getPlayArea().displayHandAndMelds();
                 if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
                     player.getPlayArea().getHand().add(discarded);
                     JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
@@ -118,7 +117,7 @@ public class Game {
     }
 
     private boolean kanOrPon(Player currentPlayer, Tile discarded, Player player) {
-        player.getPlayArea().displayHandAndMelds(window);
+        player.getPlayArea().displayHandAndMelds();
         int response = this.window.isKanOrPonCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN_OR_PON, player.getPlayerNumber()));
         if (response == KAN) {
             player.getPlayArea().meldKan(discarded, true);
@@ -136,7 +135,7 @@ public class Game {
     }
 
     private boolean ponOnly(Player currentPlayer, Tile discarded, Player player) {
-        player.getPlayArea().displayHandAndMelds(window);
+        player.getPlayArea().displayHandAndMelds();
         if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
             player.getPlayArea().meldPon(discarded, true);
             callHandler(currentPlayer, player, false);
@@ -155,52 +154,23 @@ public class Game {
     }
 
     private void chi(Player currentPlayer, Player nextPlayer, Tile discarded, List<List<Tile>> possibleChi) {
-        nextPlayer.getPlayArea().displayHandAndMelds(window);
+        nextPlayer.getPlayArea().displayHandAndMelds();
         if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
             turnQueue.remove();
             if (possibleChi.size() > 1) {
-                String response = "";
-                Scanner myScanner = new Scanner(System.in);
-                while (true) {
-                    System.out.println("Which tiles would you like to use? (1 - " + possibleChi.size() + ")");
-                    printChiOptions(possibleChi);
-                    response = myScanner.nextLine();
-                    try {
-                        int value = Integer.parseInt(response);
-                        if (value >= 1 && value <= possibleChi.size()) {
-                            nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(value - 1), true);
-                            callHandler(currentPlayer, nextPlayer, false);
-                            return;
-                        }
-                    } catch (NumberFormatException ignored) {
-                        continue;
-                    }
-                    System.out.println(INPUT_VALID_CHOICE);
-                }
+                int response = this.window.getChiCallChoice(MessageFormat.format(MessageConstants.MSG_SELECT_CHI_OPTION, nextPlayer.getPlayerNumber()), possibleChi);
+                nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(response), true);
             } else {
                 nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(0), true);
-                callHandler(currentPlayer, nextPlayer, false);
             }
-        }
-    }
-
-    private void printChiOptions(List<List<Tile>> combinations) {
-        for (List<Tile> combination : combinations) {
-            StringBuilder str = new StringBuilder();
-            for (Tile tile : combination) {
-                str.append(tile.getTileAsString());
-                str.append(", ");
-            }
-            int length = str.length();
-            str.delete(length - 2, length);
-            System.out.println(str.toString());
+            callHandler(currentPlayer, nextPlayer, false);
         }
     }
 
     private void callHandler(Player discardingPlayer, Player callingPlayer, boolean isKan) {
         discardingPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
-        System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
+        System.out.println(callingPlayer.getPlayerNumber() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true, window);
         }

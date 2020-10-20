@@ -23,7 +23,7 @@ public class TestBigFourWindsYaku {
     @Before
     public void setUp() {
         bigFourWindsYaku = new BigFourWindsYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

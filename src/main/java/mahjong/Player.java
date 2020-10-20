@@ -5,7 +5,6 @@ import mahjong.yaku.YakuHandler;
 
 import javax.swing.*;
 import java.text.MessageFormat;
-import java.util.Scanner;
 
 import static java.lang.System.exit;
 
@@ -14,26 +13,13 @@ public class Player {
     private String seat;
     private int points;
     private boolean isDealer;
-    private String name;
-    private int playerNumber;
+    private final int playerNumber;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
         this.playArea = new PlayArea(playerNumber);
         this.seat = seat;
         this.points = 25000;
         this.isDealer = isDealer;
-        Scanner myScanner = new Scanner(System.in);
-        System.out.println("Player " + playerNumber + "'s Name:");
-        this.name = myScanner.nextLine();
-        this.playerNumber = playerNumber;
-    }
-
-    public Player(String seat, boolean isDealer, int playerNumber, String name) {
-        this.playArea = new PlayArea(playerNumber);
-        this.seat = seat;
-        this.points = 25000;
-        this.isDealer = isDealer;
-        this.name = name;
         this.playerNumber = playerNumber;
     }
 
@@ -85,10 +71,6 @@ public class Player {
 
     public void setDealer(boolean dealer) {
         isDealer = dealer;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public int getPlayerNumber() {

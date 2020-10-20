@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class MeldPanelHolder extends PanelHolder {
     private int currentRow;
-    private static final int PANEL_WIDTH = 178;
-    private static final int PANEL_HEIGHT = 230;
+    private static final int PANEL_WIDTH = 200;
+    private static final int PANEL_HEIGHT = 260;
 
     public MeldPanelHolder(int rows, int cols, int playerNumber, int x, int y) {
         super(rows, cols, playerNumber);

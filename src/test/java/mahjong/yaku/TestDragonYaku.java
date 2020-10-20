@@ -23,7 +23,7 @@ public class TestDragonYaku {
     @Before
     public void setUp() {
         dragonYaku = new DragonYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

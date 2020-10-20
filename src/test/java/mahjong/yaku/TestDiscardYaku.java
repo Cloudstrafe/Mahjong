@@ -23,7 +23,7 @@ public class TestDiscardYaku {
     @Before
     public void setUp() {
         discardYaku = new DiscardYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

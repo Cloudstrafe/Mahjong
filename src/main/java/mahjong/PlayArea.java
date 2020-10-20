@@ -6,10 +6,10 @@ import mahjong.gui.HandPanelHolder;
 import mahjong.gui.MeldPanelHolder;
 import mahjong.tile.Tile;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class PlayArea {
@@ -23,6 +23,7 @@ public class PlayArea {
     private volatile boolean isDiscardSelected;
     private volatile int discardIndex;
     private boolean isMyTurn;
+    private int playerNumber;
 
     public PlayArea(int playerNumber) {
         this.hand = new ArrayList<>();
@@ -30,13 +31,14 @@ public class PlayArea {
         this.melds = new ArrayList<>();
         this.isDiscardSelected = false;
         this.discardIndex = -1;
-        this.handPanelHolder = new HandPanelHolder(1, 14, playerNumber, getHandXCoordinate(playerNumber), getHandYCoordinate(playerNumber), this);
-        this.meldPanelHolder = new MeldPanelHolder(4,4, playerNumber, getMeldsXCoordinate(playerNumber), getMeldsYCoordingate(playerNumber));
-        this.discardPanelHolder = new DiscardPanelHolder(4, 6, getDiscardXCoordinate(playerNumber), getDiscardYCoordinate(playerNumber), playerNumber);
+        this.playerNumber = playerNumber;
+        this.handPanelHolder = new HandPanelHolder(1, 14, playerNumber, getHandXCoordinate(), getHandYCoordinate(), this);
+        this.meldPanelHolder = new MeldPanelHolder(4, 4, playerNumber, getMeldsXCoordinate(), getMeldsYCoordingate());
+        this.discardPanelHolder = new DiscardPanelHolder(4, 6, getDiscardXCoordinate(), getDiscardYCoordinate(), playerNumber);
         this.isMyTurn = false;
     }
 
-    private int getHandXCoordinate(int playerNumber) {
+    private int getHandXCoordinate() {
         if (playerNumber == 1) {
             return 0;
         } else if (playerNumber == 2) {
@@ -48,7 +50,7 @@ public class PlayArea {
         }
     }
 
-    private int getMeldsXCoordinate(int playerNumber) {
+    private int getMeldsXCoordinate() {
         if (playerNumber == 1) {
             return 1120;
         } else if (playerNumber == 2) {
@@ -60,7 +62,7 @@ public class PlayArea {
         }
     }
 
-    private int getDiscardXCoordinate(int playerNumber) {
+    private int getDiscardXCoordinate() {
         if (playerNumber == 1) {
             return 1298;
         } else if (playerNumber == 2) {
@@ -72,7 +74,7 @@ public class PlayArea {
         }
     }
 
-    private int getHandYCoordinate(int playerNumber) {
+    private int getHandYCoordinate() {
         if (playerNumber == 1) {
             return 0;
         } else if (playerNumber == 2) {
@@ -84,7 +86,7 @@ public class PlayArea {
         }
     }
 
-    private int getMeldsYCoordingate(int playerNumber) {
+    private int getMeldsYCoordingate() {
         if (playerNumber == 1) {
             return 0;
         } else if (playerNumber == 2) {
@@ -96,7 +98,7 @@ public class PlayArea {
         }
     }
 
-    private int getDiscardYCoordinate(int playerNumber) {
+    private int getDiscardYCoordinate() {
         if (playerNumber == 1) {
             return 0;
         } else if (playerNumber == 2) {
@@ -124,8 +126,8 @@ public class PlayArea {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
         this.hand.add(tile);
-        displayHandAndMelds(window);
-        if (isKan(tile)) {
+        displayHandAndMelds();
+        if (isKan(tile, window)) {
             draw(deadwall.getDrawTiles(), deadwall, window);
         }
     }
@@ -144,240 +146,233 @@ public class PlayArea {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
     }
 
-    private boolean isKan(Tile tile) {
+    private boolean isKan(Tile tile, GameWindow window) {
         if (this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 4) {
-            while (true) {
-                System.out.println("Kan? (Y/N)");
-                Scanner myScanner = new Scanner(System.in);
-                String input = myScanner.nextLine();
-                if ("N".equalsIgnoreCase(input)) {
-                    return false;
-                } else if ("Y".equalsIgnoreCase(input)) {
-                    meldKan(tile, false);
-                    return true;
-                }
+            if (window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+                meldKan(tile, false);
+                return true;
             }
         }
         return false;
     }
 
-    public void meldKan(Tile discarded, boolean isOpen) {
-        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
-        this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
-        newMeld.add(discarded);
-        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
-        Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
-        this.melds.add(meld);   //TODO: fix closed kan logic
-        this.meldPanelHolder.displayMeld(meld);
-    }
-
-    public void meldPon(Tile discarded, boolean isOpen) {
-        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
-        this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
-        if (newMeld.size() == 3) {
-            this.hand.add(newMeld.remove(0));
+        public void meldKan (Tile discarded,boolean isOpen){
+            List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+            this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+            if (isOpen) {
+                newMeld.add(discarded);
+            }
+            int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+            Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
+            this.melds.add(meld);
+            this.meldPanelHolder.displayMeld(meld);
         }
-        newMeld.add(discarded);
-        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
-        Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
-        this.melds.add(meld);
-        this.meldPanelHolder.displayMeld(meld);
-    }
 
-    public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
-        this.hand.remove(newMeld.get(0));
-        this.hand.remove(newMeld.get(1));
-        newMeld.add(discarded);
-        newMeld = newMeld.stream().sorted().collect(Collectors.toList());
-        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
-        Meld meld = new Meld(newMeld, isOpen, true, calledTileIndex);
-        this.melds.add(meld);
-        this.meldPanelHolder.displayMeld(meld);
-    }
+        public void meldPon (Tile discarded,boolean isOpen){
+            List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+            this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+            if (newMeld.size() == 3) {
+                this.hand.add(newMeld.remove(0));
+            }
+            newMeld.add(discarded);
+            int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+            Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
+            this.melds.add(meld);
+            this.meldPanelHolder.displayMeld(meld);
+        }
 
-    public void discard(int index) {
-        this.handPanelHolder.displayNotMyTurnBorder();
-        this.handPanelHolder.getMainPanel().repaint();
-        Tile tile = this.hand.remove(index);
-        this.discard.add(tile);
-        this.handPanelHolder.displayHand(this);
-        this.discardPanelHolder.displayDiscard(tile);
-        this.isDiscardSelected = false;
-        this.setDiscardIndex(-1);
-    }
+        public void meldChi (Tile discarded, List < Tile > newMeld,boolean isOpen){
+            this.hand.remove(newMeld.get(0));
+            this.hand.remove(newMeld.get(1));
+            newMeld.add(discarded);
+            newMeld = newMeld.stream().sorted().collect(Collectors.toList());
+            int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+            Meld meld = new Meld(newMeld, isOpen, true, calledTileIndex);
+            this.melds.add(meld);
+            this.meldPanelHolder.displayMeld(meld);
+        }
 
-    public boolean isOpenKan(Tile tile) {
-        return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 3;
-    }
+        public void discard ( int index){
+            this.handPanelHolder.displayNotMyTurnBorder();
+            this.handPanelHolder.getMainPanel().repaint();
+            Tile tile = this.hand.remove(index);
+            this.discard.add(tile);
+            this.handPanelHolder.displayHand(this);
+            this.discardPanelHolder.displayDiscard(tile);
+            this.isDiscardSelected = false;
+            this.setDiscardIndex(-1);
+        }
 
-    public boolean isOpenPon(Tile tile) {
-        return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() >= 2;
-    }
+        public boolean isOpenKan (Tile tile){
+            return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 3;
+        }
 
-    public List<List<Tile>> isOpenChi(Tile tile) {
-        if (!tile.isHonor()) {
-            List<List<Tile>> combinations = new ArrayList<>();
-            List<Tile> minusTwoTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() - 2 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-            List<Tile> minusOneTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() - 1 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-            List<Tile> plusOneTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() + 1 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-            List<Tile> plusTwoTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() + 2 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-            List<List<Tile>> chiTiles = new ArrayList<>();
-            chiTiles.add(minusTwoTiles);
-            chiTiles.add(minusOneTiles);
-            chiTiles.add(plusOneTiles);
-            chiTiles.add(plusTwoTiles);
-            for (int i = 0; i < 3; i++) {
-                for (Tile firstTile : chiTiles.get(i)) {
-                    for (Tile secondTile : chiTiles.get(i + 1)) {
-                        List<Tile> newCombination = new ArrayList<>();
-                        newCombination.add(firstTile);
-                        newCombination.add(secondTile);
-                        combinations.add(newCombination);
+        public boolean isOpenPon (Tile tile){
+            return this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() >= 2;
+        }
+
+        public List<List<Tile>> isOpenChi (Tile tile){
+            if (!tile.isHonor()) {
+                List<List<Tile>> combinations = new ArrayList<>();
+                List<Tile> minusTwoTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() - 2 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+                List<Tile> minusOneTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() - 1 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+                List<Tile> plusOneTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() + 1 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+                List<Tile> plusTwoTiles = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() + 2 && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+                List<List<Tile>> chiTiles = new ArrayList<>();
+                chiTiles.add(minusTwoTiles);
+                chiTiles.add(minusOneTiles);
+                chiTiles.add(plusOneTiles);
+                chiTiles.add(plusTwoTiles);
+                for (int i = 0; i < 3; i++) {
+                    for (Tile firstTile : chiTiles.get(i)) {
+                        for (Tile secondTile : chiTiles.get(i + 1)) {
+                            List<Tile> newCombination = new ArrayList<>();
+                            newCombination.add(firstTile);
+                            newCombination.add(secondTile);
+                            combinations.add(newCombination);
+                        }
                     }
                 }
+                return combinations.stream().distinct().collect(Collectors.toList());
             }
-            return combinations.stream().distinct().collect(Collectors.toList());
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
-    }
 
-    public Tile getLastDiscard() {
-        if (this.discard.isEmpty()) {
-            return null;
-        }
-        return this.discard.get(this.discard.size() - 1);
-    }
-
-    public void removeLastDiscard() {
-        discard.remove(discard.size() - 1);
-        discardPanelHolder.removeLastDiscard();
-    }
-
-    public void makeDiscardSelection(boolean displayHand, GameWindow window) {
-        if (displayHand) {
-            displayHandAndMelds(window);
-        }
-        isMyTurn = true;
-        this.handPanelHolder.displayMyTurnBorder();
-        this.handPanelHolder.getMainPanel().repaint();
-        while (!isDiscardSelected) {
-            //Waiting for the player to click on the tile they want to discard
-        }
-        discard(discardIndex);
-    }
-
-    public boolean isHandOpen() {
-        return !this.melds.isEmpty();
-    }
-
-    public void reset() {
-        this.hand.clear();
-        this.discard.clear();
-    }
-
-    public void setDiscardSelected(boolean discardSelected) {
-        isDiscardSelected = discardSelected;
-    }
-
-    public void setDiscardIndex(int discardIndex) {
-        this.discardIndex = discardIndex;
-    }
-
-    public boolean isMyTurn() {
-        return isMyTurn;
-    }
-
-    public void setMyTurn(boolean myTurn) {
-        isMyTurn = myTurn;
-    }
-
-    public String getHandAsString() {
-        StringBuilder str = new StringBuilder();
-        int i = 1;
-        for (Tile tile : this.hand) {
-            str.append("(").append(i).append(") ");
-            if (tile.getNumber() != 0) {
-                str.append(tile.getNumber()).append(" ");
+        public Tile getLastDiscard () {
+            if (this.discard.isEmpty()) {
+                return null;
             }
-            str.append(tile.getSuit()).append(", ");
-            i++;
+            return this.discard.get(this.discard.size() - 1);
         }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
-    }
 
-    public String getMeldsAsString() {
-        StringBuilder str = new StringBuilder();
-        for (Meld meld : this.melds) {
-            for (Tile tile : meld.getTiles()) {
+        public void removeLastDiscard () {
+            discard.remove(discard.size() - 1);
+            discardPanelHolder.removeLastDiscard();
+        }
+
+        public void makeDiscardSelection ( boolean displayHand, GameWindow window){
+            if (displayHand) {
+                displayHandAndMelds();
+            }
+            isMyTurn = true;
+            this.handPanelHolder.displayMyTurnBorder();
+            this.handPanelHolder.getMainPanel().repaint();
+            while (!isDiscardSelected) {
+                //Waiting for the player to click on the tile they want to discard
+            }
+            discard(discardIndex);
+        }
+
+        public boolean isHandOpen () {
+            return !this.melds.isEmpty();
+        }
+
+        public void reset () {
+            this.hand.clear();
+            this.discard.clear();
+        }
+
+        public void setDiscardSelected ( boolean discardSelected){
+            isDiscardSelected = discardSelected;
+        }
+
+        public void setDiscardIndex ( int discardIndex){
+            this.discardIndex = discardIndex;
+        }
+
+        public boolean isMyTurn () {
+            return isMyTurn;
+        }
+
+        public void setMyTurn ( boolean myTurn){
+            isMyTurn = myTurn;
+        }
+
+        public String getHandAsString () {
+            StringBuilder str = new StringBuilder();
+            int i = 1;
+            for (Tile tile : this.hand) {
+                str.append("(").append(i).append(") ");
                 if (tile.getNumber() != 0) {
                     str.append(tile.getNumber()).append(" ");
                 }
                 str.append(tile.getSuit()).append(", ");
+                i++;
             }
             int length = str.length();
             str.delete(length - 2, length);
-            str.append("; ");
+            return str.toString();
         }
-        return str.toString();
-    }
 
-    public String getDiscardAsString() {
-        StringBuilder str = new StringBuilder();
-        for (Tile tile : this.discard) {
-            if (tile.getNumber() != 0) {
-                str.append(tile.getNumber());
-                str.append(" ");
+        public String getMeldsAsString () {
+            StringBuilder str = new StringBuilder();
+            for (Meld meld : this.melds) {
+                for (Tile tile : meld.getTiles()) {
+                    if (tile.getNumber() != 0) {
+                        str.append(tile.getNumber()).append(" ");
+                    }
+                    str.append(tile.getSuit()).append(", ");
+                }
+                int length = str.length();
+                str.delete(length - 2, length);
+                str.append("; ");
             }
-            str.append(tile.getSuit());
-            str.append(", ");
+            return str.toString();
         }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
-    }
 
-    public void displayHandAndMelds(GameWindow window) {
-        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
-        System.out.println("Hand: " + getHandAsString());
-        System.out.println("Melds: " + getMeldsAsString());
-        this.handPanelHolder.displayHand(this);
-    }
-
-    public List<Tile> getCombineHandAndMelds() {
-        List<Tile> combined = new ArrayList<>(hand);
-        for (Meld m : melds) {
-            combined.addAll(m.getTiles());
+        public String getDiscardAsString () {
+            StringBuilder str = new StringBuilder();
+            for (Tile tile : this.discard) {
+                if (tile.getNumber() != 0) {
+                    str.append(tile.getNumber());
+                    str.append(" ");
+                }
+                str.append(tile.getSuit());
+                str.append(", ");
+            }
+            int length = str.length();
+            str.delete(length - 2, length);
+            return str.toString();
         }
-        return combined;
-    }
 
-    public List<Meld> getMelds() {
-        return melds;
-    }
+        public void displayHandAndMelds (){
+            this.hand = this.hand.stream().sorted().collect(Collectors.toList());
+            this.handPanelHolder.displayHand(this);
+        }
 
-    public void setHand(List<Tile> hand) {
-        this.hand = hand;
-    }
+        public List<Tile> getCombineHandAndMelds () {
+            List<Tile> combined = new ArrayList<>(hand);
+            for (Meld m : melds) {
+                combined.addAll(m.getTiles());
+            }
+            return combined;
+        }
 
-    public void setMelds(List<Meld> melds) {
-        this.melds = melds;
-    }
+        public List<Meld> getMelds () {
+            return melds;
+        }
 
-    public void setDiscard(List<Tile> discard) {
-        this.discard = discard;
-    }
+        public void setHand (List < Tile > hand) {
+            this.hand = hand;
+        }
 
-    public HandPanelHolder getHandPanelHolder() {
-        return handPanelHolder;
-    }
+        public void setMelds (List < Meld > melds) {
+            this.melds = melds;
+        }
 
-    public MeldPanelHolder getMeldPanelHolder() {
-        return meldPanelHolder;
-    }
+        public void setDiscard (List < Tile > discard) {
+            this.discard = discard;
+        }
 
-    public DiscardPanelHolder getDiscardPanelHolder() {
-        return discardPanelHolder;
+        public HandPanelHolder getHandPanelHolder () {
+            return handPanelHolder;
+        }
+
+        public MeldPanelHolder getMeldPanelHolder () {
+            return meldPanelHolder;
+        }
+
+        public DiscardPanelHolder getDiscardPanelHolder () {
+            return discardPanelHolder;
+        }
     }
-}

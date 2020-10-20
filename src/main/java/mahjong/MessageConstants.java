@@ -9,6 +9,7 @@ public class MessageConstants {
     public static final String MSG_CHI = "Player {0}, would you like to chi?";
     public static final String MSG_WIN = "Player {0} wins!";
     public static final String MSG_EMPTY_DECK = "Deck empty, starting new hand";
+    public static final String MSG_SELECT_CHI_OPTION = "Player {0}, select the tiles you would like to chi with";
 
     private MessageConstants() {
         throw new IllegalStateException("Utility class");

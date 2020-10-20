@@ -23,7 +23,7 @@ public class TestThirteenOrphansYaku {
     @Before
     public void setUp() {
         thirteenOrphansYaku = new ThirteenOrphansYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

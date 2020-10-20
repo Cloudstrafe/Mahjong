@@ -23,7 +23,7 @@ public class TestAllHonorsYaku {
     @Before
     public void setUp() {
         allHonorsYaku = new AllHonorsYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

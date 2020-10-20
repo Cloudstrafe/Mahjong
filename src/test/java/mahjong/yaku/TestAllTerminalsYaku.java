@@ -22,7 +22,7 @@ public class TestAllTerminalsYaku {
     @Before
     public void setUp() {
         allTerminalsYaku = new AllTerminalsYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
     }
 
     @Test

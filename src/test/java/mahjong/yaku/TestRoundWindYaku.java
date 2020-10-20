@@ -24,7 +24,7 @@ public class TestRoundWindYaku {
     @Before
     public void setUp() {
         roundWindYaku = new RoundWindYaku();
-        player = new Player(SuitConstants.WEST_WIND, false, 4, "a");
+        player = new Player(SuitConstants.WEST_WIND, false, 4);
         RoundWindYaku.setRoundWind(SuitConstants.EAST_WIND);
     }
 
