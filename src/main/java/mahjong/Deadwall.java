@@ -32,11 +32,7 @@ public class Deadwall {
     public String getDoraAsString() {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < this.revealed; i++) {
-            if (doraTiles.get(i).getNumber() != 0) {
-                str.append(doraTiles.get(i).getNumber());
-                str.append(" ");
-            }
-            str.append(doraTiles.get(i).getSuit());
+            str.append(doraTiles.get(i).getTileAsString());
             str.append(", ");
         }
         int length = str.length();
@@ -58,10 +54,6 @@ public class Deadwall {
 
     public List<Tile> getDoraTiles() {
         return doraTiles;
-    }
-
-    public void setDoraTiles(List<Tile> doraTiles) {
-        this.doraTiles = doraTiles;
     }
 
     public int getRevealed() {
