@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class MeldPanelHolder extends PanelHolder {
+public class MeldPanelHolder extends TilePanelHolder {
     private int currentRow;
     private static final int PANEL_WIDTH = 200;
     private static final int PANEL_HEIGHT = 255;

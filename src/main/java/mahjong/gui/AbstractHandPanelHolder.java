@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public abstract class AbstractHandPanelHolder extends PanelHolder {
+public abstract class AbstractHandPanelHolder extends TilePanelHolder {
     protected int panelWidth;
     protected int panelHeight;
     protected PlayArea playArea;

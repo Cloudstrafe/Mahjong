@@ -50,49 +50,49 @@ public class PlayArea {
 
     private int getMeldsXCoordinate() {
         if (playerNumber == 1) {
-            return 1120;
+            return 1480;
         } else if (playerNumber == 2) {
-            return 1120;
+            return 1480;
         } else if (playerNumber == 3) {
-            return 1120;
+            return 140;
         } else {
-            return 1120;
+            return 140;
         }
     }
 
     private int getDiscardXCoordinate() {
         if (playerNumber == 1) {
-            return 1298;
+            return 834;
         } else if (playerNumber == 2) {
-            return 1298;
+            return 1070;
         } else if (playerNumber == 3) {
-            return 1298;
+            return 834;
         } else {
-            return 1298;
+            return 598;
         }
     }
 
     private int getMeldsYCoordinate() {
         if (playerNumber == 1) {
-            return 0;
+            return 750;
         } else if (playerNumber == 2) {
-            return 230;
+            return 0;
         } else if (playerNumber == 3) {
-            return 460;
+            return 0;
         } else {
-            return 690;
+            return 750;
         }
     }
 
     private int getDiscardYCoordinate() {
         if (playerNumber == 1) {
-            return 0;
+            return 620;
         } else if (playerNumber == 2) {
-            return 230;
+            return 400;
         } else if (playerNumber == 3) {
-            return 460;
+            return 180;
         } else {
-            return 690;
+            return 400;
         }
     }
 

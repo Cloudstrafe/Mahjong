@@ -6,7 +6,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 
-public class DiscardPanelHolder extends PanelHolder {
+public class DiscardPanelHolder extends TilePanelHolder {
     private int currentRow;
     private int currentCol;
     private static final int ROW_MAX = 4;

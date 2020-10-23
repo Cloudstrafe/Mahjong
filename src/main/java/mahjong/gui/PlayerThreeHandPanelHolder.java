@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 
 public class PlayerThreeHandPanelHolder extends AbstractHandPanelHolder {
     public PlayerThreeHandPanelHolder(PlayArea playArea) {
-        super(1, 14, 3, 400, 10, playArea, 1120, 130);
+        super(1, 14, 3, 450, 0, playArea, 1020, 130);
     }
 
     @Override

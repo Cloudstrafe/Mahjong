@@ -24,13 +24,10 @@ public class Game {
     private Deadwall deadwall;
     private GameWindow window;
     private boolean isRoundOver;
-    private static final String S_HAND = "'s Hand";
-    private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
     private static final int KAN = 0;
     private static final int PON = 1;
 
     public Game() {
-        this.window = new GameWindow();
         this.playerOne = new Player(EAST_WIND, true, 1);
         this.playerTwo = new Player(SOUTH_WIND, false, 2);
         this.playerThree = new Player(WEST_WIND, false, 3);
@@ -39,18 +36,11 @@ public class Game {
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
         this.deadwall = new Deadwall();
-        setupWindow();
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
         turnQueue.add(playerFour);
-    }
-
-    private void setupWindow() {
-        window.addPanels(playerOne);
-        window.addPanels(playerTwo);
-        window.addPanels(playerThree);
-        window.addPanels(playerFour);
+        this.window = new GameWindow(playerOne, playerTwo, playerThree, playerFour);
     }
 
     private void setupRound() {
@@ -170,7 +160,7 @@ public class Game {
     private void callHandler(Player discardingPlayer, Player callingPlayer, boolean isKan) {
         discardingPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
-        System.out.println(callingPlayer.getPlayerNumber() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getWall() + ", Dora: " + deadwall.getDoraAsString());
+        System.out.println(callingPlayer.getPlayerNumber() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTotalTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true, window);
         }

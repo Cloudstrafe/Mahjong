@@ -12,19 +12,26 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 public class GameWindow {
     private final JFrame window = new JFrame("Mahjong");
+    private GameInfoPanel gameInfoPanel;
 
-    public GameWindow() {
+    public GameWindow(Player playerOne, Player playerTwo, Player playerThree, Player playerFour) {
+        gameInfoPanel = new GameInfoPanel();
         window.setSize(1920, 1080);
         window.setLocationRelativeTo(null);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        addPanels(playerOne);
+        addPanels(playerTwo);
+        addPanels(playerThree);
+        addPanels(playerFour);
+        window.add(gameInfoPanel.getMainPanel());
+        window.add(new JPanel());
         window.setVisible(true);
     }
 
-    public void addPanels(Player player) {
+    private void addPanels(Player player) {
         window.add(player.getPlayArea().getHandPanelHolder().getMainPanel());
         window.add(player.getPlayArea().getMeldPanelHolder().getMainPanel());
         window.add(player.getPlayArea().getDiscardPanelHolder().getMainPanel());
-        window.add(new JPanel());
     }
 
     public boolean isCallConfirmed(String message) {

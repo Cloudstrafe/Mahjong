@@ -2,7 +2,7 @@ package mahjong.gui;
 
 import javax.swing.*;
 
-public class PanelHolder {
+public class TilePanelHolder {
     protected int rows;
     protected int cols;
     protected int playerNumber;
@@ -10,7 +10,7 @@ public class PanelHolder {
     protected JPanel[][] panels;
     protected JPanel mainPanel;
 
-    public PanelHolder(int rows, int cols, int playerNumber) {
+    public TilePanelHolder(int rows, int cols, int playerNumber) {
         this.rows = rows;
         this.cols = cols;
         this.playerNumber = playerNumber;
