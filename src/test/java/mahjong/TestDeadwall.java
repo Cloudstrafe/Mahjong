@@ -12,7 +12,7 @@ public class TestDeadwall {
     @Before
     public void setup() {
         Deck deck = new Deck();
-        deadwall = new Deadwall();
+        deadwall = new Deadwall(deck);
         deadwall.setup(deck);
     }
 

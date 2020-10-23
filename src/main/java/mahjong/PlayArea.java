@@ -112,6 +112,7 @@ public class PlayArea {
     public void draw(Deck deck, Deadwall deadwall, GameWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
+        window.getGameInfoPanel().getDeckTileCount().setText("x" + deck.getTotalTiles());
         this.hand.add(tile);
         displayHandAndMelds();
         if (isKan(tile, window)) {

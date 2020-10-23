@@ -1,5 +1,7 @@
 package mahjong.gui;
 
+import mahjong.tile.Tile;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
@@ -8,6 +10,7 @@ public class GameInfoPanel {
     private static final int PANEL_HEIGHT = 220;
     private static final int X_COORDINATE = 850;
     private static final int Y_COORDINATE = 400;
+    private final JLabel tileIcon = new JLabel(new ImageIcon(Tile.getBackOfTileSmall()));
     private JPanel mainPanel;
     private JLabel playerOneScore;
     private JLabel playerTwoScore;
@@ -26,17 +29,21 @@ public class GameInfoPanel {
         this.mainPanel.setBorder(new TitledBorder("Game Info"));
         this.mainPanel.setLayout(null);
         this.mainPanel.setBounds(X_COORDINATE, Y_COORDINATE, PANEL_WIDTH, PANEL_HEIGHT);
-        this.playerOneScore = initializeLabel("P1Score",90,180);
-        this.playerTwoScore = initializeLabel("P2Score",160,90);
-        this.playerThreeScore = initializeLabel("P3Score",90,0);
-        this.playerFourScore = initializeLabel("P4Score",5,90);
-        this.playerOneSeat = initializeLabel("P1Seat",30,180);
-        this.playerTwoSeat = initializeLabel("P2Seat",170,110);
-        this.playerThreeSeat = initializeLabel("P3Seat",150,0);
-        this.playerFourSeat = initializeLabel("P4Seat",5,70);
-        this.deckTileCount = initializeLabel("DeckCount",90,90);
-        this.currentRoundWind = initializeLabel("RoundWind",70,110);
-        this.currentRoundNumber = initializeLabel("RoundNumber",110,110);
+        this.playerOneScore = initializeLabel("P1Score",92,180);
+        this.playerTwoScore = initializeLabel("P2Score",175,80);
+        this.playerThreeScore = initializeLabel("P3Score",92,0);
+        this.playerFourScore = initializeLabel("P4Score",10,80);
+        this.playerOneSeat = initializeLabel("P1Seat",105,165);
+        this.playerTwoSeat = initializeLabel("P2Seat",190,95);
+        this.playerThreeSeat = initializeLabel("P3Seat",105,15);
+        this.playerFourSeat = initializeLabel("P4Seat",25,95);
+        this.deckTileCount = initializeLabel("DeckCount",100,85);
+        tileIcon.setLocation(92, 85);
+        tileIcon.setSize(37, 50);
+        tileIcon.setVisible(true);
+        mainPanel.add(tileIcon);
+        this.currentRoundWind = initializeLabel("RoundWind",92,120);
+        this.currentRoundNumber = initializeLabel("RoundNumber",120,120);
     }
 
     private JLabel initializeLabel(String label, int x, int y) {
@@ -52,47 +59,47 @@ public class GameInfoPanel {
         return mainPanel;
     }
 
-    public void setPlayerOneScore(JLabel playerOneScore) {
-        this.playerOneScore = playerOneScore;
+    public JLabel getPlayerOneScore() {
+        return playerOneScore;
     }
 
-    public void setPlayerTwoScore(JLabel playerTwoScore) {
-        this.playerTwoScore = playerTwoScore;
+    public JLabel getPlayerTwoScore() {
+        return playerTwoScore;
     }
 
-    public void setPlayerThreeScore(JLabel playerThreeScore) {
-        this.playerThreeScore = playerThreeScore;
+    public JLabel getPlayerThreeScore() {
+        return playerThreeScore;
     }
 
-    public void setPlayerFourScore(JLabel playerFourScore) {
-        this.playerFourScore = playerFourScore;
+    public JLabel getPlayerFourScore() {
+        return playerFourScore;
     }
 
-    public void setPlayerOneSeat(JLabel playerOneSeat) {
-        this.playerOneSeat = playerOneSeat;
+    public JLabel getPlayerOneSeat() {
+        return playerOneSeat;
     }
 
-    public void setPlayerTwoSeat(JLabel playerTwoSeat) {
-        this.playerTwoSeat = playerTwoSeat;
+    public JLabel getPlayerTwoSeat() {
+        return playerTwoSeat;
     }
 
-    public void setPlayerThreeSeat(JLabel playerThreeSeat) {
-        this.playerThreeSeat = playerThreeSeat;
+    public JLabel getPlayerThreeSeat() {
+        return playerThreeSeat;
     }
 
-    public void setPlayerFourSeat(JLabel playerFourSeat) {
-        this.playerFourSeat = playerFourSeat;
+    public JLabel getPlayerFourSeat() {
+        return playerFourSeat;
     }
 
-    public void setDeckTileCount(JLabel deckTileCount) {
-        this.deckTileCount = deckTileCount;
+    public JLabel getDeckTileCount() {
+        return deckTileCount;
     }
 
-    public void setCurrentRoundWind(JLabel currentRoundWind) {
-        this.currentRoundWind = currentRoundWind;
+    public JLabel getCurrentRoundWind() {
+        return currentRoundWind;
     }
 
-    public void setCurrentRoundNumber(JLabel currentRoundNumber) {
-        this.currentRoundNumber = currentRoundNumber;
+    public JLabel getCurrentRoundNumber() {
+        return currentRoundNumber;
     }
 }

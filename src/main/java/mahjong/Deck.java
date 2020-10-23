@@ -19,6 +19,7 @@ public class Deck {
         this.drawn = new ArrayList<>();
         buildDeck();
         this.totalTiles = this.wall.size();
+        shuffle();
     }
 
     public Deck(List<Tile> tiles) {

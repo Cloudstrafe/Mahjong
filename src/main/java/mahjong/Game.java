@@ -24,6 +24,9 @@ public class Game {
     private Deadwall deadwall;
     private GameWindow window;
     private boolean isRoundOver;
+    private int roundNumber;
+    private String roundWind;
+    private static final String[] windArray = {EAST_WIND, SOUTH_WIND, WEST_WIND, NORTH_WIND};
     private static final int KAN = 0;
     private static final int PON = 1;
 
@@ -35,7 +38,9 @@ public class Game {
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
-        this.deadwall = new Deadwall();
+        this.deadwall = new Deadwall(deck);
+        this.roundNumber = 1;
+        this.roundWind = EAST_WIND;
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
@@ -44,13 +49,25 @@ public class Game {
     }
 
     private void setupRound() {
-        RoundWindYaku.setRoundWind(EAST_WIND);
+        RoundWindYaku.setRoundWind(roundWind);
         this.deck.shuffle();
         this.playerOne.getPlayArea().setup(deck);
         this.playerTwo.getPlayArea().setup(deck);
         this.playerThree.getPlayArea().setup(deck);
         this.playerFour.getPlayArea().setup(deck);
-        deadwall.setup(deck);
+        this.deadwall.setup(deck);
+        window.getDoraPanelHolder().reset();
+        window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(0));
+        this.window.getGameInfoPanel().getCurrentRoundNumber().setText(Integer.toString(roundNumber));
+        this.window.getGameInfoPanel().getCurrentRoundWind().setText(getFullWindName(roundWind));
+        this.window.getGameInfoPanel().getPlayerOneScore().setText(Integer.toString(playerOne.getPoints()));
+        this.window.getGameInfoPanel().getPlayerTwoScore().setText(Integer.toString(playerTwo.getPoints()));
+        this.window.getGameInfoPanel().getPlayerThreeScore().setText(Integer.toString(playerThree.getPoints()));
+        this.window.getGameInfoPanel().getPlayerFourScore().setText(Integer.toString(playerFour.getPoints()));
+        this.window.getGameInfoPanel().getPlayerOneSeat().setText(playerOne.getSeat().toUpperCase());
+        this.window.getGameInfoPanel().getPlayerTwoSeat().setText(playerTwo.getSeat().toUpperCase());
+        this.window.getGameInfoPanel().getPlayerThreeSeat().setText(playerThree.getSeat().toUpperCase());
+        this.window.getGameInfoPanel().getPlayerFourSeat().setText(playerFour.getSeat().toUpperCase());
     }
 
     private void playRound() {
@@ -167,8 +184,20 @@ public class Game {
         if (isKan) {
             callingPlayer.takeTurnAfterKan(deadwall, window);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
+            window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(deadwall.getRevealed()));
         }
         checkRons(callingPlayer);
+    }
+
+    private String getFullWindName(String wind) {
+        if (EAST_WIND.equals(wind)) {
+            return EAST;
+        } else if (SOUTH_WIND.equals(wind)) {
+            return SOUTH;
+        } else if (WEST_WIND.equals(wind)) {
+            return WEST;
+        }
+        return NORTH;
     }
 
     public void beginNewRound() {

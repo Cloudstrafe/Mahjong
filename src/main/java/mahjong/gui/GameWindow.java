@@ -13,9 +13,11 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
 public class GameWindow {
     private final JFrame window = new JFrame("Mahjong");
     private GameInfoPanel gameInfoPanel;
+    private DoraPanelHolder doraPanelHolder;
 
     public GameWindow(Player playerOne, Player playerTwo, Player playerThree, Player playerFour) {
         gameInfoPanel = new GameInfoPanel();
+        doraPanelHolder = new DoraPanelHolder();
         window.setSize(1920, 1080);
         window.setLocationRelativeTo(null);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -24,6 +26,7 @@ public class GameWindow {
         addPanels(playerThree);
         addPanels(playerFour);
         window.add(gameInfoPanel.getMainPanel());
+        window.add(doraPanelHolder.getMainPanel());
         window.add(new JPanel());
         window.setVisible(true);
     }
@@ -58,6 +61,14 @@ public class GameWindow {
 
     public JFrame getWindow() {
         return window;
+    }
+
+    public GameInfoPanel getGameInfoPanel() {
+        return gameInfoPanel;
+    }
+
+    public DoraPanelHolder getDoraPanelHolder() {
+        return doraPanelHolder;
     }
 
     public static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {

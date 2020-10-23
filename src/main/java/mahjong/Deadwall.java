@@ -12,12 +12,18 @@ public class Deadwall {
     private static final int DEADWALL_SIZE = 10;
     private static final int DEADWALL_DRAW_SIZE = 4;
 
-    public Deadwall() {
+    public Deadwall(Deck deck) {
         this.doraTiles = new ArrayList<>();
+        List<Tile> deadwallDraw = new ArrayList<>();
+        for (int i = 0; i < DEADWALL_DRAW_SIZE; i++) {
+            deadwallDraw.add(deck.draw());
+        }
+        setDrawTiles(new Deck(deadwallDraw));
         this.revealed = 0;
     }
 
     public void setup(Deck deck) {
+        clearAll();
         for (int i = 0; i < DEADWALL_SIZE; i++) {
             this.doraTiles.add(deck.draw());
         }
@@ -54,6 +60,12 @@ public class Deadwall {
 
     public List<Tile> getDoraTiles() {
         return doraTiles;
+    }
+
+    public void clearAll() {
+        drawTiles.getDrawn().clear();
+        drawTiles.getWall().clear();
+        doraTiles.clear();
     }
 
     public int getRevealed() {
