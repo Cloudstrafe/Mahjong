@@ -20,8 +20,6 @@ public class MeldPanelHolder extends TilePanelHolder {
         this.mainPanel.setBounds(x, y, PANEL_WIDTH, PANEL_HEIGHT);
     }
 
-//TODO: kanning a pon
-
     public void displayMeld(Meld meld) {
         for (int j = 0; j < meld.getTiles().size(); j++) {
             if (!meld.isOpen() && (j == 0 || j == meld.getTiles().size() - 1)) {
@@ -33,6 +31,10 @@ public class MeldPanelHolder extends TilePanelHolder {
             }
         }
         this.currentRow++;
+    }
+
+    public void kanAPon(Tile tile, int row) {
+        labels[row][3].setIcon(new ImageIcon(tile.getSmallTileFacingDown()));
     }
 
     @Override

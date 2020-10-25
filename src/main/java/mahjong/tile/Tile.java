@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 
-public abstract class Tile implements Comparable<Tile>{
+public abstract class Tile implements Comparable<Tile> {
 
     protected int number;
     protected String suit;
@@ -24,6 +24,7 @@ public abstract class Tile implements Comparable<Tile>{
     protected BufferedImage mediumTileFacingLeft;
     protected static final BufferedImage BACK_OF_TILE_SMALL;
     protected static final BufferedImage BACK_OF_TILE_MEDIUM;
+
     static {
         BufferedImage BACK_OF_TILE_MEDIUM1;
         BufferedImage BACK_OF_TILE_SMALL1;
@@ -38,28 +39,45 @@ public abstract class Tile implements Comparable<Tile>{
         BACK_OF_TILE_SMALL = BACK_OF_TILE_SMALL1;
     }
 
+    public Tile(int number, String suit, boolean isRed, boolean isDora) {
+        this.number = number;
+        this.suit = suit;
+        this.isRed = isRed;
+        this.isDora = isDora;
+        setImages();
+    }
+
+    public Tile(Tile tile) {
+        this.number = tile.number;
+        this.suit = tile.suit;
+        this.isRed = tile.isRed;
+        this.isDora = tile.isDora;
+        this.smallTilePath = tile.smallTilePath;
+        this.mediumTilePath = tile.mediumTilePath;
+        this.smallTileFacingDown = tile.smallTileFacingDown;
+        this.smallTileFacingRight = tile.smallTileFacingRight;
+        this.smallTileFacingUp = tile.smallTileFacingUp;
+        this.smallTileFacingLeft = tile.smallTileFacingLeft;
+        this.mediumTileFacingDown = tile.mediumTileFacingDown;
+        this.mediumTileFacingRight = tile.mediumTileFacingRight;
+        this.mediumTileFacingUp = tile.mediumTileFacingUp;
+        this.mediumTileFacingLeft = tile.mediumTileFacingLeft;
+    }
+
     protected void setImages() {
-        StringBuilder str = new StringBuilder();
-        if (this.number != 0) {
-            str.append(this.number);
-        }
-        str.append(this.suit);
-        if (this.isRed) {
-            str.append("red");
-        }
-        str.append(".png");
-        this.smallTilePath = "src/main/java/mahjong/tile/images/international/small/" + str.toString();
-        this.mediumTilePath = "src/main/java/mahjong/tile/images/international/medium/" + str.toString();
+        String fileName = getTileFileName();
+        this.smallTilePath = "src/main/java/mahjong/tile/images/international/small/" + fileName;
+        this.mediumTilePath = "src/main/java/mahjong/tile/images/international/medium/" + fileName;
         try {
             this.smallTileFacingDown = ImageIO.read(new File(smallTilePath));
             this.mediumTileFacingDown = ImageIO.read(new File(mediumTilePath));
         } catch (IOException e) {
-            System.out.println("Failed to load image " + str.toString());
+            System.out.println("Failed to load image " + fileName);
         }
-        this.smallTileFacingLeft = RotateTile.rotate(smallTileFacingDown,90.0d);
+        this.smallTileFacingLeft = RotateTile.rotate(smallTileFacingDown, 90.0d);
         this.smallTileFacingUp = RotateTile.rotate(smallTileFacingDown, 180.0d);
         this.smallTileFacingRight = RotateTile.rotate(smallTileFacingDown, 270.0d);
-        this.mediumTileFacingLeft = RotateTile.rotate(mediumTileFacingDown,90.0d);
+        this.mediumTileFacingLeft = RotateTile.rotate(mediumTileFacingDown, 90.0d);
         this.mediumTileFacingUp = RotateTile.rotate(mediumTileFacingDown, 180.0d);
         this.mediumTileFacingRight = RotateTile.rotate(mediumTileFacingDown, 270.0d);
     }
@@ -68,6 +86,7 @@ public abstract class Tile implements Comparable<Tile>{
     public int compareTo(Tile o) {
         return Comparator.comparing(Tile::getSuit)
                 .thenComparingInt(Tile::getNumber)
+                .thenComparing(Tile::getIsRed)
                 .compare(this, o);
     }
 
@@ -78,6 +97,7 @@ public abstract class Tile implements Comparable<Tile>{
         }
         return Comparator.comparing(Tile::getSuit)
                 .thenComparingInt(Tile::getNumber)
+                .thenComparing(Tile::getIsRed)
                 .compare(this, (Tile) o) == 0;
     }
 
@@ -155,12 +175,16 @@ public abstract class Tile implements Comparable<Tile>{
         return BACK_OF_TILE_MEDIUM;
     }
 
-    public String getTileAsString() {
+    public String getTileFileName() {
         StringBuilder str = new StringBuilder();
         if (number != 0) {
-            str.append(number).append(" ");
+            str.append(number);
         }
         str.append(suit);
+        if (isRed) {
+            str.append("red");
+        }
+        str.append(".png");
         return str.toString();
     }
 }

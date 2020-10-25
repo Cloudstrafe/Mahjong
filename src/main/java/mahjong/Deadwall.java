@@ -35,17 +35,6 @@ public class Deadwall {
         setRevealed(1);
     }
 
-    public String getDoraAsString() {
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < this.revealed; i++) {
-            str.append(doraTiles.get(i).getTileAsString());
-            str.append(", ");
-        }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
-    }
-
     public Deck getDrawTiles() {
         return drawTiles;
     }

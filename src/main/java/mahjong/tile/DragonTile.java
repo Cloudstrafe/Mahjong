@@ -3,11 +3,11 @@ package mahjong.tile;
 public class DragonTile extends Tile {
 
     public DragonTile(String suit)  {
-        this.number = 0;
-        this.suit = suit;
-        this.isRed = false;
-        this.isDora = false;
-        setImages();
+        super(0, suit, false, false);
+    }
+
+    public DragonTile(DragonTile tile) {
+        super(tile);
     }
 
     @Override

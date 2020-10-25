@@ -41,6 +41,10 @@ public class YakuHandler {
         return yaku.stream().anyMatch(y -> y.isValid(player));
     }
 
+//    public static Map<Tile, List <Tile>> getRiichiTiles(Player player) {
+//        Player copyPlayer = new Player()
+//    }
+
     public static boolean hasAPairAndFourSetsOrRuns(Player player) {
         List<HandDetail> handDetails = getHandDetails(player);
         return !handDetails.isEmpty() && handDetails.stream().anyMatch(h -> !h.getValidHands().isEmpty());

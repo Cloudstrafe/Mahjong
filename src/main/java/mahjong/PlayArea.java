@@ -1,7 +1,10 @@
 package mahjong;
 
 import mahjong.gui.*;
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
 import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -33,6 +36,35 @@ public class PlayArea {
         this.meldPanelHolder = new MeldPanelHolder(4, 4, playerNumber, getMeldsXCoordinate(), getMeldsYCoordinate());
         this.discardPanelHolder = new DiscardPanelHolder(4, 6, getDiscardXCoordinate(), getDiscardYCoordinate(), playerNumber);
         this.isMyTurn = false;
+    }
+
+    public PlayArea(PlayArea playArea) {
+        this.hand = playArea.hand.stream().map(t -> {
+            if (t instanceof NumberTile) {
+                return new NumberTile((NumberTile) t);
+            } else if (t instanceof DragonTile) {
+                return new DragonTile((DragonTile) t);
+            } else {
+                return new WindTile((WindTile) t);
+            }
+        }).collect(Collectors.toList());
+        this.melds = playArea.melds.stream().map(Meld::new).collect(Collectors.toList());
+        this.discard = playArea.discard.stream().map(t -> {
+            if (t instanceof NumberTile) {
+                return new NumberTile((NumberTile) t);
+            } else if (t instanceof DragonTile) {
+                return new DragonTile((DragonTile) t);
+            } else {
+                return new WindTile((WindTile) t);
+            }
+        }).collect(Collectors.toList());
+        this.handPanelHolder = playArea.handPanelHolder;
+        this.meldPanelHolder = playArea.meldPanelHolder;
+        this.discardPanelHolder = playArea.discardPanelHolder;
+        this.isDiscardSelected = playArea.isDiscardSelected;
+        this.discardIndex = playArea.discardIndex;
+        this.isMyTurn = playArea.isMyTurn;
+        this.playerNumber = playArea.playerNumber;
     }
 
     private AbstractHandPanelHolder getPlayerSpecificHandPanelHolder() {
@@ -140,6 +172,12 @@ public class PlayArea {
                 meldKan(tile, false);
                 return true;
             }
+        } else {
+            List<Meld> meld = melds.stream().filter(m -> m.getTiles().stream().allMatch(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit()))).collect(Collectors.toList());
+            if (!meld.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+                meld.get(0).getTiles().add(tile);
+                meldPanelHolder.kanAPon(tile, melds.indexOf(meld));
+            }
         }
         return false;
     }
@@ -214,10 +252,13 @@ public class PlayArea {
             for (int i = 0; i < 3; i++) {
                 for (Tile firstTile : chiTiles.get(i)) {
                     for (Tile secondTile : chiTiles.get(i + 1)) {
-                        List<Tile> newCombination = new ArrayList<>();
-                        newCombination.add(firstTile);
-                        newCombination.add(secondTile);
-                        combinations.add(newCombination);
+                        if (combinations.stream().noneMatch(c -> c.get(0).getTileFileName().equals(firstTile.getTileFileName())
+                                && c.get(1).getTileFileName().equals(secondTile.getTileFileName()))) {
+                            List<Tile> newCombination = new ArrayList<>();
+                            newCombination.add(firstTile);
+                            newCombination.add(secondTile);
+                            combinations.add(newCombination);
+                        }
                     }
                 }
             }

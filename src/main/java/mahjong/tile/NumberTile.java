@@ -3,11 +3,11 @@ package mahjong.tile;
 public class NumberTile extends Tile {
 
     public NumberTile(int number, String suit, boolean isRed)  {
-        this.number = number;
-        this.suit = suit;
-        this.isRed = isRed;
-        this.isDora = isRed;
-        setImages();
+        super(number, suit, isRed, isRed);
+    }
+
+    public NumberTile(NumberTile tile) {
+        super(tile);
     }
 
     @Override

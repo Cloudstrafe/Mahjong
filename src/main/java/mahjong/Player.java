@@ -23,6 +23,14 @@ public class Player {
         this.playerNumber = playerNumber;
     }
 
+    public Player (Player player) {
+        this.playArea = new PlayArea(player.playArea);
+        this.seat = player.seat;
+        this.points = player.points;
+        this.isDealer = player.isDealer;
+        this.playerNumber = player.playerNumber;
+    }
+
     public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window) {
         playArea.draw(deck, deadwall, window);
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
