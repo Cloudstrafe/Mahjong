@@ -2,13 +2,51 @@ package mahjong.yaku;
 
 import mahjong.HandDetail;
 import mahjong.Player;
+import mahjong.SuitConstants;
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
 import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class YakuHandler {
+    private static final List<Tile> uniqueTiles = new ArrayList<>(Arrays.asList(
+            new DragonTile(SuitConstants.RED_DRAGON),
+            new DragonTile(SuitConstants.GREEN_DRAGON),
+            new DragonTile(SuitConstants.WHITE_DRAGON),
+            new WindTile(SuitConstants.SOUTH_WIND),
+            new WindTile(SuitConstants.NORTH_WIND),
+            new WindTile(SuitConstants.WEST_WIND),
+            new WindTile(SuitConstants.EAST_WIND),
+            new NumberTile(1, SuitConstants.BAMBOO, false),
+            new NumberTile(2, SuitConstants.BAMBOO, false),
+            new NumberTile(3, SuitConstants.BAMBOO, false),
+            new NumberTile(4, SuitConstants.BAMBOO, false),
+            new NumberTile(5, SuitConstants.BAMBOO, false),
+            new NumberTile(6, SuitConstants.BAMBOO, false),
+            new NumberTile(7, SuitConstants.BAMBOO, false),
+            new NumberTile(8, SuitConstants.BAMBOO, false),
+            new NumberTile(9, SuitConstants.BAMBOO, false),
+            new NumberTile(1, SuitConstants.CHARACTERS, false),
+            new NumberTile(2, SuitConstants.CHARACTERS, false),
+            new NumberTile(3, SuitConstants.CHARACTERS, false),
+            new NumberTile(4, SuitConstants.CHARACTERS, false),
+            new NumberTile(5, SuitConstants.CHARACTERS, false),
+            new NumberTile(6, SuitConstants.CHARACTERS, false),
+            new NumberTile(7, SuitConstants.CHARACTERS, false),
+            new NumberTile(8, SuitConstants.CHARACTERS, false),
+            new NumberTile(9, SuitConstants.CHARACTERS, false),
+            new NumberTile(1, SuitConstants.DOTS, false),
+            new NumberTile(2, SuitConstants.DOTS, false),
+            new NumberTile(3, SuitConstants.DOTS, false),
+            new NumberTile(4, SuitConstants.DOTS, false),
+            new NumberTile(5, SuitConstants.DOTS, false),
+            new NumberTile(6, SuitConstants.DOTS, false),
+            new NumberTile(7, SuitConstants.DOTS, false),
+            new NumberTile(8, SuitConstants.DOTS, false),
+            new NumberTile(9, SuitConstants.DOTS, false)
+    ));
 
     public static boolean hasValidYaku(Player player) {
         AllHonorsYaku allHonorsYaku = new AllHonorsYaku();
@@ -41,9 +79,29 @@ public class YakuHandler {
         return yaku.stream().anyMatch(y -> y.isValid(player));
     }
 
-//    public static Map<Tile, List <Tile>> getRiichiTiles(Player player) {
-//        Player copyPlayer = new Player()
-//    }
+    public static Map<Tile, List<Tile>> getRiichiTiles(Player player) {
+        if (!player.getPlayArea().getMelds().isEmpty()) {
+            return new HashMap<>();
+        }
+        Player copyPlayer = new Player(player);
+        Map<Tile, List<Tile>> riichiMap = new HashMap<>();
+        List<Tile> copyHand = new ArrayList<>(copyPlayer.getPlayArea().getHand());
+        for (Tile discardTile : copyHand) {
+            List<Tile> riichiTiles = new ArrayList<>();
+            copyPlayer.getPlayArea().getHand().remove(discardTile);
+            copyHand.remove(discardTile);
+            for (Tile uniqueTile : uniqueTiles) {
+                copyPlayer.getPlayArea().getHand().add(uniqueTile);
+                if (hasValidYaku(copyPlayer)) {
+                    riichiTiles.add(uniqueTile);
+                }
+                copyPlayer.getPlayArea().getHand().remove(uniqueTile);
+            }
+            riichiMap.put(discardTile, riichiTiles);
+            copyPlayer.getPlayArea().getHand().add(discardTile);
+        }
+        return riichiMap;
+    }
 
     public static boolean hasAPairAndFourSetsOrRuns(Player player) {
         List<HandDetail> handDetails = getHandDetails(player);
@@ -61,7 +119,7 @@ public class YakuHandler {
                     pair.add(hand.get(i));
                     pair.add(hand.get(j));
                     for (int k = 0; k < hand.size(); k++) {
-                        if (k != i && k !=j) {
+                        if (k != i && k != j) {
                             rest.add(hand.get(k));
                         }
                     }
