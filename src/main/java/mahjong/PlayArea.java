@@ -299,6 +299,7 @@ public class PlayArea {
     public void reset() {
         this.hand.clear();
         this.discard.clear();
+        this.melds.clear();
     }
 
     public void setDiscardSelected(boolean discardSelected) {
@@ -403,5 +404,17 @@ public class PlayArea {
 
     public DiscardPanelHolder getDiscardPanelHolder() {
         return discardPanelHolder;
+    }
+
+    public boolean isDiscardSelected() {
+        return isDiscardSelected;
+    }
+
+    public int getDiscardIndex() {
+        return discardIndex;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 }

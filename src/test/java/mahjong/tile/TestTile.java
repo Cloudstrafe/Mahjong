@@ -89,5 +89,33 @@ public class TestTile {
         assertEquals(SuitConstants.RED_DRAGON, t7.getTileFileName());
     }
 
+    @Test
+    public void testCopyConstructors() {
+        //Given
+        Tile t9 =new NumberTile((NumberTile) t1);
+
+        //Expect
+        assertEquals(t9.getNumber(), t1.getNumber());
+        assertEquals(t9.getSuit(), t1.getSuit());
+        assertEquals(t9.isRed, t1.isRed);
+        assertEquals(t9.smallTilePath, t1.smallTilePath);
+        assertEquals(t9.mediumTilePath, t1.mediumTilePath);
+        assertEquals(t9.smallTileFacingDown, t1.smallTileFacingDown);
+        assertEquals(t9.smallTileFacingLeft, t1.smallTileFacingLeft);
+        assertEquals(t9.smallTileFacingUp, t1.smallTileFacingUp);
+        assertEquals(t9.mediumTileFacingDown, t1.mediumTileFacingDown);
+        assertEquals(t9.mediumTileFacingLeft, t1.mediumTileFacingLeft);
+        assertEquals(t9.mediumTileFacingUp, t1.mediumTileFacingUp);
+        assertEquals(t9.mediumTileFacingRight, t1.mediumTileFacingRight);
+        assertEquals(t9, t1);
+
+        //Given
+        t9.setIsDora(true);
+
+        //Expect
+        assertNotEquals(t9.isDora, t1.isDora);
+
+    }
+
 
 }
