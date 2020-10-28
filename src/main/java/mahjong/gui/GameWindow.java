@@ -6,7 +6,9 @@ import mahjong.tile.Tile;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
@@ -52,6 +54,19 @@ public class GameWindow {
             response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, panelArray[0]);
         }
         return response;
+    }
+
+    public Tile getRiichiDiscardChoice(String message, Map<Tile, List<Tile>> options) {
+        Object[] panelArray = new Object[options.size()];
+        List<Tile> keys = new ArrayList<>(options.keySet());
+        for (int i = 0; i < options.size(); i++) {
+            panelArray[i] = new ImageIcon(keys.get(i).getMediumTileFacingDown());
+        }
+        int response = -1;
+        while (response == -1) {
+            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, panelArray[0]);
+        }
+        return keys.get(response);
     }
 
     public int isKanOrPonCallConfirmed(String message) {

@@ -1,10 +1,14 @@
 package mahjong;
 
 import mahjong.gui.GameWindow;
+import mahjong.tile.Tile;
 import mahjong.yaku.YakuHandler;
 
 import javax.swing.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.System.exit;
 
@@ -33,20 +37,31 @@ public class Player {
 
     public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window) {
         playArea.draw(deck, deadwall, window);
-        if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
-            JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
-            exit(0);
-        }
-        playArea.makeDiscardSelection(false, window);
+        turnHandler(window);
     }
 
     public void takeTurnAfterKan(Deadwall deadwall, GameWindow window) {
         playArea.draw(deadwall.getDrawTiles(), deadwall, window);
+        turnHandler(window);
+    }
+
+    private void turnHandler(GameWindow window) {
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             exit(0);
         }
-        playArea.makeDiscardSelection(false, window);
+        Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
+        if (!riichiTiles.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
+            if (riichiTiles.size() > 1) {
+                Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
+                playArea.discard(this.getPlayArea().getHand().indexOf(discardTile));
+
+            } else {
+                playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)));
+            }
+        } else {
+            playArea.makeDiscardSelection(false, window);
+        }
     }
 
     public PlayArea getPlayArea() {
