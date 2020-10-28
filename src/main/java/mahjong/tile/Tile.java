@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Objects;
 
 public abstract class Tile implements Comparable<Tile> {
 
@@ -99,6 +100,11 @@ public abstract class Tile implements Comparable<Tile> {
                 .thenComparingInt(Tile::getNumber)
                 .thenComparing(Tile::getIsRed)
                 .compare(this, (Tile) o) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number, suit, isRed);
     }
 
     public abstract boolean isDragon();

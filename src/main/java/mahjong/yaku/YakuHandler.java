@@ -9,6 +9,7 @@ import mahjong.tile.Tile;
 import mahjong.tile.WindTile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class YakuHandler {
     private static final List<Tile> uniqueTiles = new ArrayList<>(Arrays.asList(
@@ -85,11 +86,18 @@ public class YakuHandler {
         }
         Player copyPlayer = new Player(player);
         Map<Tile, List<Tile>> riichiMap = new HashMap<>();
-        List<Tile> copyHand = new ArrayList<>(copyPlayer.getPlayArea().getHand());
+        List<Tile> copyHand = copyPlayer.getPlayArea().getHand().stream().map(t -> {
+            if (t instanceof NumberTile) {
+                return new NumberTile((NumberTile) t);
+            } else if (t instanceof DragonTile) {
+                return new DragonTile((DragonTile) t);
+            } else {
+                return new WindTile((WindTile) t);
+            }
+        }).collect(Collectors.toList());
         for (Tile discardTile : copyHand) {
             List<Tile> riichiTiles = new ArrayList<>();
             copyPlayer.getPlayArea().getHand().remove(discardTile);
-            copyHand.remove(discardTile);
             for (Tile uniqueTile : uniqueTiles) {
                 copyPlayer.getPlayArea().getHand().add(uniqueTile);
                 if (hasValidYaku(copyPlayer)) {
@@ -97,7 +105,9 @@ public class YakuHandler {
                 }
                 copyPlayer.getPlayArea().getHand().remove(uniqueTile);
             }
-            riichiMap.put(discardTile, riichiTiles);
+            if (!riichiTiles.isEmpty()) {
+                riichiMap.put(discardTile, riichiTiles);
+            }
             copyPlayer.getPlayArea().getHand().add(discardTile);
         }
         return riichiMap;
