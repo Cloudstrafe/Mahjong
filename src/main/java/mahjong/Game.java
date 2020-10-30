@@ -123,26 +123,28 @@ public class Game {
     }
 
     private boolean kanOrPon(Player currentPlayer, Tile discarded, Player player) {
-        player.getPlayArea().displayHandAndMelds();
-        int response = this.window.isKanOrPonCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN_OR_PON, player.getPlayerNumber()));
-        if (response == KAN) {
-            player.getPlayArea().meldKan(discarded, true);
-            if (deadwall.isRoundOver()) {
-                beginNewRound();
+        //player.getPlayArea().displayHandAndMelds();
+        if (!player.isInRiichi()) {
+            int response = this.window.isKanOrPonCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN_OR_PON, player.getPlayerNumber()));
+            if (response == KAN) {
+                player.getPlayArea().meldKan(discarded, true);
+                if (deadwall.isRoundOver()) {
+                    beginNewRound();
+                }
+                callHandler(currentPlayer, player, true);
+                return true;
+            } else if (response == PON) {
+                player.getPlayArea().meldPon(discarded, true);
+                callHandler(currentPlayer, player, false);
+                return true;
             }
-            callHandler(currentPlayer, player, true);
-            return true;
-        } else if (response == PON) {
-            player.getPlayArea().meldPon(discarded, true);
-            callHandler(currentPlayer, player, false);
-            return true;
         }
         return false;
     }
 
     private boolean ponOnly(Player currentPlayer, Tile discarded, Player player) {
-        player.getPlayArea().displayHandAndMelds();
-        if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
+        //player.getPlayArea().displayHandAndMelds();
+        if (!player.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
             player.getPlayArea().meldPon(discarded, true);
             callHandler(currentPlayer, player, false);
             return true;
@@ -160,8 +162,8 @@ public class Game {
     }
 
     private void chi(Player currentPlayer, Player nextPlayer, Tile discarded, List<List<Tile>> possibleChi) {
-        nextPlayer.getPlayArea().displayHandAndMelds();
-        if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
+        //nextPlayer.getPlayArea().displayHandAndMelds();
+        if (!nextPlayer.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
             turnQueue.remove();
             if (possibleChi.size() > 1) {
                 int response = this.window.getChiCallChoice(MessageFormat.format(MessageConstants.MSG_SELECT_CHI_OPTION, nextPlayer.getPlayerNumber()), possibleChi);

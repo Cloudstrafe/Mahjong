@@ -81,12 +81,12 @@ public class TestTile {
 
     @Test
     public void getTileAsString() {
-        assertEquals("1 " + SuitConstants.BAMBOO, t1.getTileFileName());
-        assertEquals("2 " + SuitConstants.BAMBOO, t2.getTileFileName());
-        assertEquals(SuitConstants.GREEN_DRAGON, t4.getTileFileName());
-        assertEquals(SuitConstants.WHITE_DRAGON, t5.getTileFileName());
-        assertEquals(SuitConstants.WEST_WIND, t6.getTileFileName());
-        assertEquals(SuitConstants.RED_DRAGON, t7.getTileFileName());
+        assertEquals("1" + SuitConstants.BAMBOO + ".png", t1.getTileFileName());
+        assertEquals("2" + SuitConstants.BAMBOO + ".png", t2.getTileFileName());
+        assertEquals(SuitConstants.GREEN_DRAGON + ".png", t4.getTileFileName());
+        assertEquals(SuitConstants.WHITE_DRAGON + ".png", t5.getTileFileName());
+        assertEquals(SuitConstants.WEST_WIND + ".png", t6.getTileFileName());
+        assertEquals(SuitConstants.RED_DRAGON + ".png", t7.getTileFileName());
     }
 
     @Test

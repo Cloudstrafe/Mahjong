@@ -18,6 +18,9 @@ public class Player {
     private int points;
     private boolean isDealer;
     private final int playerNumber;
+    private boolean isInRiichi;
+    private boolean hasRiichiTileInDiscard;
+    private int sizeOfDiscardAfterRiichi;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
         this.playArea = new PlayArea(playerNumber);
@@ -25,43 +28,61 @@ public class Player {
         this.points = 25000;
         this.isDealer = isDealer;
         this.playerNumber = playerNumber;
+        this.isInRiichi = false;
+        hasRiichiTileInDiscard = false;
     }
 
-    public Player (Player player) {
+    public Player(Player player) {
         this.playArea = new PlayArea(player.playArea);
         this.seat = player.seat;
         this.points = player.points;
         this.isDealer = player.isDealer;
         this.playerNumber = player.playerNumber;
+        this.isInRiichi = false;
+        hasRiichiTileInDiscard = false;
     }
 
     public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window) {
-        playArea.draw(deck, deadwall, window);
-        turnHandler(window);
+        Tile drawnTile = playArea.draw(deck, deadwall, window);
+        turnHandler(window, drawnTile);
     }
 
     public void takeTurnAfterKan(Deadwall deadwall, GameWindow window) {
-        playArea.draw(deadwall.getDrawTiles(), deadwall, window);
-        turnHandler(window);
+        Tile drawnTile = playArea.draw(deadwall.getDrawTiles(), deadwall, window);
+        turnHandler(window, drawnTile);
     }
 
-    private void turnHandler(GameWindow window) {
+    private void turnHandler(GameWindow window, Tile drawnTile) {
+        if (isInRiichi && !hasRiichiTileInDiscard) {
+            hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
+        }
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             exit(0);
         }
-        Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
-        if (!riichiTiles.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
-            if (riichiTiles.size() > 1) {
-                Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
-                playArea.discard(this.getPlayArea().getHand().indexOf(discardTile));
-
+        if (!isInRiichi) {
+            Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
+            if (!riichiTiles.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
+                if (riichiTiles.size() > 1) {
+                    Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
+                    isInRiichi = true;
+                    playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
+                    sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
+                } else {
+                    isInRiichi = true;
+                    playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
+                    sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
+                }
             } else {
-                playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)));
+                playArea.makeDiscardSelection(false, window);
             }
         } else {
-            playArea.makeDiscardSelection(false, window);
+            playArea.discard(playArea.getHand().indexOf(drawnTile), !hasRiichiTileInDiscard);
         }
+    }
+
+    public boolean isInRiichi() {
+        return isInRiichi;
     }
 
     public PlayArea getPlayArea() {

@@ -141,15 +141,16 @@ public class PlayArea {
         return discard;
     }
 
-    public void draw(Deck deck, Deadwall deadwall, GameWindow window) {
+    public Tile draw(Deck deck, Deadwall deadwall, GameWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
         window.getGameInfoPanel().getDeckTileCount().setText("x" + deck.getTotalTiles());
         this.hand.add(tile);
         displayHandAndMelds();
         if (isKan(tile, window)) {
-            draw(deadwall.getDrawTiles(), deadwall, window);
+            return draw(deadwall.getDrawTiles(), deadwall, window);
         }
+        return tile;
     }
 
     public void setup(Deck deck) {
@@ -218,13 +219,13 @@ public class PlayArea {
         this.meldPanelHolder.displayMeld(meld);
     }
 
-    public void discard(int index) {
+    public void discard(int index, boolean discardSideways) {
         this.handPanelHolder.displayNotMyTurnBorder();
         this.handPanelHolder.getMainPanel().repaint();
         Tile tile = this.hand.remove(index);
         this.discard.add(tile);
         this.handPanelHolder.displayHand();
-        this.discardPanelHolder.displayDiscard(tile);
+        this.discardPanelHolder.displayDiscard(tile, discardSideways);
         this.isDiscardSelected = false;
         this.setDiscardIndex(-1);
     }
@@ -289,7 +290,7 @@ public class PlayArea {
         while (!isDiscardSelected) {
             //Waiting for the player to click on the tile they want to discard
         }
-        discard(discardIndex);
+        discard(discardIndex, false);
     }
 
     public boolean isHandOpen() {

@@ -23,8 +23,12 @@ public class DiscardPanelHolder extends TilePanelHolder {
         this.mainPanel.setBounds(x, y, PANEL_WIDTH, PANEL_HEIGHT);
     }
 
-    public void displayDiscard(Tile tile) {
-        this.labels[currentRow][currentCol].setIcon(new ImageIcon(tile.getSmallTileFacingDown()));
+    public void displayDiscard(Tile tile, boolean discardSideways) {
+        if (!discardSideways) {
+            this.labels[currentRow][currentCol].setIcon(new ImageIcon(tile.getSmallTileFacingDown()));
+        } else {
+            this.labels[currentRow][currentCol].setIcon(new ImageIcon(tile.getSmallTileFacingRight()));
+        }
         currentCol++;
         if (currentCol == COL_MAX) {
             currentCol = 0;
