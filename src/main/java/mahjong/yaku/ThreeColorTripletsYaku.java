@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ThreeColorTriplets extends AbstractYaku {
+public class ThreeColorTripletsYaku extends AbstractYaku {
     @Override
     public boolean isMangan() {
         return false;

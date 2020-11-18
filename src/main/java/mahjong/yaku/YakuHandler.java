@@ -49,6 +49,8 @@ public class YakuHandler {
             new NumberTile(9, SuitConstants.DOTS, false)
     ));
 
+    //TODO: make static variable holding all the hand details for current player
+
     public static boolean hasValidYaku(Player player) {
         AllHonorsYaku allHonorsYaku = new AllHonorsYaku();
         AllSimplesYaku allSimplesYaku = new AllSimplesYaku();
@@ -116,6 +118,15 @@ public class YakuHandler {
     public static boolean hasAPairAndFourSetsOrRuns(Player player) {
         List<HandDetail> handDetails = getHandDetails(player);
         return !handDetails.isEmpty() && handDetails.stream().anyMatch(h -> !h.getValidHands().isEmpty());
+    }
+
+    public static boolean areRunsIdentical(List<Tile> runOne, List<Tile> runTwo) {
+        return runOne.get(0).getSuit().equals(runTwo.get(0).getSuit()) &&
+                runOne.get(0).getNumber() == runTwo.get(0).getNumber() &&
+                runOne.get(1).getSuit().equals(runTwo.get(1).getSuit()) &&
+                runOne.get(1).getNumber() == runTwo.get(1).getNumber() &&
+                runOne.get(2).getSuit().equals(runTwo.get(2).getSuit()) &&
+                runOne.get(2).getNumber() == runTwo.get(2).getNumber();
     }
 
     public static List<HandDetail> getHandDetails(Player player) {

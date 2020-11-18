@@ -1,12 +1,12 @@
 package mahjong.yaku;
 
+import mahjong.HandDetail;
+import mahjong.Meld;
 import mahjong.Player;
-import mahjong.tile.Tile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class OneSetOfIdenticalSequencesYaku extends AbstractYaku {
+public class TwinRunsYaku extends AbstractYaku {
     @Override
     public boolean isMangan() {
         return false;
@@ -30,9 +30,18 @@ public class OneSetOfIdenticalSequencesYaku extends AbstractYaku {
     @Override
     public boolean isValid(Player player) {
         if (player.getPlayArea().getMelds().isEmpty()) {
-            List<Tile> unique = player.getPlayArea().getHand().stream().filter(distinctByKey(t -> t.getNumber() + t.getSuit())).distinct().collect(Collectors.toList());
-            List<Long> counts = unique.stream().map(t -> player.getPlayArea().getHand().stream().filter(i -> i.getSuit().equals(t.getSuit()) && i.getNumber() == t.getNumber()).count()).sorted().collect(Collectors.toList());
-            //TODO: figure out how to finish this
+            List<HandDetail> handDetails = YakuHandler.getHandDetails(player);
+            for (HandDetail handDetail : handDetails) {
+                for (List<Meld> validHand : handDetail.getValidHands()) {
+                    for (int i = 0; i < validHand.size(); i++) {
+                        for (int j = i + 1; j < validHand.size(); j++) {
+                            if (YakuHandler.areRunsIdentical(validHand.get(i).getTiles(), validHand.get(j).getTiles())) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
