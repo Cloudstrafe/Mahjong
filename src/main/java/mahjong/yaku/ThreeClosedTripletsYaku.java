@@ -1,10 +1,10 @@
 package mahjong.yaku;
 
+import mahjong.HandDetail;
+import mahjong.Meld;
 import mahjong.Player;
-import mahjong.tile.Tile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ThreeClosedTripletsYaku extends AbstractYaku {
     @Override
@@ -29,20 +29,19 @@ public class ThreeClosedTripletsYaku extends AbstractYaku {
 
     @Override
     public boolean isValid(Player player) {
-        if (player.getPlayArea().getMelds().size() < 2) {
-            List<Tile> combined = player.getPlayArea().getCombineHandAndMelds();
-            List<Tile> unique = combined.stream().filter(distinctByKey(t -> t.getNumber() + t.getSuit())).distinct().collect(Collectors.toList());
-            if (unique.size() == 5) {
-                List<Long> counts = unique.stream().map(t -> combined.stream().filter(i -> i.getSuit().equals(t.getSuit()) && i.getNumber() == t.getNumber()).count()).sorted().collect(Collectors.toList());
-                if (counts.get(0) == 2) {
-                    return counts.get(1) > 2 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
+        List<HandDetail> handDetails = YakuHandler.getHandDetails(player);
+        int totalClosedTriplets = 0;
+        for (HandDetail handDetail : handDetails) {
+            for (List<Meld> validHand : handDetail.getValidHands()) {
+                for (Meld meld : validHand) {
+                    if (meld.getTiles().get(0).getNumber() == meld.getTiles().get(1).getNumber() && meld.getTiles().get(0).getSuit().equals(meld.getTiles().get(1).getSuit()) && !meld.isOpen()) {
+                        totalClosedTriplets++;
+                        if (totalClosedTriplets == 3) {
+                            return true;
+                        }
+                    }
                 }
-            }
-            if (unique.size() == 7) {
-                List<Long> counts = unique.stream().map(t -> combined.stream().filter(i -> i.getSuit().equals(t.getSuit()) && i.getNumber() == t.getNumber()).count()).sorted().collect(Collectors.toList());
-                if (counts.get(4) == 2) {
-                    return counts.get(5) > 2 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
-                }
+                totalClosedTriplets = 0;
             }
         }
         return false;

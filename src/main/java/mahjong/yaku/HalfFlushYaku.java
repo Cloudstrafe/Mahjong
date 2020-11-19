@@ -34,7 +34,7 @@ public class HalfFlushYaku extends AbstractYaku {
             }
         }
         String finalSuit = suit;
-        return player.getPlayArea().getCombineHandAndMelds().stream().allMatch(t -> finalSuit.equals(t.getSuit()) || t.isHonor()) && YakuHandler.hasAPairAndFourSetsOrRuns(player);
+        return !"".equals(suit) && player.getPlayArea().getCombineHandAndMelds().stream().allMatch(t -> finalSuit.equals(t.getSuit()) || t.isHonor()) && YakuHandler.hasAPairAndFourSetsOrRuns(player);
     }
 
     @Override

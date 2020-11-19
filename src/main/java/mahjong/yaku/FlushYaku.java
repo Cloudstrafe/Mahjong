@@ -1,7 +1,6 @@
 package mahjong.yaku;
 
 import mahjong.Player;
-import mahjong.tile.Tile;
 
 public class FlushYaku extends  AbstractYaku {
     @Override
@@ -27,11 +26,10 @@ public class FlushYaku extends  AbstractYaku {
     @Override
     public boolean isValid(Player player) {
         String suit = "";
-        for (Tile tile : player.getPlayArea().getCombineHandAndMelds()) {
-            if (tile.isNumber()) {
-                suit = tile.getSuit();
-                break;
-            }
+        if (!player.getPlayArea().getHand().isEmpty()) {
+            suit = player.getPlayArea().getHand().get(0).getSuit();
+        } else {
+            suit = player.getPlayArea().getMelds().get(0).getTiles().get(0).getSuit();
         }
         String finalSuit = suit;
         return player.getPlayArea().getCombineHandAndMelds().stream().allMatch(t -> finalSuit.equals(t.getSuit())) && YakuHandler.hasAPairAndFourSetsOrRuns(player);

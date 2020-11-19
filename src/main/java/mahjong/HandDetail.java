@@ -79,7 +79,7 @@ public class HandDetail {
                             run.add(third);
                             Meld meld = new Meld(run, false, false, -1);
                             allSets.add(meld);
-                        }
+                        } // TODO: possibly add a catch here for kans???
                     }
                 }
             }
