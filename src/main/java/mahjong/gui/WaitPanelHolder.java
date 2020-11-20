@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class WaitPanelHolder extends TilePanelHolder {
-    public WaitPanelHolder(Tile key, List<Tile> waits, int index) {
+    public WaitPanelHolder(Tile key, List<Tile> waits) {
         super(2, 2, 1);
         mainPanel.setLayout(new GridLayout(3, 2));
         labels[0][0].setText("Discard:");
@@ -18,7 +18,6 @@ public class WaitPanelHolder extends TilePanelHolder {
         JButton button = new JButton("Select");
         button.addActionListener(e -> {
             JOptionPane pane = getOptionPane((JComponent) e.getSource());
-            // set the value of the option pane
             pane.setValue(mainPanel);
         });
         mainPanel.add(button);

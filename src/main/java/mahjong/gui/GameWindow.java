@@ -60,8 +60,7 @@ public class GameWindow {
         Object[] panelArray = new Object[options.size()];
         List<Tile> keys = new ArrayList<>(options.keySet());
         for (int i = 0; i < options.size(); i++) {
-            //panelArray[i] = new ImageIcon(keys.get(i).getMediumTileFacingDown());
-            WaitPanelHolder waitPanelHolder = new WaitPanelHolder(keys.get(i), options.get(keys.get(i)), i);
+            WaitPanelHolder waitPanelHolder = new WaitPanelHolder(keys.get(i), options.get(keys.get(i)));
             panelArray[i] = waitPanelHolder.getMainPanel();
         }
         int response = -1;
