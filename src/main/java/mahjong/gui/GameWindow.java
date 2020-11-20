@@ -60,11 +60,13 @@ public class GameWindow {
         Object[] panelArray = new Object[options.size()];
         List<Tile> keys = new ArrayList<>(options.keySet());
         for (int i = 0; i < options.size(); i++) {
-            panelArray[i] = new ImageIcon(keys.get(i).getMediumTileFacingDown());
+            //panelArray[i] = new ImageIcon(keys.get(i).getMediumTileFacingDown());
+            WaitPanelHolder waitPanelHolder = new WaitPanelHolder(keys.get(i), options.get(keys.get(i)), i);
+            panelArray[i] = waitPanelHolder.getMainPanel();
         }
         int response = -1;
         while (response == -1) {
-            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, panelArray[0]);
+            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, null);
         }
         return keys.get(response);
     }
