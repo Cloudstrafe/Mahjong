@@ -3,7 +3,7 @@ package mahjong.yaku;
 import mahjong.Player;
 import mahjong.tile.Tile;
 
-public class FlushYaku extends  AbstractYaku {
+public class AllGreenYaku extends AbstractYaku {
     @Override
     public boolean isMangan() {
         return false;
@@ -11,12 +11,12 @@ public class FlushYaku extends  AbstractYaku {
 
     @Override
     public int getClosedPoints() {
-        return 6;
+        return 0;
     }
 
     @Override
     public int getOpenPoints() {
-        return 5;
+        return 0;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class FlushYaku extends  AbstractYaku {
 
     @Override
     public boolean isValid(Player player) {
-        return player.getPlayArea().getCombineHandAndMelds().stream().map(Tile::getSuit).distinct().count() == 1 && YakuHandler.hasAPairAndFourSetsOrRuns(player);
+        return player.getPlayArea().getCombineHandAndMelds().stream().allMatch(Tile::isGreen) && YakuHandler.hasAPairAndFourSetsOrRuns(player);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class FlushYaku extends  AbstractYaku {
 
     @Override
     public boolean isYakuman() {
-        return false;
+        return true;
     }
 
     @Override

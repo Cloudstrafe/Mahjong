@@ -1,5 +1,7 @@
 package mahjong.tile;
 
+import mahjong.SuitConstants;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,6 +15,7 @@ public abstract class Tile implements Comparable<Tile> {
     protected String suit;
     protected boolean isRed;
     protected boolean isDora;
+    protected boolean isGreen;
     protected String smallTilePath;
     protected String mediumTilePath;
     protected BufferedImage smallTileFacingDown;
@@ -45,6 +48,8 @@ public abstract class Tile implements Comparable<Tile> {
         this.suit = suit;
         this.isRed = isRed;
         this.isDora = isDora;
+        this.isGreen = (suit.equals(SuitConstants.BAMBOO) && (number == 2 || number == 3 || number == 4 || number == 6 || number == 8)) ||
+                suit.equals(SuitConstants.GREEN_DRAGON);
         setImages();
     }
 
@@ -53,6 +58,7 @@ public abstract class Tile implements Comparable<Tile> {
         this.suit = tile.suit;
         this.isRed = tile.isRed;
         this.isDora = tile.isDora;
+        this.isGreen = tile.isGreen;
         this.smallTilePath = tile.smallTilePath;
         this.mediumTilePath = tile.mediumTilePath;
         this.smallTileFacingDown = tile.smallTileFacingDown;
@@ -120,6 +126,8 @@ public abstract class Tile implements Comparable<Tile> {
     public abstract boolean isTerminal();
 
     public abstract boolean isHonor();
+
+    public abstract boolean isGreen();
 
     public boolean getIsDora() {
         return isDora;

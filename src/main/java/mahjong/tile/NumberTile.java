@@ -44,4 +44,8 @@ public class NumberTile extends Tile {
     public boolean isHonor() {
         return false;
     }
+
+    public boolean isGreen() {
+        return isGreen;
+    }
 }

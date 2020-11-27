@@ -82,7 +82,7 @@ public class YakuHandler {
         return yaku.stream().anyMatch(y -> y.isValid(player));
     }
 
-    public static Map<Tile, List<Tile>> getRiichiTiles(Player player) {
+    public static Map<Tile, List<Tile>> getRiichiTiles(Player player) { //TODO: Update riichi to not check for valid yaku outside of seven pairs, just check for tenpai
         if (!player.getPlayArea().getMelds().isEmpty()) {
             return new HashMap<>();
         }
@@ -126,6 +126,12 @@ public class YakuHandler {
                 runOne.get(1).getSuit().equals(runTwo.get(1).getSuit()) &&
                 runOne.get(1).getNumber() == runTwo.get(1).getNumber() &&
                 runOne.get(2).getSuit().equals(runTwo.get(2).getSuit()) &&
+                runOne.get(2).getNumber() == runTwo.get(2).getNumber();
+    }
+
+    public static boolean areRunsSameNumber(List<Tile> runOne, List<Tile> runTwo) {
+        return runOne.get(0).getNumber() == runTwo.get(0).getNumber() &&
+                runOne.get(1).getNumber() == runTwo.get(1).getNumber() &&
                 runOne.get(2).getNumber() == runTwo.get(2).getNumber();
     }
 

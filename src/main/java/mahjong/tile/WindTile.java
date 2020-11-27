@@ -46,4 +46,9 @@ public class WindTile extends Tile {
     public boolean isHonor() {
         return true;
     }
+
+    @Override
+    public boolean isGreen() {
+        return isGreen;
+    }
 }

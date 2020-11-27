@@ -44,4 +44,9 @@ public class DragonTile extends Tile {
     public boolean isHonor() {
         return true;
     }
+
+    @Override
+    public boolean isGreen() {
+        return isGreen;
+    }
 }
