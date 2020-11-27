@@ -36,9 +36,7 @@ public class TerminalOrHonorInEachSetYaku extends AbstractYaku {
                 for (List<Meld> validHand : handDetail.getValidHands()) {
                     valid = true;
                     for (Meld meld : validHand) {
-                        if (meld.getTiles().stream().anyMatch(t -> t.isHonor() || t.isTerminal())) {
-                            continue;
-                        } else {
+                        if (meld.getTiles().stream().noneMatch(t -> t.isHonor() || t.isTerminal())) {
                             valid = false;
                             break;
                         }

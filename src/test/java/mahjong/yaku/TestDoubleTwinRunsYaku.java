@@ -64,7 +64,7 @@ public class TestDoubleTwinRunsYaku {
     }
 
     @Test
-    public void fourIdenticalSequencesIsValid() {
+    public void fourIdenticalSequencesIsNotValid() {
         Tile t1 = new NumberTile(1, SuitConstants.BAMBOO, false);
         Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
         Tile t3 = new NumberTile(3, SuitConstants.BAMBOO, false);
@@ -86,7 +86,7 @@ public class TestDoubleTwinRunsYaku {
         player.setPlayArea(playArea);
 
         //Expect
-        assertTrue(doubleTwinRunsYaku.isValid(player));
+        assertFalse(doubleTwinRunsYaku.isValid(player));
     }
 
     @Test

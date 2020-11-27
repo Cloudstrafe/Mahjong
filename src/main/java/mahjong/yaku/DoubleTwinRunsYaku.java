@@ -34,18 +34,8 @@ public class DoubleTwinRunsYaku extends AbstractYaku {
             List<HandDetail> handDetails = YakuHandler.getHandDetails(player);
             for (HandDetail handDetail : handDetails) {
                 for (List<Meld> validHand : handDetail.getValidHands()) {
-                    int count = 0;
-                    for (int i = 0; i < validHand.size(); i++) {
-                        for (int j = i + 1; j < validHand.size(); j++) {
-                            if (YakuHandler.areRunsIdentical(validHand.get(i).getTiles(), validHand.get(j).getTiles())) {
-                                count++;
-                                i = j;
-                                if (count >= 2) {
-                                    return true;
-                                }
-                                break;
-                            }
-                        }
+                    if (validHand.stream().allMatch(m1 -> validHand.stream().filter(m2 -> YakuHandler.areRunsIdentical(m1.getTiles(), m2.getTiles())).count() == 2)) {
+                        return true;
                     }
                 }
             }
