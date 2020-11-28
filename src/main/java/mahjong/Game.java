@@ -79,6 +79,7 @@ public class Game {
         }
         if (!isRoundOver) {
             JOptionPane.showMessageDialog(this.window.getWindow(), MessageConstants.MSG_EMPTY_DECK);
+            ExhaustiveDraw.tenpaiPayout(turnQueue);
             beginNewRound();
         }
     }
@@ -123,7 +124,6 @@ public class Game {
     }
 
     private boolean kanOrPon(Player currentPlayer, Tile discarded, Player player) {
-        //player.getPlayArea().displayHandAndMelds();
         if (!player.isInRiichi()) {
             int response = this.window.isKanOrPonCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN_OR_PON, player.getPlayerNumber()));
             if (response == KAN) {
@@ -143,7 +143,6 @@ public class Game {
     }
 
     private boolean ponOnly(Player currentPlayer, Tile discarded, Player player) {
-        //player.getPlayArea().displayHandAndMelds();
         if (!player.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
             player.getPlayArea().meldPon(discarded, true);
             callHandler(currentPlayer, player, false);
