@@ -31,7 +31,7 @@ public class TilePanelHolder {
         }
     }
 
-    protected void clearAll() {
+    public void clearAll() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 this.labels[i][j].setIcon(null);

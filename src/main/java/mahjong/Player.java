@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.System.exit;
-
 public class Player {
     private PlayArea playArea;
     private String seat;
@@ -42,23 +40,27 @@ public class Player {
         hasRiichiTileInDiscard = false;
     }
 
-    public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window) {
+    public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window, Game game) {
         Tile drawnTile = playArea.draw(deck, deadwall, window);
-        turnHandler(window, drawnTile);
+        turnHandler(window, drawnTile, game);
     }
 
-    public void takeTurnAfterKan(Deadwall deadwall, GameWindow window) {
+    public void takeTurnAfterKan(Deadwall deadwall, GameWindow window, Game game) {
         Tile drawnTile = playArea.draw(deadwall.getDrawTiles(), deadwall, window);
-        turnHandler(window, drawnTile);
+        turnHandler(window, drawnTile, game);
     }
 
-    private void turnHandler(GameWindow window, Tile drawnTile) {
+    private void turnHandler(GameWindow window, Tile drawnTile, Game game) {
         if (isInRiichi && !hasRiichiTileInDiscard) {
             hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
         }
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
-            exit(0);
+            game.getTurnQueue().add(this);
+            if (!isDealer) {
+                game.advanceRound();
+            }
+            game.beginNewRound();
         }
         if (!isInRiichi) {
             Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
@@ -79,6 +81,11 @@ public class Player {
         } else {
             playArea.discard(playArea.getHand().indexOf(drawnTile), !hasRiichiTileInDiscard);
         }
+    }
+
+    public void reset() {
+        isInRiichi = false;
+        hasRiichiTileInDiscard = false;
     }
 
     public boolean isInRiichi() {

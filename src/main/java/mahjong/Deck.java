@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Deck {
     private final List<Tile> wall;
-    private List<Tile> drawn;
+    private final List<Tile> drawn;
     private int totalTiles;
 
     public Deck() {
@@ -19,7 +19,7 @@ public class Deck {
         this.drawn = new ArrayList<>();
         buildDeck();
         this.totalTiles = this.wall.size();
-        shuffle();
+        reset();
     }
 
     public Deck(List<Tile> tiles) {
@@ -56,7 +56,7 @@ public class Deck {
         createNumberTiles(this.wall);
     }
 
-    public void shuffle() {
+    public void reset() {
         this.wall.addAll(this.drawn);
         this.drawn.clear();
         this.totalTiles = this.wall.size();

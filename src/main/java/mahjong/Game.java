@@ -7,11 +7,8 @@ import mahjong.yaku.YakuHandler;
 
 import javax.swing.*;
 import java.text.MessageFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
-import static java.lang.System.exit;
 import static mahjong.SuitConstants.*;
 
 public class Game {
@@ -26,7 +23,7 @@ public class Game {
     private boolean isRoundOver;
     private int roundNumber;
     private String roundWind;
-    private static final String[] windArray = {EAST_WIND, SOUTH_WIND, WEST_WIND, NORTH_WIND};
+    private static final List<String> windArray = new ArrayList<>(Arrays.asList(EAST_WIND, SOUTH_WIND, WEST_WIND, NORTH_WIND));
     private static final int KAN = 0;
     private static final int PON = 1;
 
@@ -50,12 +47,17 @@ public class Game {
 
     private void setupRound() {
         RoundWindYaku.setRoundWind(roundWind);
-        this.deck.shuffle();
+        this.deck.reset();
+        playerOne.reset();
+        playerTwo.reset();
+        playerThree.reset();
+        playerFour.reset();
         this.playerOne.getPlayArea().setup(deck);
         this.playerTwo.getPlayArea().setup(deck);
         this.playerThree.getPlayArea().setup(deck);
         this.playerFour.getPlayArea().setup(deck);
         this.deadwall.setup(deck);
+        putDealerAtFrontOfPlayerQueue();
         window.getDoraPanelHolder().reset();
         window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(0));
         this.window.getGameInfoPanel().getCurrentRoundNumber().setText(Integer.toString(roundNumber));
@@ -70,16 +72,24 @@ public class Game {
         this.window.getGameInfoPanel().getPlayerFourSeat().setText(playerFour.getSeat().toUpperCase());
     }
 
+    private void putDealerAtFrontOfPlayerQueue() {
+        while (!turnQueue.peek().isDealer()) {
+            turnQueue.add(turnQueue.remove());
+        }
+    }
+
     private void playRound() {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            currentPlayer.takeTurn(deck, deadwall, window);
+            currentPlayer.takeTurn(deck, deadwall, window, this);
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
         }
         if (!isRoundOver) {
             JOptionPane.showMessageDialog(this.window.getWindow(), MessageConstants.MSG_EMPTY_DECK);
-            ExhaustiveDraw.tenpaiPayout(turnQueue);
+            if (!ExhaustiveDraw.tenpaiPayout(turnQueue)) {
+                advanceRound();
+            }
             beginNewRound();
         }
     }
@@ -95,7 +105,11 @@ public class Game {
                 if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
                     player.getPlayArea().getHand().add(discarded);
                     JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
-                    exit(0);
+                    turnQueue.add(player);
+                    if (!player.isDealer()) {
+                        advanceRound();
+                    }
+                    beginNewRound();
                 }
             } else {
                 player.getPlayArea().getHand().remove(discarded);
@@ -180,7 +194,7 @@ public class Game {
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true, window);
         } else {
-            callingPlayer.takeTurnAfterKan(deadwall, window);
+            callingPlayer.takeTurnAfterKan(deadwall, window, this);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
             window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(deadwall.getRevealed()));
         }
@@ -198,8 +212,29 @@ public class Game {
         return NORTH;
     }
 
+    public void advanceRound() {
+        if (roundNumber == 4) {
+            roundWind = windArray.get(windArray.indexOf(roundWind) + 1);    //technically should check in case of going out of bounds, extremely unlikely to happen
+            roundNumber = 1;
+        } else {
+            roundNumber++;
+        }
+        for (Player player : turnQueue) {
+            int index = windArray.indexOf(player.getSeat()) - 1;
+            if (index == -1) {
+                index = 3;
+            }
+            player.setSeat(windArray.get(index));
+            player.setDealer(index == 0);
+        }
+    }
+
     public void beginNewRound() {
         setupRound();
         playRound();
+    }
+
+    public Queue<Player> getTurnQueue() {
+        return turnQueue;
     }
 }

@@ -162,6 +162,7 @@ public class PlayArea {
 //    }
     //This is a debug method, set to put players in riichi instantly
     public void setup(Deck deck) {
+        reset();
         Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
         Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
         Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
@@ -331,6 +332,11 @@ public class PlayArea {
         this.hand.clear();
         this.discard.clear();
         this.melds.clear();
+        discardIndex = -1;
+        handPanelHolder.clearAll();
+        discardPanelHolder.clearAll();
+        meldPanelHolder.clearAll();
+        isMyTurn = false;
     }
 
     public void setDiscardSelected(boolean discardSelected) {

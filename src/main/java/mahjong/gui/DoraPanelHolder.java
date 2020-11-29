@@ -34,7 +34,7 @@ public class DoraPanelHolder extends TilePanelHolder {
         currentCol = 0;
     }
 
-    protected void clearAll() {
+    public void clearAll() {
         super.clearAll();
         reset();
     }

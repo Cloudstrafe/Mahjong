@@ -38,7 +38,7 @@ public class MeldPanelHolder extends TilePanelHolder {
     }
 
     @Override
-    protected void clearAll() {
+    public void clearAll() {
         super.clearAll();
         currentRow = 0;
     }

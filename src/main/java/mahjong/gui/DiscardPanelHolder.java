@@ -37,7 +37,7 @@ public class DiscardPanelHolder extends TilePanelHolder {
     }
 
     @Override
-    protected void clearAll() {
+    public void clearAll() {
         super.clearAll();
         currentRow = 0;
         currentCol = 0;

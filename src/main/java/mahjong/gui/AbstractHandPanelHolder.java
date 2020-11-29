@@ -46,6 +46,12 @@ public abstract class AbstractHandPanelHolder extends TilePanelHolder {
 
     public abstract void displayHand();
 
+    @Override
+    public void clearAll() {
+        super.clearAll();
+        handBorder.setBorder(notMyTurnBorder);
+    }
+
     protected abstract void onMouseClick(MouseEvent e);
 
     protected class GUIListener implements MouseListener {
