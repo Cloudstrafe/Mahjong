@@ -19,6 +19,9 @@ public class Player {
     private boolean isInRiichi;
     private boolean hasRiichiTileInDiscard;
     private int sizeOfDiscardAfterRiichi;
+    private List<Tile> waits;
+    private boolean isInTemporaryFuriten;
+    private boolean isInPermanentFuriten;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
         this.playArea = new PlayArea(playerNumber);
@@ -28,6 +31,9 @@ public class Player {
         this.playerNumber = playerNumber;
         this.isInRiichi = false;
         hasRiichiTileInDiscard = false;
+        waits = new ArrayList<>();
+        isInTemporaryFuriten = false;
+        isInPermanentFuriten = false;
     }
 
     public Player(Player player) {
@@ -36,8 +42,11 @@ public class Player {
         this.points = player.points;
         this.isDealer = player.isDealer;
         this.playerNumber = player.playerNumber;
-        this.isInRiichi = false;
-        hasRiichiTileInDiscard = false;
+        this.isInRiichi = player.isInRiichi;
+        hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
+        this.waits = player.waits;
+        this.isInTemporaryFuriten = player.isInTemporaryFuriten;
+        this.isInPermanentFuriten = player.isInPermanentFuriten;
     }
 
     public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window, Game game) {
@@ -51,6 +60,7 @@ public class Player {
     }
 
     private void turnHandler(GameWindow window, Tile drawnTile, Game game) {
+        isInTemporaryFuriten = false;
         if (isInRiichi && !hasRiichiTileInDiscard) {
             hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
         }
@@ -68,24 +78,44 @@ public class Player {
                 if (riichiTiles.size() > 1) {
                     Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
                     isInRiichi = true;
+                    waits = riichiTiles.get(discardTile);
                     playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
-                    sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 } else {
                     isInRiichi = true;
+                    waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
                     playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
-                    sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 }
+                sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
+                isInPermanentFuriten = isInFuriten();
             } else {
                 playArea.makeDiscardSelection(false, window);
+                isInTemporaryFuriten = isInFuriten();
+                waits = YakuHandler.getWaitTiles(new Player(this));
             }
         } else {
             playArea.discard(playArea.getHand().indexOf(drawnTile), !hasRiichiTileInDiscard);
+            isInTemporaryFuriten = isInFuriten();
+            waits = YakuHandler.getWaitTiles(new Player(this));
         }
+    }
+
+    public boolean isInFuriten() {
+        for (Tile wait : waits) {
+            for (Tile discard : getPlayArea().getDiscard()) {
+                if (discard.equals(wait)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public void reset() {
         isInRiichi = false;
         hasRiichiTileInDiscard = false;
+        waits.clear();
+        isInTemporaryFuriten = false;
+        isInPermanentFuriten = false;
     }
 
     public boolean isInRiichi() {
@@ -128,4 +158,23 @@ public class Player {
         return playerNumber;
     }
 
+    public void setWaits(List<Tile> waits) {
+        this.waits = waits;
+    }
+
+    public void setInTemporaryFuriten(boolean inTemporaryFuriten) {
+        isInTemporaryFuriten = inTemporaryFuriten;
+    }
+
+    public void setInPermanentFuriten(boolean inPermanentFuriten) {
+        isInPermanentFuriten = inPermanentFuriten;
+    }
+
+    public boolean isInTemporaryFuriten() {
+        return isInTemporaryFuriten;
+    }
+
+    public boolean isInPermanentFuriten() {
+        return isInPermanentFuriten;
+    }
 }

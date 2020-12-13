@@ -99,7 +99,7 @@ public class Game {
         while (turnQueue.peek() != currentPlayer) {
             Player player = turnQueue.remove();
             player.getPlayArea().getHand().add(discarded);
-            if (YakuHandler.hasValidYaku(player)) {
+            if (!player.isInPermanentFuriten() && !player.isInTemporaryFuriten() && YakuHandler.hasValidYaku(player)) {
                 player.getPlayArea().getHand().remove(discarded);
                 player.getPlayArea().displayHandAndMelds();
                 if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
@@ -110,6 +110,12 @@ public class Game {
                         advanceRound();
                     }
                     beginNewRound();
+                } else {
+                    if (player.isInRiichi()) {
+                        player.setInPermanentFuriten(true);
+                    } else {
+                        player.setInTemporaryFuriten(true);
+                    }
                 }
             } else {
                 player.getPlayArea().getHand().remove(discarded);
@@ -193,6 +199,8 @@ public class Game {
         turnQueue.add(callingPlayer);
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true, window);
+            callingPlayer.setWaits(YakuHandler.getWaitTiles(new Player(callingPlayer)));
+            callingPlayer.setInTemporaryFuriten(callingPlayer.isInFuriten());
         } else {
             callingPlayer.takeTurnAfterKan(deadwall, window, this);
             deadwall.setRevealed(deadwall.getRevealed() + 1);

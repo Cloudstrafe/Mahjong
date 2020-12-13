@@ -121,21 +121,26 @@ public class YakuHandler {
         Map<Tile, List<Tile>> riichiMap = new HashMap<>();
         List<Tile> copyHand = getCopyHand(copyPlayer);
         for (Tile discardTile : copyHand) {
-            List<Tile> riichiTiles = new ArrayList<>();
             copyPlayer.getPlayArea().getHand().remove(discardTile);
-            for (Tile uniqueTile : uniqueTiles) {
-                copyPlayer.getPlayArea().getHand().add(uniqueTile);
-                if (hasAPairAndFourSetsOrRuns(copyPlayer) || sevenPairsYaku.isValid(copyPlayer) || thirteenOrphansYaku.isValid(copyPlayer)) {  //potentially prevent riichi declaration for Yakuman hands
-                    riichiTiles.add(uniqueTile);
-                }
-                copyPlayer.getPlayArea().getHand().remove(uniqueTile);
-            }
+            List<Tile> riichiTiles = getWaitTiles(copyPlayer);
             if (!riichiTiles.isEmpty()) {
                 riichiMap.put(discardTile, riichiTiles);
             }
             copyPlayer.getPlayArea().getHand().add(discardTile);
         }
         return riichiMap;
+    }
+
+    public static List<Tile> getWaitTiles(Player player) {
+        List<Tile> waits = new ArrayList<>();
+        for (Tile uniqueTile : uniqueTiles) {
+            player.getPlayArea().getHand().add(uniqueTile);
+            if (hasAPairAndFourSetsOrRuns(player) || sevenPairsYaku.isValid(player) || thirteenOrphansYaku.isValid(player)) {  //potentially prevent riichi declaration for Yakuman hands
+                waits.add(uniqueTile);
+            }
+            player.getPlayArea().getHand().remove(uniqueTile);
+        }
+        return waits;
     }
 
     public static boolean isInTenpai(Player player) {
