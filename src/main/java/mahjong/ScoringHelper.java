@@ -230,8 +230,6 @@ public class ScoringHelper {
         stringBuilder.append("config = HandConfig(");
         if (isTsumo) {
             stringBuilder.append("is_tsumo=True, ");
-        } else {
-            stringBuilder.append("is_tsumo=False, ");
         }
         if (winningPlayer.isInRiichi()) {
             stringBuilder.append("is_riichi=True, ");
