@@ -45,6 +45,25 @@ public class Game {
         this.window = new GameWindow(playerOne, playerTwo, playerThree, playerFour);
     }
 
+    //use for testing w/o dealing with UI elements causing issues, pass in null for the GameWindow
+    public Game(GameWindow gameWindow) {
+        this.playerOne = new Player(EAST_WIND, true, 1);
+        this.playerTwo = new Player(SOUTH_WIND, false, 2);
+        this.playerThree = new Player(WEST_WIND, false, 3);
+        this.playerFour = new Player(NORTH_WIND, false, 4);
+        this.deck = new Deck();
+        this.turnQueue = new LinkedList<>();
+        this.isRoundOver = false;
+        this.deadwall = new Deadwall(deck);
+        this.roundNumber = 1;
+        this.roundWind = EAST_WIND;
+        turnQueue.add(playerOne);
+        turnQueue.add(playerTwo);
+        turnQueue.add(playerThree);
+        turnQueue.add(playerFour);
+        window = gameWindow;
+    }
+
     private void setupRound() {
         RoundWindYaku.setRoundWind(roundWind);
         this.deck.reset();
@@ -106,6 +125,9 @@ public class Game {
                     player.getPlayArea().getHand().add(discarded);
                     JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
                     turnQueue.add(player);
+                    //scoring stuff
+                    ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, discarded, player, false);
+                    ScoringHelper.adjustScores(scoringResult, this, player, currentPlayer);
                     if (!player.isDealer()) {
                         advanceRound();
                     }
@@ -244,5 +266,17 @@ public class Game {
 
     public Queue<Player> getTurnQueue() {
         return turnQueue;
+    }
+
+    public Deadwall getDeadwall() {
+        return deadwall;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public String getRoundWind() {
+        return roundWind;
     }
 }

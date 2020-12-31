@@ -1,0 +1,282 @@
+package mahjong;
+
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
+import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class TestScoringHelper {
+    private Player player;
+
+    @Before
+    public void setUp() {
+        player = new Player(SuitConstants.WEST_WIND, false, 1);
+    }
+
+    @Test
+    public void testGetTilesStringWithHonorsAndBambooAndKan() {
+        //Given
+        Tile t1 = new DragonTile(SuitConstants.GREEN_DRAGON);
+        Tile t2 = new DragonTile(SuitConstants.GREEN_DRAGON);
+        Tile t3 = new DragonTile(SuitConstants.GREEN_DRAGON);
+        Tile t4 = new DragonTile(SuitConstants.WHITE_DRAGON);
+        Tile t5 = new DragonTile(SuitConstants.WHITE_DRAGON);
+        Tile t6 = new DragonTile(SuitConstants.WHITE_DRAGON);
+        Tile t15 = new DragonTile(SuitConstants.WHITE_DRAGON);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(8, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(8, SuitConstants.BAMBOO, false);
+        Tile t12 = new NumberTile(9, SuitConstants.BAMBOO, false);
+        Tile t13 = new NumberTile(9, SuitConstants.BAMBOO, false);
+        Tile t14 = new NumberTile(9, SuitConstants.BAMBOO, false);
+
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t1, t2, t3));
+        Meld meld = new Meld(tiles, true, false, -1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t4, t5, t6, t15));
+        Meld meld2 = new Meld(tilesMeld2, true, false, -1);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t7, t8, t9, t10, t11, t12, t13, t14));
+
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        player.setPlayArea(playArea);
+
+        //Expect
+        assertEquals("tiles = TilesConverter.string_to_136_array(sou='66688999', honors='666555')", ScoringHelper.getTilesString(player));
+    }
+
+    @Test
+    public void testGetTilesStringWithDotsAndCharacters() {
+        //Given
+        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
+        Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
+        Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(3, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(4, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t10 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t11 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t12 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t13 = new NumberTile(7, SuitConstants.BAMBOO, false);
+        Tile t14 = new NumberTile(8, SuitConstants.BAMBOO, false);
+
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t1, t2, t3));
+        Meld meld = new Meld(tiles, true, false, -1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t4, t5, t6));
+        Meld meld2 = new Meld(tilesMeld2, true, true, -1);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t7, t8, t9, t10, t11, t12, t13, t14));
+
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        player.setPlayArea(playArea);
+
+        //Expect
+        assertEquals("tiles = TilesConverter.string_to_136_array(man='444', pin='234', sou='66678222')", ScoringHelper.getTilesString(player));
+    }
+
+    @Test
+    public void testGetWinningTileStringWithBamboo() {
+        //Given
+        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
+
+        //Expect
+        assertEquals("win_tile = TilesConverter.string_to_136_array(sou='2')[0]", ScoringHelper.getWinTileString(t1));
+    }
+
+    @Test
+    public void testGetWinningTileStringWithDots() {
+        //Given
+        Tile t1 = new NumberTile(3, SuitConstants.DOTS, false);
+
+        //Expect
+        assertEquals("win_tile = TilesConverter.string_to_136_array(pin='3')[0]", ScoringHelper.getWinTileString(t1));
+    }
+
+    @Test
+    public void testGetWinningTileStringWithCharacters() {
+        //Given
+        Tile t1 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+
+        //Expect
+        assertEquals("win_tile = TilesConverter.string_to_136_array(man='3')[0]", ScoringHelper.getWinTileString(t1));
+    }
+
+    @Test
+    public void testGetWinningTileStringWithRed() {
+        //Given
+        Tile t1 = new NumberTile(5, SuitConstants.DOTS, true);
+
+        //Expect
+        assertEquals("win_tile = TilesConverter.string_to_136_array(pin='r')[0]", ScoringHelper.getWinTileString(t1));
+    }
+
+    @Test
+    public void testGetWinningTileStringWithHonor() {
+        //Given
+        Tile t1 = new DragonTile(SuitConstants.RED_DRAGON);
+
+        //Expect
+        assertEquals("win_tile = TilesConverter.string_to_136_array(honors='7')[0]", ScoringHelper.getWinTileString(t1));
+    }
+
+    @Test
+    public void testGetMeldsStringWithFourMelds() {
+        //Given
+        Tile t1 = new NumberTile(1, SuitConstants.CHARACTERS, false);
+        Tile t2 = new NumberTile(2, SuitConstants.CHARACTERS, false);
+        Tile t3 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t16 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t12 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t13 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t14 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t15 = new WindTile(SuitConstants.EAST_WIND);
+
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t1, t2, t3));
+        Meld meld = new Meld(tiles, true, true, 1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t4, t5, t6));
+        Meld meld2 = new Meld(tilesMeld2, true, false, 2);
+        List<Tile> tilesMeld3 = new ArrayList<>(Arrays.asList(t9, t10, t11, t16));
+        Meld meld3 = new Meld(tilesMeld3, false, false, -1);
+        List<Tile> tilesMeld4 = new ArrayList<>(Arrays.asList(t12, t13, t14, t15));
+        Meld meld4 = new Meld(tilesMeld4, false, false, -1);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2, meld3, meld4));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t7, t8));
+
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        player.setPlayArea(playArea);
+
+        //Expect
+        assertEquals("melds = [Meld(meld_type=Meld.CHI, tiles=TilesConverter.string_to_136_array(man='123'), opened=True), " +
+                "Meld(meld_type=Meld.PON, tiles=TilesConverter.string_to_136_array(pin='222'), opened=True), " +
+                "Meld(meld_type=Meld.KAN, tiles=TilesConverter.string_to_136_array(sou='4444'), opened=False), " +
+                "Meld(meld_type=Meld.KAN, tiles=TilesConverter.string_to_136_array(honors='1111'), opened=False)]", ScoringHelper.getMeldsString(player));
+    }
+
+    @Test
+    public void testGetDoraIndicatorsString() {
+        //Given
+        Tile t1 = new NumberTile(1, SuitConstants.CHARACTERS, false);
+        Tile t2 = new NumberTile(2, SuitConstants.CHARACTERS, false);
+        Tile t3 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t12 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t13 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t14 = new WindTile(SuitConstants.EAST_WIND);
+        Deck deck = new Deck(new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)));
+        Deadwall deadwall = new Deadwall(deck);
+        deadwall.setup(deck);
+        deadwall.setRevealed(3);
+
+        //Expect
+        assertEquals("dora_indicators = [" +
+                "TilesConverter.string_to_136_array(pin='2')[0], " +
+                "TilesConverter.string_to_136_array(pin='2')[0], " +
+                "TilesConverter.string_to_136_array(sou='6')[0]]", ScoringHelper.getDoraIndicatorsString(deadwall));
+    }
+
+    @Test
+    public void testScoreRound() {
+        //Given
+        Tile t1 = new NumberTile(1, SuitConstants.CHARACTERS, false);
+        Tile t2 = new NumberTile(2, SuitConstants.CHARACTERS, false);
+        Tile t3 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t12 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t13 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t14 = new WindTile(SuitConstants.EAST_WIND);
+        Deck deadwallDeck = new Deck(new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)));
+        Deadwall deadwall = new Deadwall(deadwallDeck);
+        deadwall.setup(deadwallDeck);
+        deadwall.setRevealed(3);
+
+        Deck deck = new Deck();
+        String roundWind = SuitConstants.EAST_WIND;
+
+        Tile t15 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t16 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t17 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t18 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t19 = new NumberTile(3, SuitConstants.DOTS, false);
+        Tile t20 = new NumberTile(4, SuitConstants.DOTS, false);
+        Tile t21 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t22 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t23 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t24 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t25 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t26 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t27 = new NumberTile(7, SuitConstants.BAMBOO, false);
+        Tile t28 = new NumberTile(8, SuitConstants.BAMBOO, false);
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t15, t16, t17));
+        Meld meld = new Meld(tiles, true, false, 1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t18, t19, t20));
+        Meld meld2 = new Meld(tilesMeld2, true, true, 2);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t21, t22, t23, t24, t25, t26, t27, t28));
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        player.setPlayArea(playArea);
+
+        Tile winningTile = t26;
+
+        //When
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, player, true);
+
+        //Then
+        assertNotNull(scoringResult);
+        assertEquals(40, scoringResult.getFu());
+        assertEquals(4, scoringResult.getHan());
+        assertEquals(4000, scoringResult.getCost().getMain());
+        assertEquals(4000, scoringResult.getCost().getMainPayment());
+        assertEquals(2000, scoringResult.getCost().getAdditional());
+        assertEquals(2000, scoringResult.getCost().getAdditionalPayment());
+        assertEquals(0, scoringResult.getCost().getMainBonus());
+        assertEquals(0, scoringResult.getCost().getAdditionalBonus());
+        assertEquals(0, scoringResult.getCost().getKyoutakuBonus());
+        assertEquals(8000, scoringResult.getCost().getTotal());
+        assertEquals("", scoringResult.getCost().getYakuLevel());
+        assertEquals("Yakuhai (chun)", scoringResult.getYaku().get(0));
+        assertEquals("Dora", scoringResult.getYaku().get(1));
+    }
+}
