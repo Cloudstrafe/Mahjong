@@ -39,7 +39,7 @@ public class TestHandDetail {
         Tile t13 = new DragonTile(SuitConstants.RED_DRAGON);
         Tile t14 = new DragonTile(SuitConstants.RED_DRAGON);
         List<Tile> tiles = new ArrayList<>(Arrays.asList(t12, t13, t14));
-        Meld meld = new Meld(tiles, true, false);
+        Meld meld = new Meld(tiles, true, false, -1);
         List<Meld> melds = new ArrayList<>(Collections.singletonList(meld));
 
         //When
@@ -53,15 +53,15 @@ public class TestHandDetail {
 
         List<Tile> firstRun = new ArrayList<>(Arrays.asList(t3, t4, t5));
         List<Tile> secondRun = new ArrayList<>(Arrays.asList(t6, t7, t8));
-        Meld meldR1 = new Meld(firstRun, false, true);
-        Meld meldR2 = new Meld(secondRun, false, true);
+        Meld meldR1 = new Meld(firstRun, false, true, -1);
+        Meld meldR2 = new Meld(secondRun, false, true, -1);
         List<Meld> runs = new ArrayList<>(Arrays.asList(meldR1, meldR2));
         assertEquals(runs.size(), handDetail.getRuns().size());
         assertEquals(runs.get(0).getTiles(), handDetail.getRuns().get(0).getTiles());
         assertEquals(runs.get(1).getTiles(), handDetail.getRuns().get(1).getTiles());
 
         List<Tile> firstSet = new ArrayList<>(Arrays.asList(t9, t10, t11));
-        Meld meldS1 = new Meld(firstSet, false, true);
+        Meld meldS1 = new Meld(firstSet, false, true, -1);
         List<Meld> sets = new ArrayList<>(Collections.singletonList(meldS1));
         assertEquals(sets.size(), handDetail.getSets().size());
         assertEquals(sets.get(0).getTiles(), handDetail.getSets().get(0).getTiles());

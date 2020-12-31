@@ -1,63 +1,128 @@
 package mahjong;
 
+import mahjong.gui.GameWindow;
+import mahjong.tile.Tile;
 import mahjong.yaku.YakuHandler;
 
-import java.util.Scanner;
-
-import static java.lang.System.exit;
+import javax.swing.*;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Player {
     private PlayArea playArea;
     private String seat;
     private int points;
     private boolean isDealer;
-    private String name;
-    private int playerNumber;
+    private final int playerNumber;
+    private boolean isInRiichi;
+    private boolean hasRiichiTileInDiscard;
+    private int sizeOfDiscardAfterRiichi;
+    private List<Tile> waits;
+    private boolean isInTemporaryFuriten;
+    private boolean isInPermanentFuriten;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
-        this.playArea = new PlayArea();
+        this.playArea = new PlayArea(playerNumber);
         this.seat = seat;
         this.points = 25000;
         this.isDealer = isDealer;
-        Scanner myScanner = new Scanner(System.in);
-        System.out.println("Player " + playerNumber + "'s Name:");
-        this.name = myScanner.nextLine();
         this.playerNumber = playerNumber;
+        this.isInRiichi = false;
+        hasRiichiTileInDiscard = false;
+        waits = new ArrayList<>();
+        isInTemporaryFuriten = false;
+        isInPermanentFuriten = false;
     }
 
-    public Player(String seat, boolean isDealer, int playerNumber, String name) {
-        this.playArea = new PlayArea();
-        this.seat = seat;
-        this.points = 25000;
-        this.isDealer = isDealer;
-        this.name = name;
-        this.playerNumber = playerNumber;
+    public Player(Player player) {
+        this.playArea = new PlayArea(player.playArea);
+        this.seat = player.seat;
+        this.points = player.points;
+        this.isDealer = player.isDealer;
+        this.playerNumber = player.playerNumber;
+        this.isInRiichi = player.isInRiichi;
+        hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
+        this.waits = player.waits;
+        this.isInTemporaryFuriten = player.isInTemporaryFuriten;
+        this.isInPermanentFuriten = player.isInPermanentFuriten;
     }
 
-    public void takeTurn(Deck deck, Deadwall deadwall) {
-        playArea.draw(deck, deadwall);
-        if (YakuHandler.hasValidYaku(this)) {
-            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
-            Scanner myScanner = new Scanner(System.in);
-            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
-                System.out.println("You Win!!");
-                exit(0);
+    public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window, Game game) {
+        Tile drawnTile = playArea.draw(deck, deadwall, window);
+        turnHandler(window, drawnTile, game);
+    }
+
+    public void takeTurnAfterKan(Deadwall deadwall, GameWindow window, Game game) {
+        Tile drawnTile = playArea.draw(deadwall.getDrawTiles(), deadwall, window);
+        turnHandler(window, drawnTile, game);
+    }
+
+    private void turnHandler(GameWindow window, Tile drawnTile, Game game) {
+        isInTemporaryFuriten = false;
+        if (isInRiichi && !hasRiichiTileInDiscard) {
+            hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
+        }
+        if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
+            JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
+            game.getTurnQueue().add(this);
+            //scoring stuff
+            ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), drawnTile, this, true);
+            ScoringHelper.adjustScores(scoringResult, game, this, null);
+            if (!isDealer) {
+                game.advanceRound();
+            }
+            game.beginNewRound();
+        }
+        if (!isInRiichi) {
+            Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
+            if (!riichiTiles.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
+                if (riichiTiles.size() > 1) {
+                    Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
+                    isInRiichi = true;
+                    waits = riichiTiles.get(discardTile);
+                    playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
+                } else {
+                    isInRiichi = true;
+                    waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
+                    playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
+                }
+                sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
+                isInPermanentFuriten = isInFuriten();
+            } else {
+                playArea.makeDiscardSelection(false, window);
+                isInTemporaryFuriten = isInFuriten();
+                waits = YakuHandler.getWaitTiles(new Player(this));
+            }
+        } else {
+            playArea.discard(playArea.getHand().indexOf(drawnTile), !hasRiichiTileInDiscard);
+            isInTemporaryFuriten = isInFuriten();
+            waits = YakuHandler.getWaitTiles(new Player(this));
+        }
+    }
+
+    public boolean isInFuriten() {
+        for (Tile wait : waits) {
+            for (Tile discard : getPlayArea().getDiscard()) {
+                if (discard.equals(wait)) {
+                    return true;
+                }
             }
         }
-        playArea.makeDiscardSelection(false);
+        return false;
     }
 
-    public void takeTurnAfterKan(Deadwall deadwall) {
-        playArea.draw(deadwall.getDrawTiles(), deadwall);
-        if (YakuHandler.hasValidYaku(this)) {
-            System.out.println(this.getName() + ", would you like to Tsumo? (Y, N)");
-            Scanner myScanner = new Scanner(System.in);
-            if ("Y".equalsIgnoreCase(myScanner.nextLine())) {
-                System.out.println("You Win!!");
-                exit(0);
-            }
-        }
-        playArea.makeDiscardSelection(false);
+    public void reset() {
+        isInRiichi = false;
+        hasRiichiTileInDiscard = false;
+        waits.clear();
+        isInTemporaryFuriten = false;
+        isInPermanentFuriten = false;
+    }
+
+    public boolean isInRiichi() {
+        return isInRiichi;
     }
 
     public PlayArea getPlayArea() {
@@ -92,12 +157,27 @@ public class Player {
         isDealer = dealer;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public int getPlayerNumber() {
         return playerNumber;
     }
 
+    public void setWaits(List<Tile> waits) {
+        this.waits = waits;
+    }
+
+    public void setInTemporaryFuriten(boolean inTemporaryFuriten) {
+        isInTemporaryFuriten = inTemporaryFuriten;
+    }
+
+    public void setInPermanentFuriten(boolean inPermanentFuriten) {
+        isInPermanentFuriten = inPermanentFuriten;
+    }
+
+    public boolean isInTemporaryFuriten() {
+        return isInTemporaryFuriten;
+    }
+
+    public boolean isInPermanentFuriten() {
+        return isInPermanentFuriten;
+    }
 }

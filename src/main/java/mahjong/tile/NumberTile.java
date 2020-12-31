@@ -2,12 +2,12 @@ package mahjong.tile;
 
 public class NumberTile extends Tile {
 
-    public NumberTile(int number, String suit, boolean isRed) {
-        this.number = number;
-        this.suit = suit;
-        this.isRed = isRed;
-        this.isDora = isRed;
-        setImageFilePaths();
+    public NumberTile(int number, String suit, boolean isRed)  {
+        super(number, suit, isRed, isRed);
+    }
+
+    public NumberTile(NumberTile tile) {
+        super(tile);
     }
 
     @Override
@@ -43,5 +43,9 @@ public class NumberTile extends Tile {
     @Override
     public boolean isHonor() {
         return false;
+    }
+
+    public boolean isGreen() {
+        return isGreen;
     }
 }

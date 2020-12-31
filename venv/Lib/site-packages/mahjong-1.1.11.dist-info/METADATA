@@ -1,0 +1,302 @@
+Metadata-Version: 2.1
+Name: mahjong
+Version: 1.1.11
+Summary: Mahjong hands calculation
+Home-page: https://github.com/MahjongRepository/mahjong
+Author: Alexey Lisikhin
+Author-email: alexey@nihisil.com
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+
+.. image:: https://github.com/MahjongRepository/mahjong/workflows/Mahjong%20lib/badge.svg
+    :target: https://github.com/MahjongRepository/mahjong
+
+Python 2.7 and 3.5+ are supported.
+
+We support the Japanese version of mahjong only (riichi mahjong).
+
+
+Riichi mahjong hands calculation
+================================
+
+This library can calculate hand cost (han, fu with details, yaku, and scores) for riichi mahjong (Japanese version).
+
+It supports optional features like:
+
+==========================================================================================  ========================= ===========================
+Feature                                                                                     Keyword parameter         Default value
+==========================================================================================  ========================= ===========================
+Disable or enable open tanyao yaku                                                          has_open_tanyao           False
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Disable or enable aka dora in the hand                                                      has_aka_dora              False
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Disable or enable double yakuman (like suuanko tanki)                                       has_double_yakuman        True
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Settings for different kazoe yakuman calculation (it сan be an yakuman or a sanbaiman)      kazoe_limit               HandConstants.KAZOE_LIMITED
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Support kiriage mangan                                                                      kiriage                   False
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Allow to disable additional +2 fu in open hand (you can make 1-20 hand with that setting)   fu_for_open_pinfu         True
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Disable or enable pinfu tsumo                                                               fu_for_pinfu_tsumo        False
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Counting renhou as 5 han or yakuman                                                         renhou_as_yakuman         False
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Disable or enable Daisharin yakuman                                                         has_daisharin             False
+------------------------------------------------------------------------------------------  ------------------------- ---------------------------
+Disable or enable Daisharin in other suits (Daisuurin, Daichikurin)                         has_daisharin_other_suits False
+==========================================================================================  ========================= ===========================
+
+
+The code was validated on tenhou.net phoenix replays in total on **11,120,125 hands**.
+
+So, we can say that our hand calculator works the same way that tenhou.net hand calculation.
+
+Project repository: https://github.com/MahjongRepository/mahjong
+
+
+How to install
+--------------
+
+::
+
+   pip install mahjong
+
+
+How to use
+----------
+
+You can find more examples here: https://github.com/MahjongRepository/mahjong/blob/master/doc/examples.py
+
+Let's calculate how much will cost this hand:
+
+.. image:: https://user-images.githubusercontent.com/475367/30796350-3d30431a-a204-11e7-99e5-aab144c82f97.png
+
+
+Tanyao hand by ron
+^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    from mahjong.hand_calculating.hand import HandCalculator
+    from mahjong.tile import TilesConverter
+    from mahjong.hand_calculating.hand_config import HandConfig
+    from mahjong.meld import Meld
+
+    calculator = HandCalculator()
+
+    # we had to use all 14 tiles in that array
+    tiles = TilesConverter.string_to_136_array(man='22444', pin='333567', sou='444')
+    win_tile = TilesConverter.string_to_136_array(sou='4')[0]
+
+    result = calculator.estimate_hand_value(tiles, win_tile)
+
+    print(result.han, result.fu)
+    print(result.cost['main'])
+    print(result.yaku)
+    for fu_item in result.fu_details:
+        print(fu_item)
+
+Output:
+
+::
+
+    1 40
+    1300
+    [Tanyao]
+    {'fu': 30, 'reason': 'base'}
+    {'fu': 4, 'reason': 'closed_pon'}
+    {'fu': 4, 'reason': 'closed_pon'}
+    {'fu': 2, 'reason': 'open_pon'}
+
+
+How about tsumo?
+^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    result = calculator.estimate_hand_value(tiles, win_tile, config=HandConfig(is_tsumo=True))
+
+    print(result.han, result.fu)
+    print(result.cost['main'], result.cost['additional'])
+    print(result.yaku)
+    for fu_item in result.fu_details:
+        print(fu_item)
+
+Output:
+
+::
+
+    4 40
+    4000 2000
+    [Menzen Tsumo, Tanyao, San Ankou]
+    {'fu': 20, 'reason': 'base'}
+    {'fu': 4, 'reason': 'closed_pon'}
+    {'fu': 4, 'reason': 'closed_pon'}
+    {'fu': 4, 'reason': 'closed_pon'}
+    {'fu': 2, 'reason': 'tsumo'}
+
+
+What if we add open set?
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    melds = [Meld(meld_type=Meld.PON, tiles=TilesConverter.string_to_136_array(man='444'))]
+
+    result = calculator.estimate_hand_value(tiles, win_tile, melds=melds, config=HandConfig(options=OptionalRules(has_open_tanyao=True)))
+
+    print(result.han, result.fu)
+    print(result.cost['main'])
+    print(result.yaku)
+    for fu_item in result.fu_details:
+        print(fu_item)
+
+Output:
+
+::
+
+    1 30
+    1000
+    [Tanyao]
+    {'fu': 20, 'reason': 'base'}
+    {'fu': 4, 'reason': 'closed_pon'}
+    {'fu': 2, 'reason': 'open_pon'}
+    {'fu': 2, 'reason': 'open_pon'}
+
+
+Shanten calculation
+===================
+
+.. code-block:: python
+
+    from mahjong.shanten import Shanten
+
+    shanten = Shanten()
+    tiles = TilesConverter.string_to_34_array(man='13569', pin='123459', sou='443')
+    result = shanten.calculate_shanten(tiles)
+
+    print(result)
+
+
+Releases History
+================
+
+1.1.11 (2020-10-28)
+-------------------
+- Speed up performance a bit
+- Add support for Python 3.9
+
+1.1.10 (2020-05-11)
+-------------------
+- Add japanese yaku names
+- Fix an issue with not correct ryuuiisou detection
+- Allow to print aka dora in `TilesConverter.to_one_line_string()` method ("0" symbol)
+- Add support for Python 3.8
+
+1.1.9 (2019-07-29)
+------------------
+-  Add `TilesConverter.one_line_string_to_136_array()` and `TilesConverter.one_line_string_to_34_array()` methods
+
+1.1.8 (2019-07-25)
+------------------
+- Fix an issue with incorrect daburu chuuren poutou calculations
+- Allow passing '0' as a red five to tiles converter
+
+
+1.1.7 (2019-04-09)
+------------------
+- Introduce OptionalRules hand configuration
+
+1.1.6 (2019-02-10)
+------------------
+- Fix a bug when hatsu yaku was added to the hand instead of chun
+- Fix a bug where kokushi wasn't combined with tenhou/renhou/chihou
+- Add English names to all yaku
+- Add support of python 2.7
+- Add a way to pass aka dora to tile converter
+
+1.1.5 (2018-09-04)
+------------------
+
+- Allow to disable chiitoitsu or kokushi in shanten calculator
+
+1.1.4 (2018-08-31)
+------------------
+
+- Add is_terminal() and is_dora_indicator_for_terminal() functions to the utils.py
+
+1.1.3 (2018-08-22)
+------------------
+
+- Add is_tile_strictly_isolated() function to the utils.py
+
+1.1.2 (2017-10-14)
+------------------
+
+- Add settings for different kazoe yakuman calculation (it kan be an yakuman or a sanbaiman)
+- Support up to sextuple yakuman scores
+- Support kiriage mangan
+- Allow to disable +2 fu in open hand
+- Allow to disable tsumo pinfu (add 2 additional fu for hand like that)
+
+1.1.1 (2017-10-07)
+------------------
+
+- Fix a bug with not correct agari state determination and closed kan in the hand
+
+1.1.0 (2017-10-07)
+------------------
+
+Breaking changes:
+
+- Interface of hand calculator was changed. New interface will allow to easy support different game rules
+
+Additional fixes:
+
+- Refactor hand divider. Allow to pass melds objects instead of arrays
+- Add file with usage examples
+- Minor project refactoring
+
+
+1.0.5 (2017-09-25)
+------------------
+
+- Improve installation script
+
+
+1.0.4 (2017-09-25)
+------------------
+
+Bug fixes:
+
+- Fix refactoring regressions with kan sets and dora calculations
+- Fix regression with sankantsu\suukantsu and called chankan
+- Closed kan can't be used in chuuren poutou
+- Fix yaku ids (some of them had incorrect numbers)
+
+Features:
+
+- Allow to disable double yakuman (like suuanko tanki)
+- Remove float calculations from scores and fu
+- Add travis build status
+- Add usage examples to the readme
+
+
+1.0.3 (2017-09-23)
+------------------
+
+- Hand calculation code was moved from mahjong bot package https://github.com/MahjongRepository/tenhou-python-bot
+- This library can calculate hand cost (han, fu with details, yaku and scores) for riichi mahjong (japanese version)
+
+

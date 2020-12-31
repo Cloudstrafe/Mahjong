@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Deck {
     private final List<Tile> wall;
-    private List<Tile> drawn;
+    private final List<Tile> drawn;
     private int totalTiles;
 
     public Deck() {
@@ -19,6 +19,7 @@ public class Deck {
         this.drawn = new ArrayList<>();
         buildDeck();
         this.totalTiles = this.wall.size();
+        reset();
     }
 
     public Deck(List<Tile> tiles) {
@@ -49,20 +50,20 @@ public class Deck {
         return null;
     }
 
-    public void buildDeck() {
+    public void buildDeck()  {
         createDragonTiles(this.wall);
         createWindTiles(this.wall);
         createNumberTiles(this.wall);
     }
 
-    public void shuffle() {
+    public void reset() {
         this.wall.addAll(this.drawn);
         this.drawn.clear();
         this.totalTiles = this.wall.size();
         Collections.shuffle(this.wall);
     }
 
-    private void createDragonTiles(List<Tile> deck) {
+    private void createDragonTiles(List<Tile> deck)  {
         List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.RED_DRAGON);
         suits.add(SuitConstants.WHITE_DRAGON);
@@ -75,7 +76,7 @@ public class Deck {
         }
     }
 
-    private void createWindTiles(List<Tile> deck) {
+    private void createWindTiles(List<Tile> deck)  {
         List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.EAST_WIND);
         suits.add(SuitConstants.SOUTH_WIND);
@@ -89,7 +90,7 @@ public class Deck {
         }
     }
 
-    private void createNumberTiles(List<Tile> deck) {
+    private void createNumberTiles(List<Tile> deck)  {
         List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.BAMBOO);
         suits.add(SuitConstants.CHARACTERS);

@@ -1,15 +1,14 @@
 package mahjong;
 
+import mahjong.gui.GameWindow;
 import mahjong.tile.Tile;
 import mahjong.yaku.RoundWindYaku;
 import mahjong.yaku.YakuHandler;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+import javax.swing.*;
+import java.text.MessageFormat;
+import java.util.*;
 
-import static java.lang.System.exit;
 import static mahjong.SuitConstants.*;
 
 public class Game {
@@ -20,9 +19,13 @@ public class Game {
     private Deck deck;
     private Queue<Player> turnQueue;
     private Deadwall deadwall;
+    private GameWindow window;
     private boolean isRoundOver;
-    private static final String S_HAND = "'s Hand";
-    private static final String INPUT_VALID_CHOICE = "Please input a valid choice";
+    private int roundNumber;
+    private String roundWind;
+    private static final List<String> windArray = new ArrayList<>(Arrays.asList(EAST_WIND, SOUTH_WIND, WEST_WIND, NORTH_WIND));
+    private static final int KAN = 0;
+    private static final int PON = 1;
 
     public Game() {
         this.playerOne = new Player(EAST_WIND, true, 1);
@@ -32,39 +35,80 @@ public class Game {
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
         this.isRoundOver = false;
-        this.deadwall = new Deadwall();
+        this.deadwall = new Deadwall(deck);
+        this.roundNumber = 1;
+        this.roundWind = EAST_WIND;
         turnQueue.add(playerOne);
         turnQueue.add(playerTwo);
         turnQueue.add(playerThree);
         turnQueue.add(playerFour);
+        this.window = new GameWindow(playerOne, playerTwo, playerThree, playerFour);
+    }
+
+    //use for testing w/o dealing with UI elements causing issues, pass in null for the GameWindow
+    public Game(GameWindow gameWindow) {
+        this.playerOne = new Player(EAST_WIND, true, 1);
+        this.playerTwo = new Player(SOUTH_WIND, false, 2);
+        this.playerThree = new Player(WEST_WIND, false, 3);
+        this.playerFour = new Player(NORTH_WIND, false, 4);
+        this.deck = new Deck();
+        this.turnQueue = new LinkedList<>();
+        this.isRoundOver = false;
+        this.deadwall = new Deadwall(deck);
+        this.roundNumber = 1;
+        this.roundWind = EAST_WIND;
+        turnQueue.add(playerOne);
+        turnQueue.add(playerTwo);
+        turnQueue.add(playerThree);
+        turnQueue.add(playerFour);
+        window = gameWindow;
     }
 
     private void setupRound() {
-        RoundWindYaku.setRoundWind(EAST_WIND);
-        this.deck.shuffle();
-        this.playerOne.getPlayArea().reset();
-        this.playerTwo.getPlayArea().reset();
-        this.playerThree.getPlayArea().reset();
-        this.playerFour.getPlayArea().reset();
-        for (int i = 0; i < playerOne.getPlayArea().getStartingHandSize(); i++) {
-            playerOne.getPlayArea().initialDraw(deck);
-            playerTwo.getPlayArea().initialDraw(deck);
-            playerThree.getPlayArea().initialDraw(deck);
-            playerFour.getPlayArea().initialDraw(deck);
+        RoundWindYaku.setRoundWind(roundWind);
+        this.deck.reset();
+        playerOne.reset();
+        playerTwo.reset();
+        playerThree.reset();
+        playerFour.reset();
+        this.playerOne.getPlayArea().setup(deck);
+        this.playerTwo.getPlayArea().setup(deck);
+        this.playerThree.getPlayArea().setup(deck);
+        this.playerFour.getPlayArea().setup(deck);
+        this.deadwall.setup(deck);
+        putDealerAtFrontOfPlayerQueue();
+        window.getDoraPanelHolder().reset();
+        window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(0));
+        this.window.getGameInfoPanel().getCurrentRoundNumber().setText(Integer.toString(roundNumber));
+        this.window.getGameInfoPanel().getCurrentRoundWind().setText(getFullWindName(roundWind));
+        this.window.getGameInfoPanel().getPlayerOneScore().setText(Integer.toString(playerOne.getPoints()));
+        this.window.getGameInfoPanel().getPlayerTwoScore().setText(Integer.toString(playerTwo.getPoints()));
+        this.window.getGameInfoPanel().getPlayerThreeScore().setText(Integer.toString(playerThree.getPoints()));
+        this.window.getGameInfoPanel().getPlayerFourScore().setText(Integer.toString(playerFour.getPoints()));
+        this.window.getGameInfoPanel().getPlayerOneSeat().setText(playerOne.getSeat().toUpperCase());
+        this.window.getGameInfoPanel().getPlayerTwoSeat().setText(playerTwo.getSeat().toUpperCase());
+        this.window.getGameInfoPanel().getPlayerThreeSeat().setText(playerThree.getSeat().toUpperCase());
+        this.window.getGameInfoPanel().getPlayerFourSeat().setText(playerFour.getSeat().toUpperCase());
+    }
+
+    private void putDealerAtFrontOfPlayerQueue() {
+        while (!turnQueue.peek().isDealer()) {
+            turnQueue.add(turnQueue.remove());
         }
-        deadwall.setup(deck);
     }
 
     private void playRound() {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            System.out.println(currentPlayer.getName() + "'s turn, " + currentPlayer.getSeat() + ", Tiles in deck: " + deck.getTotalTiles() + ", Dora: " + deadwall.getDoraAsString());
-            currentPlayer.takeTurn(deck, deadwall);
+            currentPlayer.takeTurn(deck, deadwall, window, this);
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
         }
         if (!isRoundOver) {
-            System.out.println("Deck empty, starting new hand");
+            JOptionPane.showMessageDialog(this.window.getWindow(), MessageConstants.MSG_EMPTY_DECK);
+            if (!ExhaustiveDraw.tenpaiPayout(turnQueue)) {
+                advanceRound();
+            }
             beginNewRound();
         }
     }
@@ -74,23 +118,25 @@ public class Game {
         while (turnQueue.peek() != currentPlayer) {
             Player player = turnQueue.remove();
             player.getPlayArea().getHand().add(discarded);
-            if (YakuHandler.hasValidYaku(player)) {
+            if (!player.isInPermanentFuriten() && !player.isInTemporaryFuriten() && YakuHandler.hasValidYaku(player)) {
                 player.getPlayArea().getHand().remove(discarded);
-                String response = "";
-                while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
-                    System.out.println(player.getName() + S_HAND);
-                    player.getPlayArea().displayHandAndMelds();
-                    System.out.println(player.getName() + ", would you like to Ron the " + discarded.getTileAsString() + "? (Y, N)");
-                    Scanner myScanner = new Scanner(System.in);
-                    response = myScanner.nextLine();
-                    if ("Y".equalsIgnoreCase(response)) {
-                        player.getPlayArea().getHand().add(discarded);
-                        System.out.println("You Win!!");
-                        exit(0);
-                    } else if ("N".equalsIgnoreCase(response)) {
-                        break;
+                player.getPlayArea().displayHandAndMelds();
+                if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
+                    player.getPlayArea().getHand().add(discarded);
+                    JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
+                    turnQueue.add(player);
+                    //scoring stuff
+                    ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, discarded, player, false);
+                    ScoringHelper.adjustScores(scoringResult, this, player, currentPlayer);
+                    if (!player.isDealer()) {
+                        advanceRound();
+                    }
+                    beginNewRound();
+                } else {
+                    if (player.isInRiichi()) {
+                        player.setInPermanentFuriten(true);
                     } else {
-                        System.out.println(INPUT_VALID_CHOICE);
+                        player.setInTemporaryFuriten(true);
                     }
                 }
             } else {
@@ -120,50 +166,29 @@ public class Game {
     }
 
     private boolean kanOrPon(Player currentPlayer, Tile discarded, Player player) {
-        String response = "";
-        while (!"K".equalsIgnoreCase(response) && !"P".equalsIgnoreCase(response.toUpperCase()) && !"N".equalsIgnoreCase(response)) {
-            System.out.println(player.getName() + S_HAND);
-            player.getPlayArea().displayHandAndMelds();
-            System.out.println(player.getName() + ", would you like to Kan or Pon the " + discarded.getTileAsString() + "? (K, P, N)");
-            Scanner myScanner = new Scanner(System.in);
-            response = myScanner.nextLine();
-            if ("K".equalsIgnoreCase(response)) {
+        if (!player.isInRiichi()) {
+            int response = this.window.isKanOrPonCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN_OR_PON, player.getPlayerNumber()));
+            if (response == KAN) {
                 player.getPlayArea().meldKan(discarded, true);
                 if (deadwall.isRoundOver()) {
                     beginNewRound();
                 }
                 callHandler(currentPlayer, player, true);
                 return true;
-            } else if ("P".equalsIgnoreCase(response)) {
+            } else if (response == PON) {
                 player.getPlayArea().meldPon(discarded, true);
                 callHandler(currentPlayer, player, false);
                 return true;
-            } else if ("N".equalsIgnoreCase(response)) {
-                break;
-            } else {
-                System.out.println(INPUT_VALID_CHOICE);
             }
         }
         return false;
     }
 
     private boolean ponOnly(Player currentPlayer, Tile discarded, Player player) {
-        String response = "";
-        while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
-            System.out.println(player.getName() + S_HAND);
-            player.getPlayArea().displayHandAndMelds();
-            System.out.println(player.getName() + ", would you like to Pon the " + discarded.getTileAsString() + "? (Y, N)");
-            Scanner myScanner = new Scanner(System.in);
-            response = myScanner.nextLine();
-            if ("Y".equalsIgnoreCase(response)) {
-                player.getPlayArea().meldPon(discarded, true);
-                callHandler(currentPlayer, player, false);
-                return true;
-            } else if ("N".equalsIgnoreCase(response)) {
-                break;
-            } else {
-                System.out.println(INPUT_VALID_CHOICE);
-            }
+        if (!player.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
+            player.getPlayArea().meldPon(discarded, true);
+            callHandler(currentPlayer, player, false);
+            return true;
         }
         return false;
     }
@@ -178,74 +203,80 @@ public class Game {
     }
 
     private void chi(Player currentPlayer, Player nextPlayer, Tile discarded, List<List<Tile>> possibleChi) {
-        String response = "";
-        while (!"Y".equalsIgnoreCase(response) && !"N".equalsIgnoreCase(response)) {
-            System.out.println(nextPlayer.getName() + S_HAND);
-            nextPlayer.getPlayArea().displayHandAndMelds();
-            System.out.println(nextPlayer.getName() + ", would you like to Chi the " + discarded.getTileAsString() + "? (Y, N)");
-            Scanner myScanner = new Scanner(System.in);
-            response = myScanner.nextLine();
-            if ("Y".equalsIgnoreCase(response)) {
-                turnQueue.remove();
-                if (possibleChi.size() > 1) {
-                    while (true) {
-                        System.out.println("Which tiles would you like to use? (1 - " + possibleChi.size() + ")");
-                        printChiOptions(possibleChi);
-                        response = myScanner.nextLine();
-                        try {
-                            int value = Integer.parseInt(response);
-                            if (value >= 1 && value <= possibleChi.size()) {
-                                nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(value - 1), true);
-                                callHandler(currentPlayer, nextPlayer, false);
-                                return;
-                            }
-                        } catch (NumberFormatException ignored) {
-                            continue;
-                        }
-                        System.out.println(INPUT_VALID_CHOICE);
-                    }
-                } else {
-                    nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(0), true);
-                    callHandler(currentPlayer, nextPlayer, false);
-                    return;
-                }
-            } else if ("N".equalsIgnoreCase(response)) {
-                break;
+        //nextPlayer.getPlayArea().displayHandAndMelds();
+        if (!nextPlayer.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
+            turnQueue.remove();
+            if (possibleChi.size() > 1) {
+                int response = this.window.getChiCallChoice(MessageFormat.format(MessageConstants.MSG_SELECT_CHI_OPTION, nextPlayer.getPlayerNumber()), possibleChi);
+                nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(response), true);
             } else {
-                System.out.println(INPUT_VALID_CHOICE);
+                nextPlayer.getPlayArea().meldChi(discarded, possibleChi.get(0), true);
             }
+            callHandler(currentPlayer, nextPlayer, false);
         }
     }
 
-    private void printChiOptions(List<List<Tile>> combinations) {
-        for (List<Tile> combination : combinations) {
-            StringBuilder str = new StringBuilder();
-            for (Tile tile : combination) {
-                str.append(tile.getTileAsString());
-                str.append(", ");
-            }
-            int length = str.length();
-            str.delete(length - 2, length);
-            System.out.println(str.toString());
-        }
-    }
-
-    private void callHandler(Player currentPlayer, Player callingPlayer, boolean isKan) {
-        currentPlayer.getPlayArea().removeLastDiscard();
+    private void callHandler(Player discardingPlayer, Player callingPlayer, boolean isKan) {
+        discardingPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
-        System.out.println(callingPlayer.getName() + "'s turn, " + callingPlayer.getSeat() + ", Tiles in deck: " + deck.getTotalTiles() + ", Dora: " + deadwall.getDoraAsString());
         if (!isKan) {
-            callingPlayer.getPlayArea().makeDiscardSelection(true);
-        }
-        if (isKan) {
-            callingPlayer.takeTurnAfterKan(deadwall);
+            callingPlayer.getPlayArea().makeDiscardSelection(true, window);
+            callingPlayer.setWaits(YakuHandler.getWaitTiles(new Player(callingPlayer)));
+            callingPlayer.setInTemporaryFuriten(callingPlayer.isInFuriten());
+        } else {
+            callingPlayer.takeTurnAfterKan(deadwall, window, this);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
+            window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(deadwall.getRevealed()));
         }
         checkRons(callingPlayer);
+    }
+
+    private String getFullWindName(String wind) {
+        if (EAST_WIND.equals(wind)) {
+            return EAST;
+        } else if (SOUTH_WIND.equals(wind)) {
+            return SOUTH;
+        } else if (WEST_WIND.equals(wind)) {
+            return WEST;
+        }
+        return NORTH;
+    }
+
+    public void advanceRound() {
+        if (roundNumber == 4) {
+            roundWind = windArray.get(windArray.indexOf(roundWind) + 1);    //technically should check in case of going out of bounds, extremely unlikely to happen
+            roundNumber = 1;
+        } else {
+            roundNumber++;
+        }
+        for (Player player : turnQueue) {
+            int index = windArray.indexOf(player.getSeat()) - 1;
+            if (index == -1) {
+                index = 3;
+            }
+            player.setSeat(windArray.get(index));
+            player.setDealer(index == 0);
+        }
     }
 
     public void beginNewRound() {
         setupRound();
         playRound();
+    }
+
+    public Queue<Player> getTurnQueue() {
+        return turnQueue;
+    }
+
+    public Deadwall getDeadwall() {
+        return deadwall;
+    }
+
+    public Deck getDeck() {
+        return deck;
+    }
+
+    public String getRoundWind() {
+        return roundWind;
     }
 }

@@ -12,7 +12,7 @@ public class TestDeadwall {
     @Before
     public void setup() {
         Deck deck = new Deck();
-        deadwall = new Deadwall();
+        deadwall = new Deadwall(deck);
         deadwall.setup(deck);
     }
 
@@ -21,7 +21,6 @@ public class TestDeadwall {
         //Expect
         assertEquals(4, deadwall.getDrawTiles().getWall().size());
         assertEquals(1, deadwall.getRevealed());
-        assertEquals(deadwall.getDoraTiles().get(0).getTileAsString(), deadwall.getDoraAsString());
         assertFalse(deadwall.isRoundOver());
     }
 
@@ -29,15 +28,14 @@ public class TestDeadwall {
     public void testWithFourRevealedTiles() {
         //Given
         deadwall.setRevealed(4);
-        String doraString = deadwall.getDoraTiles().get(0).getTileAsString() + ", "
-                + deadwall.getDoraTiles().get(1).getTileAsString() + ", "
-                + deadwall.getDoraTiles().get(2).getTileAsString() + ", "
-                + deadwall.getDoraTiles().get(3).getTileAsString();
+        String doraString = deadwall.getDoraTiles().get(0).getTileFileName() + ", "
+                + deadwall.getDoraTiles().get(1).getTileFileName() + ", "
+                + deadwall.getDoraTiles().get(2).getTileFileName() + ", "
+                + deadwall.getDoraTiles().get(3).getTileFileName();
         Tile toBeDrawn = deadwall.getDrawTiles().getWall().get(0);
         Tile drawn = deadwall.getDrawTiles().draw();
 
         //Expect
-        assertEquals(doraString, deadwall.getDoraAsString());
         assertEquals(4, deadwall.getRevealed());
         assertEquals(3, deadwall.getDrawTiles().getWall().size());
         assertEquals(toBeDrawn, drawn);

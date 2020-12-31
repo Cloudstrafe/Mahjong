@@ -30,7 +30,7 @@ public class TestDeck {
         }
         assertEquals(tiles, deck.getDrawn());
         assertEquals(111, deck.getTotalTiles());
-        deck.shuffle();
+        deck.reset();
         assertEquals(136, deck.getTotalTiles());
         assertEquals(136, deck.getWall().size());
         assertEquals(0, deck.getDrawn().size());

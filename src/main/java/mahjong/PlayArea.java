@@ -1,24 +1,133 @@
 package mahjong;
 
+import mahjong.gui.*;
+import mahjong.tile.DragonTile;
+import mahjong.tile.NumberTile;
 import mahjong.tile.Tile;
+import mahjong.tile.WindTile;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class PlayArea {
     private List<Tile> hand;
     private List<Meld> melds;
-    private static final int STARTING_HAND_SIZE = 13;
     private List<Tile> discard;
+    private static final int STARTING_HAND_SIZE = 13;
+    private AbstractHandPanelHolder handPanelHolder;
+    private MeldPanelHolder meldPanelHolder;
+    private DiscardPanelHolder discardPanelHolder;
+    private volatile boolean isDiscardSelected;
+    private volatile int discardIndex;
+    private boolean isMyTurn;
+    private int playerNumber;
 
-    public PlayArea() {
+    public PlayArea(int playerNumber) {
         this.hand = new ArrayList<>();
         this.discard = new ArrayList<>();
         this.melds = new ArrayList<>();
+        this.isDiscardSelected = false;
+        this.discardIndex = -1;
+        this.playerNumber = playerNumber;
+        this.handPanelHolder = getPlayerSpecificHandPanelHolder();
+        this.meldPanelHolder = new MeldPanelHolder(4, 4, playerNumber, getMeldsXCoordinate(), getMeldsYCoordinate());
+        this.discardPanelHolder = new DiscardPanelHolder(4, 6, getDiscardXCoordinate(), getDiscardYCoordinate(), playerNumber);
+        this.isMyTurn = false;
     }
+
+    public PlayArea(PlayArea playArea) {
+        this.hand = playArea.hand.stream().map(t -> {
+            if (t instanceof NumberTile) {
+                return new NumberTile((NumberTile) t);
+            } else if (t instanceof DragonTile) {
+                return new DragonTile((DragonTile) t);
+            } else {
+                return new WindTile((WindTile) t);
+            }
+        }).collect(Collectors.toList());
+        this.melds = playArea.melds.stream().map(Meld::new).collect(Collectors.toList());
+        this.discard = playArea.discard.stream().map(t -> {
+            if (t instanceof NumberTile) {
+                return new NumberTile((NumberTile) t);
+            } else if (t instanceof DragonTile) {
+                return new DragonTile((DragonTile) t);
+            } else {
+                return new WindTile((WindTile) t);
+            }
+        }).collect(Collectors.toList());
+        this.handPanelHolder = playArea.handPanelHolder;
+        this.meldPanelHolder = playArea.meldPanelHolder;
+        this.discardPanelHolder = playArea.discardPanelHolder;
+        this.isDiscardSelected = playArea.isDiscardSelected;
+        this.discardIndex = playArea.discardIndex;
+        this.isMyTurn = playArea.isMyTurn;
+        this.playerNumber = playArea.playerNumber;
+    }
+
+    private AbstractHandPanelHolder getPlayerSpecificHandPanelHolder() {
+        if (this.playerNumber == 1) {
+            return new PlayerOneHandPanelHolder(this);
+        }
+        if (this.playerNumber == 2) {
+            return new PlayerTwoHandPanelHolder(this);
+        }
+        if (this.playerNumber == 3) {
+            return new PlayerThreeHandPanelHolder(this);
+        }
+        return new PlayerFourHandPanelHolder(this);
+    }
+
+    private int getMeldsXCoordinate() {
+        if (playerNumber == 1) {
+            return 1480;
+        } else if (playerNumber == 2) {
+            return 1480;
+        } else if (playerNumber == 3) {
+            return 140;
+        } else {
+            return 140;
+        }
+    }
+
+    private int getDiscardXCoordinate() {
+        if (playerNumber == 1) {
+            return 834;
+        } else if (playerNumber == 2) {
+            return 1070;
+        } else if (playerNumber == 3) {
+            return 834;
+        } else {
+            return 598;
+        }
+    }
+
+    private int getMeldsYCoordinate() {
+        if (playerNumber == 1) {
+            return 750;
+        } else if (playerNumber == 2) {
+            return 0;
+        } else if (playerNumber == 3) {
+            return 0;
+        } else {
+            return 750;
+        }
+    }
+
+    private int getDiscardYCoordinate() {
+        if (playerNumber == 1) {
+            return 620;
+        } else if (playerNumber == 2) {
+            return 400;
+        } else if (playerNumber == 3) {
+            return 180;
+        } else {
+            return 400;
+        }
+    }
+
 
     public List<Tile> getHand() {
         return hand;
@@ -32,54 +141,102 @@ public class PlayArea {
         return discard;
     }
 
-    public void draw(Deck deck, Deadwall deadwall) {
+    public Tile draw(Deck deck, Deadwall deadwall, GameWindow window) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
         Tile tile = deck.draw();
+        window.getGameInfoPanel().getDeckTileCount().setText("x" + deck.getTotalTiles());
         this.hand.add(tile);
         displayHandAndMelds();
-        if (isKan(tile)) {
-            draw(deadwall.getDrawTiles(), deadwall);
+        if (isKan(tile, window)) {
+            return draw(deadwall.getDrawTiles(), deadwall, window);
         }
+        return tile;
     }
 
-    public void initialDraw(Deck deck) {
+    public void setup(Deck deck) {
+        reset();
+        for (int i = 0; i < getStartingHandSize(); i++) {
+            initialDraw(deck);
+        }
+        handPanelHolder.displayHand();
+    }
+    //This is a debug method, set to put players in riichi instantly
+//    public void setup(Deck deck) {
+//        reset();
+//        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
+//        Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
+//        Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
+//        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+//        Tile t5 = new NumberTile(3, SuitConstants.DOTS, false);
+//        Tile t6 = new NumberTile(4, SuitConstants.DOTS, false);
+//        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+//        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+//        Tile t9 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+//        Tile t10 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+//        Tile t11 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+//        Tile t12 = new NumberTile(6, SuitConstants.BAMBOO, false);
+//        Tile t13 = new NumberTile(7, SuitConstants.BAMBOO, false);
+//        this.hand.add(t1);
+//        this.hand.add(t2);
+//        this.hand.add(t3);
+//        this.hand.add(t4);
+//        this.hand.add(t5);
+//        this.hand.add(t6);
+//        this.hand.add(t7);
+//        this.hand.add(t8);
+//        this.hand.add(t9);
+//        this.hand.add(t10);
+//        this.hand.add(t11);
+//        this.hand.add(t12);
+//        this.hand.add(t13);
+//        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
+//    }
+
+    private void initialDraw(Deck deck) {
         Tile tile = deck.draw();
         this.hand.add(tile);
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
     }
 
-    private boolean isKan(Tile tile) {
+    private boolean isKan(Tile tile, GameWindow window) {
         if (this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 4) {
-            while (true) {
-                System.out.println("Kan? (Y/N)");
-                Scanner myScanner = new Scanner(System.in);
-                String input = myScanner.nextLine();
-                if ("N".equalsIgnoreCase(input)) {
-                    return false;
-                } else if ("Y".equalsIgnoreCase(input)) {
-                    meldKan(tile, false);
-                    return true;
-                }
+            if (window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+                meldKan(tile, false);
+                return true;
+            }
+        } else {
+            List<Meld> meld = melds.stream().filter(m -> m.getTiles().stream().allMatch(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit()))).collect(Collectors.toList());
+            if (!meld.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+                meld.get(0).getTiles().add(tile);
+                meldPanelHolder.kanAPon(tile, melds.indexOf(meld));
             }
         }
         return false;
     }
 
-    public void meldKan(Tile tile, boolean isOpen) {
-        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-        this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-        newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen, false));
+    public void meldKan(Tile discarded, boolean isOpen) {
+        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+        this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+        if (isOpen) {
+            newMeld.add(discarded);
+        }
+        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+        Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
+        this.melds.add(meld);
+        this.meldPanelHolder.displayMeld(meld);
     }
 
-    public void meldPon(Tile tile, boolean isOpen) {
-        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
-        this.hand = this.hand.stream().filter(t -> t.getNumber() != tile.getNumber() || !t.getSuit().equals(tile.getSuit())).collect(Collectors.toList());
+    public void meldPon(Tile discarded, boolean isOpen) {
+        List<Tile> newMeld = this.hand.stream().filter(t -> t.getNumber() == discarded.getNumber() && t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
+        this.hand = this.hand.stream().filter(t -> t.getNumber() != discarded.getNumber() || !t.getSuit().equals(discarded.getSuit())).collect(Collectors.toList());
         if (newMeld.size() == 3) {
             this.hand.add(newMeld.remove(0));
         }
-        newMeld.add(tile);
-        this.melds.add(new Meld(newMeld, isOpen, false));
+        newMeld.add(discarded);
+        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+        Meld meld = new Meld(newMeld, isOpen, false, calledTileIndex);
+        this.melds.add(meld);
+        this.meldPanelHolder.displayMeld(meld);
     }
 
     public void meldChi(Tile discarded, List<Tile> newMeld, boolean isOpen) {
@@ -87,12 +244,21 @@ public class PlayArea {
         this.hand.remove(newMeld.get(1));
         newMeld.add(discarded);
         newMeld = newMeld.stream().sorted().collect(Collectors.toList());
-        this.melds.add(new Meld(newMeld, isOpen, true));
+        int calledTileIndex = isOpen ? newMeld.indexOf(discarded) : -1;
+        Meld meld = new Meld(newMeld, isOpen, true, calledTileIndex);
+        this.melds.add(meld);
+        this.meldPanelHolder.displayMeld(meld);
     }
 
-    public void discard(int index) {
+    public void discard(int index, boolean discardSideways) {
+        this.handPanelHolder.displayNotMyTurnBorder();
+        this.handPanelHolder.getMainPanel().repaint();
         Tile tile = this.hand.remove(index);
         this.discard.add(tile);
+        this.handPanelHolder.displayHand();
+        this.discardPanelHolder.displayDiscard(tile, discardSideways);
+        this.isDiscardSelected = false;
+        this.setDiscardIndex(-1);
     }
 
     public boolean isOpenKan(Tile tile) {
@@ -118,10 +284,13 @@ public class PlayArea {
             for (int i = 0; i < 3; i++) {
                 for (Tile firstTile : chiTiles.get(i)) {
                     for (Tile secondTile : chiTiles.get(i + 1)) {
-                        List<Tile> newCombination = new ArrayList<>();
-                        newCombination.add(firstTile);
-                        newCombination.add(secondTile);
-                        combinations.add(newCombination);
+                        if (combinations.stream().noneMatch(c -> c.get(0).getTileFileName().equals(firstTile.getTileFileName())
+                                && c.get(1).getTileFileName().equals(secondTile.getTileFileName()))) {
+                            List<Tile> newCombination = new ArrayList<>();
+                            newCombination.add(firstTile);
+                            newCombination.add(secondTile);
+                            combinations.add(newCombination);
+                        }
                     }
                 }
             }
@@ -139,28 +308,20 @@ public class PlayArea {
 
     public void removeLastDiscard() {
         discard.remove(discard.size() - 1);
+        discardPanelHolder.removeLastDiscard();
     }
 
-    public void makeDiscardSelection(boolean displayHand) {
-        Scanner myScanner = new Scanner(System.in);
+    public void makeDiscardSelection(boolean displayHand, GameWindow window) {
         if (displayHand) {
             displayHandAndMelds();
         }
-        while (true) {
-            System.out.println("Discard which tile? (1 - " + hand.size() + ")");
-            String input = myScanner.nextLine();
-            try {
-                int value = Integer.parseInt(input);
-                if (value >= 1 && value <= hand.size()) {
-                    discard(value - 1);
-                    return;
-                }
-            } catch (NumberFormatException ignored) {
-                continue;
-            }
-            System.out.println("Input a valid tile");
-            displayHandAndMelds();
+        isMyTurn = true;
+        this.handPanelHolder.displayMyTurnBorder();
+        this.handPanelHolder.getMainPanel().repaint();
+        while (!isDiscardSelected) {
+            //Waiting for the player to click on the tile they want to discard
         }
+        discard(discardIndex, false);
     }
 
     public boolean isHandOpen() {
@@ -170,6 +331,28 @@ public class PlayArea {
     public void reset() {
         this.hand.clear();
         this.discard.clear();
+        this.melds.clear();
+        discardIndex = -1;
+        handPanelHolder.clearAll();
+        discardPanelHolder.clearAll();
+        meldPanelHolder.clearAll();
+        isMyTurn = false;
+    }
+
+    public void setDiscardSelected(boolean discardSelected) {
+        isDiscardSelected = discardSelected;
+    }
+
+    public void setDiscardIndex(int discardIndex) {
+        this.discardIndex = discardIndex;
+    }
+
+    public boolean isMyTurn() {
+        return isMyTurn;
+    }
+
+    public void setMyTurn(boolean myTurn) {
+        isMyTurn = myTurn;
     }
 
     public String getHandAsString() {
@@ -221,8 +404,7 @@ public class PlayArea {
 
     public void displayHandAndMelds() {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
-        System.out.println("Hand: " + getHandAsString());
-        System.out.println("Melds: " + getMeldsAsString());
+        this.handPanelHolder.displayHand();
     }
 
     public List<Tile> getCombineHandAndMelds() {
@@ -247,5 +429,29 @@ public class PlayArea {
 
     public void setDiscard(List<Tile> discard) {
         this.discard = discard;
+    }
+
+    public AbstractHandPanelHolder getHandPanelHolder() {
+        return handPanelHolder;
+    }
+
+    public MeldPanelHolder getMeldPanelHolder() {
+        return meldPanelHolder;
+    }
+
+    public DiscardPanelHolder getDiscardPanelHolder() {
+        return discardPanelHolder;
+    }
+
+    public boolean isDiscardSelected() {
+        return isDiscardSelected;
+    }
+
+    public int getDiscardIndex() {
+        return discardIndex;
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 }

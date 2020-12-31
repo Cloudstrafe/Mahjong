@@ -2,12 +2,12 @@ package mahjong.tile;
 
 public class WindTile extends Tile {
 
-    public WindTile(String suit) {
-        this.number = 0;
-        this.suit = suit;
-        this.isRed = false;
-        this.isDora = false;
-        setImageFilePaths();
+    public WindTile(String suit)  {
+        super(0, suit, false, false);
+    }
+
+    public WindTile(WindTile tile) {
+        super(tile);
     }
 
     @Override
@@ -45,5 +45,10 @@ public class WindTile extends Tile {
     @Override
     public boolean isHonor() {
         return true;
+    }
+
+    @Override
+    public boolean isGreen() {
+        return isGreen;
     }
 }

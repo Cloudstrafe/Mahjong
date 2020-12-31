@@ -2,12 +2,12 @@ package mahjong.tile;
 
 public class DragonTile extends Tile {
 
-    public DragonTile(String suit) {
-        this.number = 0;
-        this.suit = suit;
-        this.isRed = false;
-        this.isDora = false;
-        setImageFilePaths();
+    public DragonTile(String suit)  {
+        super(0, suit, false, false);
+    }
+
+    public DragonTile(DragonTile tile) {
+        super(tile);
     }
 
     @Override
@@ -43,5 +43,10 @@ public class DragonTile extends Tile {
     @Override
     public boolean isHonor() {
         return true;
+    }
+
+    @Override
+    public boolean isGreen() {
+        return isGreen;
     }
 }
