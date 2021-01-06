@@ -13,6 +13,20 @@ public class Cost {
         total = main + mainBonus + 2*(additional + additionalBonus) + kyoutakuBonus;
     }
 
+    public void setKyoutakuBonus(int riichiSticks) {
+        kyoutakuBonus = riichiSticks * 1000;
+    }
+
+    public void setTsumiBonuses(int tsumiSticks) {
+        if (additional == 0) {
+            mainBonus = tsumiSticks * 300;
+            additionalBonus = 0;
+        } else {
+            mainBonus = tsumiSticks * 100;
+            additionalBonus = tsumiSticks * 100;
+        }
+    }
+
     public int getMainPayment() {
         return main + mainBonus;
     }

@@ -261,7 +261,7 @@ public class TestScoringHelper {
         Tile winningTile = t26;
 
         //When
-        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, player, true);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, player, true, 0, 0);
 
         //Then
         assertNotNull(scoringResult);
@@ -279,4 +279,206 @@ public class TestScoringHelper {
         assertEquals("Yakuhai (chun)", scoringResult.getYaku().get(0));
         assertEquals("Dora", scoringResult.getYaku().get(1));
     }
+
+    @Test
+    public void testAdjustScoresWithTsumo() {
+        //Given
+        Tile t1 = new NumberTile(1, SuitConstants.CHARACTERS, false);
+        Tile t2 = new NumberTile(2, SuitConstants.CHARACTERS, false);
+        Tile t3 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t12 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t13 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t14 = new WindTile(SuitConstants.EAST_WIND);
+        Deck deadwallDeck = new Deck(new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)));
+        Deadwall deadwall = new Deadwall(deadwallDeck);
+        deadwall.setup(deadwallDeck);
+        deadwall.setRevealed(3);
+
+        Game game = new Game(null);
+
+        Tile t15 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t16 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t17 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t18 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t19 = new NumberTile(3, SuitConstants.DOTS, false);
+        Tile t20 = new NumberTile(4, SuitConstants.DOTS, false);
+        Tile t21 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t22 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t23 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t24 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t25 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t26 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t27 = new NumberTile(7, SuitConstants.BAMBOO, false);
+        Tile t28 = new NumberTile(8, SuitConstants.BAMBOO, false);
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t15, t16, t17));
+        Meld meld = new Meld(tiles, true, false, 1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t18, t19, t20));
+        Meld meld2 = new Meld(tilesMeld2, true, true, 2);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t21, t22, t23, t24, t25, t26, t27, t28));
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        Player p1 = game.getTurnQueue().remove();
+        p1.setPlayArea(playArea);
+        game.getTurnQueue().add(p1);
+        game.setDeadwall(deadwall);
+
+        Tile winningTile = t26;
+
+        //When
+        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), winningTile, p1, true, 0, 0);
+        ScoringHelper.adjustScores(scoringResult, game, p1, null);
+
+        //Then
+        assertEquals(21000, game.getTurnQueue().remove().getPoints());
+        assertEquals(21000, game.getTurnQueue().remove().getPoints());
+        assertEquals(21000, game.getTurnQueue().remove().getPoints());
+        assertEquals(37000, game.getTurnQueue().remove().getPoints());
+    }
+
+    @Test
+    public void testAdjustScoresWithRon() {
+        //Given
+        Tile t1 = new NumberTile(1, SuitConstants.CHARACTERS, false);
+        Tile t2 = new NumberTile(2, SuitConstants.CHARACTERS, false);
+        Tile t3 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t12 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t13 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t14 = new WindTile(SuitConstants.EAST_WIND);
+        Deck deadwallDeck = new Deck(new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)));
+        Deadwall deadwall = new Deadwall(deadwallDeck);
+        deadwall.setup(deadwallDeck);
+        deadwall.setRevealed(3);
+
+        Game game = new Game(null);
+
+        Tile t15 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t16 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t17 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t18 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t19 = new NumberTile(3, SuitConstants.DOTS, false);
+        Tile t20 = new NumberTile(4, SuitConstants.DOTS, false);
+        Tile t21 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t22 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t23 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t24 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t25 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t26 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t27 = new NumberTile(7, SuitConstants.BAMBOO, false);
+        Tile t28 = new NumberTile(8, SuitConstants.BAMBOO, false);
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t15, t16, t17));
+        Meld meld = new Meld(tiles, true, false, 1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t18, t19, t20));
+        Meld meld2 = new Meld(tilesMeld2, true, true, 2);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t21, t22, t23, t24, t25, t26, t27, t28));
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        Player p1 = game.getTurnQueue().remove();
+        p1.setPlayArea(playArea);
+        game.getTurnQueue().add(p1);
+        Player p2 = game.getTurnQueue().remove();
+        game.getTurnQueue().add(p2);
+        game.getTurnQueue().add(game.getTurnQueue().remove());
+        game.getTurnQueue().add(game.getTurnQueue().remove());
+        game.getTurnQueue().add(game.getTurnQueue().remove());
+        game.setDeadwall(deadwall);
+
+        Tile winningTile = t26;
+
+        //When
+        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), winningTile, p1, false, 0, 0);
+        ScoringHelper.adjustScores(scoringResult, game, p1, p2);
+
+        //Then
+        assertEquals(13400, game.getTurnQueue().remove().getPoints());
+        assertEquals(25000, game.getTurnQueue().remove().getPoints());
+        assertEquals(25000, game.getTurnQueue().remove().getPoints());
+        assertEquals(36600, game.getTurnQueue().remove().getPoints());
+    }
+
+    @Test
+    public void testAdjustScoresWithRiichiBonus() {
+        //Given
+        Tile t1 = new NumberTile(1, SuitConstants.CHARACTERS, false);
+        Tile t2 = new NumberTile(2, SuitConstants.CHARACTERS, false);
+        Tile t3 = new NumberTile(3, SuitConstants.CHARACTERS, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t10 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t11 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        Tile t12 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t13 = new WindTile(SuitConstants.EAST_WIND);
+        Tile t14 = new WindTile(SuitConstants.EAST_WIND);
+        Deck deadwallDeck = new Deck(new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14)));
+        Deadwall deadwall = new Deadwall(deadwallDeck);
+        deadwall.setup(deadwallDeck);
+        deadwall.setRevealed(3);
+
+        Game game = new Game(null);
+
+        Tile t15 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t16 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t17 = new DragonTile(SuitConstants.RED_DRAGON);
+        Tile t18 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t19 = new NumberTile(3, SuitConstants.DOTS, false);
+        Tile t20 = new NumberTile(4, SuitConstants.DOTS, false);
+        Tile t21 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t22 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t23 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t24 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t25 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t26 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t27 = new NumberTile(7, SuitConstants.BAMBOO, false);
+        Tile t28 = new NumberTile(8, SuitConstants.BAMBOO, false);
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t15, t16, t17));
+        Meld meld = new Meld(tiles, true, false, 1);
+        List<Tile> tilesMeld2 = new ArrayList<>(Arrays.asList(t18, t19, t20));
+        Meld meld2 = new Meld(tilesMeld2, true, true, 2);
+        List<Meld> melds = new ArrayList<>(Arrays.asList(meld, meld2));
+        List<Tile> hand = new ArrayList<>(Arrays.asList(t21, t22, t23, t24, t25, t26, t27, t28));
+        PlayArea playArea = new PlayArea(1);
+        playArea.setHand(hand);
+        playArea.setMelds(melds);
+        Player p1 = game.getTurnQueue().remove();
+        p1.setPlayArea(playArea);
+        game.getTurnQueue().add(p1);
+        game.setDeadwall(deadwall);
+
+        Tile winningTile = t26;
+
+        //When
+        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), winningTile, p1, true, 3, 0);
+        ScoringHelper.adjustScores(scoringResult, game, p1, null);
+
+        //Then
+        assertEquals(21000, game.getTurnQueue().remove().getPoints());
+        assertEquals(21000, game.getTurnQueue().remove().getPoints());
+        assertEquals(21000, game.getTurnQueue().remove().getPoints());
+        assertEquals(40000, game.getTurnQueue().remove().getPoints());
+    }
+
+    //test for tsumi bonus w/ both tsumo and ron
 }

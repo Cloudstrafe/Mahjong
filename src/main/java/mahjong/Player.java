@@ -18,6 +18,7 @@ public class Player {
     private final int playerNumber;
     private boolean isInRiichi;
     private boolean hasRiichiTileInDiscard;
+    private boolean hasRiichiDeposit;
     private int sizeOfDiscardAfterRiichi;
     private List<Tile> waits;
     private boolean isInTemporaryFuriten;
@@ -68,16 +69,20 @@ public class Player {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
             //scoring stuff
-            ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), drawnTile, this, true);
+            ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), drawnTile, this, true, game.getRiichiSticks(), game.getTsumiSticks());
             ScoringHelper.adjustScores(scoringResult, game, this, null);
+            game.clearRiichiSticks();
             if (!isDealer) {
+                game.clearTsumiSticks();
                 game.advanceRound();
+            } else {
+                game.addTsumiStick();
             }
             game.beginNewRound();
         }
         if (!isInRiichi) {
             Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
-            if (!riichiTiles.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
+            if (!riichiTiles.isEmpty() && points >= 1000 && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
                 if (riichiTiles.size() > 1) {
                     Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
                     isInRiichi = true;
@@ -119,6 +124,7 @@ public class Player {
         waits.clear();
         isInTemporaryFuriten = false;
         isInPermanentFuriten = false;
+        hasRiichiDeposit = false;
     }
 
     public boolean isInRiichi() {
@@ -179,5 +185,13 @@ public class Player {
 
     public boolean isInPermanentFuriten() {
         return isInPermanentFuriten;
+    }
+
+    public boolean hasRiichiDeposit() {
+        return hasRiichiDeposit;
+    }
+
+    public void setHasRiichiDeposit(boolean hasRiichiDeposit) {
+        this.hasRiichiDeposit = hasRiichiDeposit;
     }
 }
