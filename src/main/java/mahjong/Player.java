@@ -17,6 +17,7 @@ public class Player {
     private boolean isDealer;
     private final int playerNumber;
     private boolean isInRiichi;
+    private boolean isIppatsu;
     private boolean hasRiichiTileInDiscard;
     private int sizeOfDiscardAfterRiichi;
     private List<Tile> waits;
@@ -30,6 +31,7 @@ public class Player {
         this.isDealer = isDealer;
         this.playerNumber = playerNumber;
         this.isInRiichi = false;
+        isIppatsu = false;
         hasRiichiTileInDiscard = false;
         waits = new ArrayList<>();
         isInTemporaryFuriten = false;
@@ -43,6 +45,7 @@ public class Player {
         this.isDealer = player.isDealer;
         this.playerNumber = player.playerNumber;
         this.isInRiichi = player.isInRiichi;
+        this.isIppatsu = player.isIppatsu;
         hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
         this.waits = player.waits;
         this.isInTemporaryFuriten = player.isInTemporaryFuriten;
@@ -80,14 +83,13 @@ public class Player {
             if (!riichiTiles.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
                 if (riichiTiles.size() > 1) {
                     Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
-                    isInRiichi = true;
                     waits = riichiTiles.get(discardTile);
                     playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
                 } else {
-                    isInRiichi = true;
                     waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
                     playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
                 }
+                isInRiichi = true;
                 sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 isInPermanentFuriten = isInFuriten();
             } else {
