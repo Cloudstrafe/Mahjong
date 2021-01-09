@@ -164,7 +164,7 @@ public class Game {
 
     public void endRound(Player winningPlayer, Tile winningTile, Player discardingPlayer) {
         //scoring stuff
-        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, false);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, false, riichiSticks, tsumiSticks);
         ScoringHelper.adjustScores(scoringResult, this, winningPlayer, discardingPlayer);
         riichiSticks = 0;
         if (!winningPlayer.isDealer()) {
@@ -341,5 +341,9 @@ public class Game {
 
     public void setDeadwall(Deadwall deadwall) {
         this.deadwall = deadwall;
+    }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
     }
 }
