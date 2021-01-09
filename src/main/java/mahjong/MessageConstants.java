@@ -12,6 +12,7 @@ public class MessageConstants {
     public static final String MSG_WIN = "Player {0} wins!";
     public static final String MSG_EMPTY_DECK = "Deck empty, starting new hand.";
     public static final String MSG_SELECT_CHI_OPTION = "Player {0}, select the tiles you would like to chi with";
+    public static final String MSG_PLAY_AGAIN = "Would you like to play again";
 
     private MessageConstants() {
         throw new IllegalStateException("Utility class");

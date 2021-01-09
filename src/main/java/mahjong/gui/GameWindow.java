@@ -44,6 +44,11 @@ public class GameWindow {
         return response == JOptionPane.YES_OPTION;
     }
 
+    public boolean isPlayAgainConfirmed(String message) {
+        int response = JOptionPane.showConfirmDialog(this.window, message, UIManager.getString("OptionPane.titleText"), YES_NO_OPTION);
+        return response == JOptionPane.YES_OPTION;
+    }
+
     public int getChiCallChoice(String message, List<List<Tile>> combinations) {
         Object[] panelArray = new Object[combinations.size()];
         for (int i = 0; i < combinations.size(); i++) {
