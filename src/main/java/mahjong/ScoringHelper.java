@@ -243,7 +243,7 @@ public class ScoringHelper {
             stringBuilder.append("is_haitei=True, ");
         }
         if (deck.getWall().isEmpty() && !isTsumo) {
-            stringBuilder.append("is_houtei=True");
+            stringBuilder.append("is_houtei=True, ");
         }
         stringBuilder.append("player_wind=").append(HONORS_LIST.indexOf(winningPlayer.getSeat()) + WIND_OFFSET).append(", ");
         stringBuilder.append("round_wind=").append(HONORS_LIST.indexOf(roundWind) + WIND_OFFSET).append(")");

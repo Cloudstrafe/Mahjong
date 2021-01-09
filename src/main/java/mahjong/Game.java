@@ -342,4 +342,8 @@ public class Game {
     public void setDeadwall(Deadwall deadwall) {
         this.deadwall = deadwall;
     }
+
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
 }
