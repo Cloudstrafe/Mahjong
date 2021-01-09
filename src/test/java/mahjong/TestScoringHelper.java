@@ -258,10 +258,8 @@ public class TestScoringHelper {
         playArea.setMelds(melds);
         player.setPlayArea(playArea);
 
-        Tile winningTile = t26;
-
         //When
-        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, player, true);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, t26, player, true);
 
         //Then
         assertNotNull(scoringResult);

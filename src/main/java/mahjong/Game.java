@@ -219,6 +219,9 @@ public class Game {
     private void callHandler(Player discardingPlayer, Player callingPlayer, boolean isKan) {
         discardingPlayer.getPlayArea().removeLastDiscard();
         turnQueue.add(callingPlayer);
+        for (Player player : turnQueue) {
+            player.setIppatsu(false);
+        }
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true, window);
             callingPlayer.setWaits(YakuHandler.getWaitTiles(new Player(callingPlayer)));

@@ -234,6 +234,9 @@ public class ScoringHelper {
         if (winningPlayer.isInRiichi()) {
             stringBuilder.append("is_riichi=True, ");
         }
+        if (winningPlayer.isIppatsu()) {
+            stringBuilder.append("is_ippatsu=True, ");
+        }
         if (deck.getWall().isEmpty() && isTsumo) {
             stringBuilder.append("is_haitei=True, ");
         }
