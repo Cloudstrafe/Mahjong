@@ -258,10 +258,8 @@ public class TestScoringHelper {
         playArea.setMelds(melds);
         player.setPlayArea(playArea);
 
-        Tile winningTile = t26;
-
         //When
-        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, player, true, 0, 0);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, t26, player, true, 0, 0);
 
         //Then
         assertNotNull(scoringResult);
@@ -332,10 +330,8 @@ public class TestScoringHelper {
         game.getTurnQueue().add(p1);
         game.setDeadwall(deadwall);
 
-        Tile winningTile = t26;
-
         //When
-        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), winningTile, p1, true, 0, 0);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), t26, p1, true, 0, 0);
         ScoringHelper.adjustScores(scoringResult, game, p1, null);
 
         //Then
@@ -402,10 +398,8 @@ public class TestScoringHelper {
         game.getTurnQueue().add(game.getTurnQueue().remove());
         game.setDeadwall(deadwall);
 
-        Tile winningTile = t26;
-
         //When
-        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), winningTile, p1, false, 0, 0);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), t26, p1, false, 0, 0);
         ScoringHelper.adjustScores(scoringResult, game, p1, p2);
 
         //Then
@@ -467,10 +461,8 @@ public class TestScoringHelper {
         game.getTurnQueue().add(p1);
         game.setDeadwall(deadwall);
 
-        Tile winningTile = t26;
-
         //When
-        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), winningTile, p1, true, 3, 0);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), t26, p1, true, 3, 0);
         ScoringHelper.adjustScores(scoringResult, game, p1, null);
 
         //Then
@@ -480,5 +472,5 @@ public class TestScoringHelper {
         assertEquals(40000, game.getTurnQueue().remove().getPoints());
     }
 
-    //test for tsumi bonus w/ both tsumo and ron
+    //tests for tsumi bonus w/ both tsumo and ron, when winning player is in riichi, haitei, and hotei
 }
