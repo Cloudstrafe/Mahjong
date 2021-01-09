@@ -66,6 +66,8 @@ public class ScoringHelper {
             String jsonContents = Files.readString(Paths.get("src/main/java/mahjong/result.json"));
             Gson gson = new Gson();
             ScoringResult scoringResult = gson.fromJson(jsonContents, ScoringResult.class);
+            scoringResult.getCost().setKyoutakuBonus(riichiSticks);
+            scoringResult.getCost().setTsumiBonuses(tsumiSticks);
             scoringResult.getCost().setTotal();
             return scoringResult;
         } catch (Exception e) {
@@ -245,7 +247,7 @@ public class ScoringHelper {
             stringBuilder.append("is_haitei=True, ");
         }
         if (deck.getWall().isEmpty() && !isTsumo) {
-            stringBuilder.append("is_houtei=True");
+            stringBuilder.append("is_houtei=True, ");
         }
         stringBuilder.append("player_wind=").append(HONORS_LIST.indexOf(winningPlayer.getSeat()) + WIND_OFFSET).append(", ");
         stringBuilder.append("round_wind=").append(HONORS_LIST.indexOf(roundWind) + WIND_OFFSET).append(")");

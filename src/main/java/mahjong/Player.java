@@ -197,6 +197,10 @@ public class Player {
         return hasRiichiDeposit;
     }
 
+    public void setInRiichi(boolean inRiichi) {
+        isInRiichi = inRiichi;
+    }
+
     public void setHasRiichiDeposit(boolean hasRiichiDeposit) {
         this.hasRiichiDeposit = hasRiichiDeposit;
     }
