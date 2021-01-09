@@ -68,31 +68,20 @@ public class Player {
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
-            //scoring stuff
-            ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), drawnTile, this, true, game.getRiichiSticks(), game.getTsumiSticks());
-            ScoringHelper.adjustScores(scoringResult, game, this, null);
-            game.clearRiichiSticks();
-            if (!isDealer) {
-                game.clearTsumiSticks();
-                game.advanceRound();
-            } else {
-                game.addTsumiStick();
-            }
-            game.beginNewRound();
+            game.endRound(this, drawnTile, null);
         }
         if (!isInRiichi) {
             Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
             if (!riichiTiles.isEmpty() && points >= 1000 && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
                 if (riichiTiles.size() > 1) {
                     Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
-                    isInRiichi = true;
                     waits = riichiTiles.get(discardTile);
                     playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
                 } else {
-                    isInRiichi = true;
                     waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
                     playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
                 }
+                isInRiichi = true;
                 sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 isInPermanentFuriten = isInFuriten();
             } else {
@@ -125,6 +114,14 @@ public class Player {
         isInTemporaryFuriten = false;
         isInPermanentFuriten = false;
         hasRiichiDeposit = false;
+    }
+
+    public void newGame(String wind) {
+        reset();
+        points = 25000;
+        isDealer = false;
+        seat = wind;
+        playArea.reset();
     }
 
     public boolean isInRiichi() {

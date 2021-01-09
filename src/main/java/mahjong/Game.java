@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static java.lang.System.exit;
 import static mahjong.SuitConstants.*;
 
 public class Game {
@@ -20,7 +21,6 @@ public class Game {
     private Queue<Player> turnQueue;
     private Deadwall deadwall;
     private GameWindow window;
-    private boolean isRoundOver;
     private int riichiSticks;
     private int tsumiSticks;
     private int roundNumber;
@@ -36,7 +36,6 @@ public class Game {
         this.playerFour = new Player(NORTH_WIND, false, 4);
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
-        this.isRoundOver = false;
         this.deadwall = new Deadwall(deck);
         this.roundNumber = 1;
         this.roundWind = EAST_WIND;
@@ -55,7 +54,6 @@ public class Game {
         this.playerFour = new Player(NORTH_WIND, false, 4);
         this.deck = new Deck();
         this.turnQueue = new LinkedList<>();
-        this.isRoundOver = false;
         this.deadwall = new Deadwall(deck);
         this.roundNumber = 1;
         this.roundWind = EAST_WIND;
@@ -106,16 +104,14 @@ public class Game {
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
         }
-        if (!isRoundOver) {
-            JOptionPane.showMessageDialog(this.window.getWindow(), MessageConstants.MSG_EMPTY_DECK);
-            if (!ExhaustiveDraw.tenpaiPayout(turnQueue)) {
-                //potentially clear tsumiSticks here? unsure about ruling when dealer loses control during exhaustive draw
-                advanceRound();
-            } else {
-                tsumiSticks++;
-            }
-            beginNewRound();
+        JOptionPane.showMessageDialog(this.window.getWindow(), MessageConstants.MSG_EMPTY_DECK);
+        if (!ExhaustiveDraw.tenpaiPayout(turnQueue)) {
+            //potentially clear tsumiSticks here? unsure about ruling when dealer loses control during exhaustive draw
+            advanceRound();
+        } else {
+            tsumiSticks++;
         }
+        beginNewRound();
     }
 
     private void checkRons(Player currentPlayer) {
@@ -130,17 +126,7 @@ public class Game {
                     player.getPlayArea().getHand().add(discarded);
                     JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
                     turnQueue.add(player);
-                    //scoring stuff
-                    ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, discarded, player, false, riichiSticks, tsumiSticks);
-                    ScoringHelper.adjustScores(scoringResult, this, player, currentPlayer);
-                    riichiSticks = 0;
-                    if (!player.isDealer()) {
-                        tsumiSticks = 0;
-                        advanceRound();
-                    } else {
-                        tsumiSticks++;
-                    }
-                    beginNewRound();
+                    endRound(player, discarded, currentPlayer);
                 } else {
                     if (player.isInRiichi()) {
                         player.setInPermanentFuriten(true);
@@ -155,11 +141,46 @@ public class Game {
         }
         if (currentPlayer.isInRiichi() && !currentPlayer.hasRiichiDeposit()) {
             currentPlayer.setPoints(currentPlayer.getPoints() - 1000);
+            updateScoreDisplay(currentPlayer);
             riichiSticks++;
             currentPlayer.setHasRiichiDeposit(true);
         }
         turnQueue.add(turnQueue.remove());
         checkOpenKansAndPons(currentPlayer);
+    }
+
+    private void updateScoreDisplay(Player currentPlayer) {
+        if (currentPlayer.getPlayerNumber() == 1) {
+            window.getGameInfoPanel().getPlayerOneScore().setText(Integer.toString(playerOne.getPoints()));
+        } else if (currentPlayer.getPlayerNumber() == 2) {
+            window.getGameInfoPanel().getPlayerTwoScore().setText(Integer.toString(playerTwo.getPoints()));
+        } else if (currentPlayer.getPlayerNumber() == 3) {
+            window.getGameInfoPanel().getPlayerThreeScore().setText(Integer.toString(playerThree.getPoints()));
+        }
+        if (currentPlayer.getPlayerNumber() == 4) {
+            window.getGameInfoPanel().getPlayerFourScore().setText(Integer.toString(playerFour.getPoints()));
+        }
+    }
+
+    public void endRound(Player winningPlayer, Tile winningTile, Player discardingPlayer) {
+        //scoring stuff
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, false);
+        ScoringHelper.adjustScores(scoringResult, this, winningPlayer, discardingPlayer);
+        riichiSticks = 0;
+        if (!winningPlayer.isDealer()) {
+            tsumiSticks = 0;
+            advanceRound();
+        } else {
+            tsumiSticks++;
+        }
+        if (hasGameEnded()) {
+            if (window.isPlayAgainConfirmed(MessageConstants.MSG_PLAY_AGAIN)) {
+                beginNewGame();
+            } else {
+                exit(0);
+            }
+        }
+        beginNewRound();
     }
 
     private void checkOpenKansAndPons(Player currentPlayer) {
@@ -273,9 +294,33 @@ public class Game {
         }
     }
 
+    public boolean hasGameEnded() {
+        boolean playerHas30000Points = false;
+        for (Player player : turnQueue) {
+            if (player.getPoints() >= 30000) {
+                playerHas30000Points = true;
+            }
+            if (player.getPoints() < 0) {
+                return true;
+            }
+        }
+        return (WEST_WIND.equals(roundWind) || NORTH_WIND.equals(roundWind)) && playerHas30000Points;
+    }
+
     public void beginNewRound() {
         setupRound();
         playRound();
+    }
+
+    public void beginNewGame() {
+        playerOne.newGame(EAST_WIND);
+        playerTwo.newGame(SOUTH_WIND);
+        playerThree.newGame(WEST_WIND);
+        playerFour.newGame(NORTH_WIND);
+        playerOne.setDealer(true);
+        roundWind = EAST_WIND;
+        roundNumber = 1;
+        beginNewRound();
     }
 
     public Queue<Player> getTurnQueue() {
@@ -296,25 +341,5 @@ public class Game {
 
     public void setDeadwall(Deadwall deadwall) {
         this.deadwall = deadwall;
-    }
-
-    public int getRiichiSticks() {
-        return riichiSticks;
-    }
-
-    public int getTsumiSticks() {
-        return tsumiSticks;
-    }
-
-    public void addTsumiStick() {
-        tsumiSticks++;
-    }
-
-    public void clearTsumiSticks() {
-        tsumiSticks = 0;
-    }
-
-    public void clearRiichiSticks() {
-        riichiSticks = 0;
     }
 }
