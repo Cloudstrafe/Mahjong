@@ -46,8 +46,10 @@ public class Player {
         this.isDealer = player.isDealer;
         this.playerNumber = player.playerNumber;
         this.isInRiichi = player.isInRiichi;
+        this.hasRiichiDeposit = player.hasRiichiDeposit;
+        this.sizeOfDiscardAfterRiichi = player.sizeOfDiscardAfterRiichi;
         this.isIppatsu = player.isIppatsu;
-        hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
+        this.hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
         this.waits = player.waits;
         this.isInTemporaryFuriten = player.isInTemporaryFuriten;
         this.isInPermanentFuriten = player.isInPermanentFuriten;

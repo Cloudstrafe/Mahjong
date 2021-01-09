@@ -25,6 +25,10 @@ public class ScoringHelper {
 
     private static final int WIND_OFFSET = 27;
 
+    private ScoringHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static ScoringResult scoreRound(Deadwall deadwall, Deck deck, String roundWind, Tile winningTile, Player winningPlayer, boolean isTsumo) {
         try {
             StringBuilder pythonScript = new StringBuilder();
