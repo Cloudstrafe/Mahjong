@@ -17,6 +17,7 @@ public class Player {
     private boolean isDealer;
     private final int playerNumber;
     private boolean isInRiichi;
+    private boolean isIppatsu;
     private boolean hasRiichiTileInDiscard;
     private boolean hasRiichiDeposit;
     private int sizeOfDiscardAfterRiichi;
@@ -31,6 +32,7 @@ public class Player {
         this.isDealer = isDealer;
         this.playerNumber = playerNumber;
         this.isInRiichi = false;
+        isIppatsu = false;
         hasRiichiTileInDiscard = false;
         waits = new ArrayList<>();
         isInTemporaryFuriten = false;
@@ -44,7 +46,10 @@ public class Player {
         this.isDealer = player.isDealer;
         this.playerNumber = player.playerNumber;
         this.isInRiichi = player.isInRiichi;
-        hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
+        this.hasRiichiDeposit = player.hasRiichiDeposit;
+        this.sizeOfDiscardAfterRiichi = player.sizeOfDiscardAfterRiichi;
+        this.isIppatsu = player.isIppatsu;
+        this.hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
         this.waits = player.waits;
         this.isInTemporaryFuriten = player.isInTemporaryFuriten;
         this.isInPermanentFuriten = player.isInPermanentFuriten;
@@ -70,6 +75,9 @@ public class Player {
             game.getTurnQueue().add(this);
             game.endRound(this, drawnTile, null);
         }
+        if (isIppatsu) {
+            isIppatsu = false;
+        }
         if (!isInRiichi) {
             Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
             if (!riichiTiles.isEmpty() && points >= 1000 && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
@@ -82,6 +90,7 @@ public class Player {
                     playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
                 }
                 isInRiichi = true;
+                isIppatsu = true;
                 sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 isInPermanentFuriten = isInFuriten();
             } else {
@@ -194,5 +203,13 @@ public class Player {
 
     public void setHasRiichiDeposit(boolean hasRiichiDeposit) {
         this.hasRiichiDeposit = hasRiichiDeposit;
+    }
+
+    public boolean isIppatsu() {
+        return isIppatsu;
+    }
+
+    public void setIppatsu(boolean ippatsu) {
+        isIppatsu = ippatsu;
     }
 }

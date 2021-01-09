@@ -26,6 +26,7 @@ public class ScoringHelper {
     private static final int WIND_OFFSET = 27;
 
     private ScoringHelper() {
+        throw new IllegalStateException("Utility class");
     }
 
     public static ScoringResult scoreRound(Deadwall deadwall, Deck deck, String roundWind, Tile winningTile, Player winningPlayer, boolean isTsumo, int riichiSticks, int tsumiSticks) {
@@ -238,6 +239,9 @@ public class ScoringHelper {
         }
         if (winningPlayer.isInRiichi()) {
             stringBuilder.append("is_riichi=True, ");
+        }
+        if (winningPlayer.isIppatsu()) {
+            stringBuilder.append("is_ippatsu=True, ");
         }
         if (deck.getWall().isEmpty() && isTsumo) {
             stringBuilder.append("is_haitei=True, ");
