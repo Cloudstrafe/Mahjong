@@ -70,7 +70,13 @@ public class Player {
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
-            game.endRound(this, drawnTile, null);
+            //scoring stuff
+            ScoringResult scoringResult = ScoringHelper.scoreRound(game.getDeadwall(), game.getDeck(), game.getRoundWind(), drawnTile, this, true);
+            ScoringHelper.adjustScores(scoringResult, game, this, null);
+            if (!isDealer) {
+                game.advanceRound();
+            }
+            game.beginNewRound();
         }
         if (isIppatsu) {
             isIppatsu = false;
@@ -179,5 +185,13 @@ public class Player {
 
     public boolean isInPermanentFuriten() {
         return isInPermanentFuriten;
+    }
+
+    public boolean isIppatsu() {
+        return isIppatsu;
+    }
+
+    public void setIppatsu(boolean ippatsu) {
+        isIppatsu = ippatsu;
     }
 }
