@@ -29,7 +29,7 @@ public class ScoringHelper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static ScoringResult scoreRound(Deadwall deadwall, Deck deck, String roundWind, Tile winningTile, Player winningPlayer, boolean isTsumo) {
+    public static ScoringResult scoreRound(Deadwall deadwall, Deck deck, String roundWind, Tile winningTile, Player winningPlayer, boolean isTsumo, int riichiSticks, int tsumiSticks) {
         try {
             StringBuilder pythonScript = new StringBuilder();
             String tiles = getTilesString(winningPlayer);
