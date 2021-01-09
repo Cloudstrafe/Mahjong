@@ -20,6 +20,8 @@ public class Game {
     private Queue<Player> turnQueue;
     private Deadwall deadwall;
     private GameWindow window;
+    private int tsumiSticks;
+    private int riichiSticks;
     private boolean isRoundOver;
     private int roundNumber;
     private String roundWind;
