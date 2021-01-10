@@ -21,7 +21,7 @@ public class TestTile {
         assertTrue(t2.compareTo(t1) > 0);
         assertEquals(0, t1.compareTo(t3));
         assertTrue(t1.compareTo(t2) < 0);
-        assertTrue(t1.compareTo(t7) > 0);
+        assertTrue(t1.compareTo(t7) < 0);
     }
 
     @Test

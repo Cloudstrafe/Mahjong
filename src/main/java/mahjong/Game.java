@@ -126,6 +126,7 @@ public class Game {
     }
 
     public void ronHandler(Player currentPlayer, Tile ronTile, boolean robbedKan) {
+        turnQueue.add(currentPlayer);
         while (turnQueue.peek() != currentPlayer) {
             Player player = turnQueue.remove();
             player.getPlayArea().getHand().add(ronTile);
@@ -149,7 +150,10 @@ public class Game {
             }
             turnQueue.add(player);
         }
-        turnQueue.add(turnQueue.remove());
+        turnQueue.remove();
+        if (!robbedKan) {
+            turnQueue.add(turnQueue.remove());
+        }
     }
 
     private void updateScoreDisplay(Player currentPlayer) {
