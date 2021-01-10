@@ -55,14 +55,14 @@ public class Player {
         this.isInPermanentFuriten = player.isInPermanentFuriten;
     }
 
-    public void takeTurn(Deck deck, Deadwall deadwall, GameWindow window, Game game) {
-        Tile drawnTile = playArea.draw(deck, deadwall, window);
-        turnHandler(window, drawnTile, game);
+    public void takeTurn(Game game) {
+        Tile drawnTile = playArea.draw(game, false);
+        turnHandler(game.getWindow(), drawnTile, game);
     }
 
-    public void takeTurnAfterKan(Deadwall deadwall, GameWindow window, Game game) {
-        Tile drawnTile = playArea.draw(deadwall.getDrawTiles(), deadwall, window);
-        turnHandler(window, drawnTile, game);
+    public void takeTurnAfterKan(Game game) {
+        Tile drawnTile = playArea.draw(game, true);
+        turnHandler(game.getWindow(), drawnTile, game);
     }
 
     private void turnHandler(GameWindow window, Tile drawnTile, Game game) {
@@ -73,7 +73,7 @@ public class Player {
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
-            game.endRound(this, drawnTile, null);
+            game.endRound(this, drawnTile, null, false);
         }
         if (isIppatsu) {
             isIppatsu = false;
@@ -103,6 +103,7 @@ public class Player {
             isInTemporaryFuriten = isInFuriten();
             waits = YakuHandler.getWaitTiles(new Player(this));
         }
+        playArea.displayHandAndMelds();
     }
 
     public boolean isInFuriten() {

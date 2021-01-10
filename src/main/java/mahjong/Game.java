@@ -100,7 +100,7 @@ public class Game {
     private void playRound() {
         while (!deck.getWall().isEmpty()) {
             Player currentPlayer = turnQueue.remove();
-            currentPlayer.takeTurn(deck, deadwall, window, this);
+            currentPlayer.takeTurn(this);
             turnQueue.add(currentPlayer);
             checkRons(currentPlayer);
         }
@@ -115,18 +115,28 @@ public class Game {
     }
 
     private void checkRons(Player currentPlayer) {
-        Tile discarded = currentPlayer.getPlayArea().getLastDiscard();
+        ronHandler(currentPlayer, currentPlayer.getPlayArea().getLastDiscard(), false);
+        if (currentPlayer.isInRiichi() && !currentPlayer.hasRiichiDeposit()) {
+            currentPlayer.setPoints(currentPlayer.getPoints() - 1000);
+            updateScoreDisplay(currentPlayer);
+            riichiSticks++;
+            currentPlayer.setHasRiichiDeposit(true);
+        }
+        checkOpenKansAndPons(currentPlayer);
+    }
+
+    public void ronHandler(Player currentPlayer, Tile ronTile, boolean robbedKan) {
         while (turnQueue.peek() != currentPlayer) {
             Player player = turnQueue.remove();
-            player.getPlayArea().getHand().add(discarded);
+            player.getPlayArea().getHand().add(ronTile);
             if (!player.isInPermanentFuriten() && !player.isInTemporaryFuriten() && YakuHandler.hasValidYaku(player)) {
-                player.getPlayArea().getHand().remove(discarded);
+                player.getPlayArea().getHand().remove(ronTile);
                 player.getPlayArea().displayHandAndMelds();
                 if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
-                    player.getPlayArea().getHand().add(discarded);
+                    player.getPlayArea().getHand().add(ronTile);
                     JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
                     turnQueue.add(player);
-                    endRound(player, discarded, currentPlayer);
+                    endRound(player, ronTile, currentPlayer, robbedKan);
                 } else {
                     if (player.isInRiichi()) {
                         player.setInPermanentFuriten(true);
@@ -135,18 +145,11 @@ public class Game {
                     }
                 }
             } else {
-                player.getPlayArea().getHand().remove(discarded);
+                player.getPlayArea().getHand().remove(ronTile);
             }
             turnQueue.add(player);
         }
-        if (currentPlayer.isInRiichi() && !currentPlayer.hasRiichiDeposit()) {
-            currentPlayer.setPoints(currentPlayer.getPoints() - 1000);
-            updateScoreDisplay(currentPlayer);
-            riichiSticks++;
-            currentPlayer.setHasRiichiDeposit(true);
-        }
         turnQueue.add(turnQueue.remove());
-        checkOpenKansAndPons(currentPlayer);
     }
 
     private void updateScoreDisplay(Player currentPlayer) {
@@ -162,9 +165,9 @@ public class Game {
         }
     }
 
-    public void endRound(Player winningPlayer, Tile winningTile, Player discardingPlayer) {
+    public void endRound(Player winningPlayer, Tile winningTile, Player discardingPlayer, boolean robbedKan) {
         //scoring stuff
-        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, false, riichiSticks, tsumiSticks);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, false, riichiSticks, tsumiSticks, robbedKan);
         ScoringHelper.adjustScores(scoringResult, this, winningPlayer, discardingPlayer);
         riichiSticks = 0;
         if (!winningPlayer.isDealer()) {
@@ -262,7 +265,7 @@ public class Game {
             callingPlayer.setWaits(YakuHandler.getWaitTiles(new Player(callingPlayer)));
             callingPlayer.setInTemporaryFuriten(callingPlayer.isInFuriten());
         } else {
-            callingPlayer.takeTurnAfterKan(deadwall, window, this);
+            callingPlayer.takeTurnAfterKan(this);
             deadwall.setRevealed(deadwall.getRevealed() + 1);
             window.getDoraPanelHolder().displayDora(deadwall.getDoraTiles().get(deadwall.getRevealed()));
         }
@@ -326,6 +329,19 @@ public class Game {
         beginNewRound();
     }
 
+    public Player getPlayerFromNumber(int playerNumber) {
+        if (playerNumber == 1) {
+            return playerOne;
+        }
+        if (playerNumber == 2) {
+            return playerTwo;
+        }
+        if (playerNumber == 3) {
+            return playerThree;
+        }
+        return playerFour;
+    }
+
     public Queue<Player> getTurnQueue() {
         return turnQueue;
     }
@@ -348,5 +364,9 @@ public class Game {
 
     public void setDeck(Deck deck) {
         this.deck = deck;
+    }
+
+    public GameWindow getWindow() {
+        return window;
     }
 }

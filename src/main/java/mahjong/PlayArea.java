@@ -141,56 +141,61 @@ public class PlayArea {
         return discard;
     }
 
-    public Tile draw(Deck deck, Deadwall deadwall, GameWindow window) {
+    public Tile draw(Game game, boolean useDeadwall) {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
-        Tile tile = deck.draw();
-        window.getGameInfoPanel().getDeckTileCount().setText("x" + deck.getTotalTiles());
+        Tile tile;
+        if (!useDeadwall) {
+            tile = game.getDeck().draw();
+            game.getWindow().getGameInfoPanel().getDeckTileCount().setText("x" + game.getDeck().getTotalTiles());
+        } else {
+            tile = game.getDeadwall().getDrawTiles().draw();
+        }
         this.hand.add(tile);
-        displayHandAndMelds();
-        if (isKan(tile, window)) {
-            return draw(deadwall.getDrawTiles(), deadwall, window);
+        this.handPanelHolder.displayHand();
+        if (isKan(tile, game)) {
+            return draw(game, true);
         }
         return tile;
     }
 
+    //    public void setup(Deck deck) {
+//        reset();
+//        for (int i = 0; i < getStartingHandSize(); i++) {
+//            initialDraw(deck);
+//        }
+//        handPanelHolder.displayHand();
+//    }
+    //This is a debug method, set to put players in riichi instantly
     public void setup(Deck deck) {
         reset();
-        for (int i = 0; i < getStartingHandSize(); i++) {
-            initialDraw(deck);
-        }
-        handPanelHolder.displayHand();
+        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
+        Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
+        Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
+        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+        Tile t5 = new NumberTile(3, SuitConstants.DOTS, false);
+        Tile t6 = new NumberTile(4, SuitConstants.DOTS, false);
+        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+        Tile t9 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t10 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t11 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t12 = new NumberTile(3, SuitConstants.BAMBOO, false);
+        Tile t13 = new NumberTile(4, SuitConstants.BAMBOO, false);
+        this.hand.add(t1);
+        this.hand.add(t2);
+        this.hand.add(t3);
+        this.hand.add(t4);
+        this.hand.add(t5);
+        this.hand.add(t6);
+        this.hand.add(t7);
+        this.hand.add(t8);
+        this.hand.add(t9);
+        this.hand.add(t10);
+        this.hand.add(t11);
+        this.hand.add(t12);
+        this.hand.add(t13);
+        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
     }
-//    This is a debug method, set to put players in riichi instantly
-//    public void setup(Deck deck) {
-//        reset();
-//        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
-//        Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
-//        Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
-//        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
-//        Tile t5 = new NumberTile(3, SuitConstants.DOTS, false);
-//        Tile t6 = new NumberTile(4, SuitConstants.DOTS, false);
-//        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
-//        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
-//        Tile t9 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-//        Tile t10 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-//        Tile t11 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-//        Tile t12 = new NumberTile(6, SuitConstants.BAMBOO, false);
-//        Tile t13 = new NumberTile(7, SuitConstants.BAMBOO, false);
-//        this.hand.add(t1);
-//        this.hand.add(t2);
-//        this.hand.add(t3);
-//        this.hand.add(t4);
-//        this.hand.add(t5);
-//        this.hand.add(t6);
-//        this.hand.add(t7);
-//        this.hand.add(t8);
-//        this.hand.add(t9);
-//        this.hand.add(t10);
-//        this.hand.add(t11);
-//        this.hand.add(t12);
-//        this.hand.add(t13);
-//        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
-//    }
 
     private void initialDraw(Deck deck) {
         Tile tile = deck.draw();
@@ -198,17 +203,18 @@ public class PlayArea {
         this.hand = this.hand.stream().sorted().collect(Collectors.toList());
     }
 
-    private boolean isKan(Tile tile, GameWindow window) {
+    private boolean isKan(Tile tile, Game game) {
         if (this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 4) {
-            if (window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+            if (game.getWindow().isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
                 meldKan(tile, false);
                 return true;
             }
         } else {
             List<Meld> meld = melds.stream().filter(m -> m.getTiles().stream().allMatch(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit()))).collect(Collectors.toList());
-            if (!meld.isEmpty() && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+            if (!meld.isEmpty() && game.getWindow().isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+                game.ronHandler(game.getPlayerFromNumber(playerNumber), tile, true);
                 meld.get(0).getTiles().add(tile);
-                meldPanelHolder.kanAPon(tile, melds.indexOf(meld));
+                meldPanelHolder.kanAPon(tile, melds.indexOf(meld.get(0)));
             }
         }
         return false;
