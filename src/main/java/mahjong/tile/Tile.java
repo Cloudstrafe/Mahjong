@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public abstract class Tile implements Comparable<Tile> {
@@ -28,6 +30,7 @@ public abstract class Tile implements Comparable<Tile> {
     protected BufferedImage mediumTileFacingLeft;
     protected static final BufferedImage BACK_OF_TILE_SMALL;
     protected static final BufferedImage BACK_OF_TILE_MEDIUM;
+    protected static Map<String, Integer> rankMap = new HashMap<>();
 
     static {
         BufferedImage BACK_OF_TILE_MEDIUM1;
@@ -41,6 +44,16 @@ public abstract class Tile implements Comparable<Tile> {
         }
         BACK_OF_TILE_MEDIUM = BACK_OF_TILE_MEDIUM1;
         BACK_OF_TILE_SMALL = BACK_OF_TILE_SMALL1;
+        rankMap.put(SuitConstants.CHARACTERS, 1);
+        rankMap.put(SuitConstants.DOTS, 2);
+        rankMap.put(SuitConstants.BAMBOO, 3);
+        rankMap.put(SuitConstants.EAST_WIND, 4);
+        rankMap.put(SuitConstants.SOUTH_WIND, 5);
+        rankMap.put(SuitConstants.WEST_WIND, 6);
+        rankMap.put(SuitConstants.NORTH_WIND, 7);
+        rankMap.put(SuitConstants.WHITE_DRAGON, 8);
+        rankMap.put(SuitConstants.GREEN_DRAGON, 9);
+        rankMap.put(SuitConstants.RED_DRAGON, 10);
     }
 
     public Tile(int number, String suit, boolean isRed, boolean isDora) {
@@ -89,9 +102,13 @@ public abstract class Tile implements Comparable<Tile> {
         this.mediumTileFacingRight = RotateTile.rotate(mediumTileFacingDown, 270.0d);
     }
 
+    protected int getSuitRank() {
+        return rankMap.get(suit);
+    }
+
     @Override
     public int compareTo(Tile o) {
-        return Comparator.comparing(Tile::getSuit)
+        return Comparator.comparing(Tile::getSuitRank)
                 .thenComparingInt(Tile::getNumber)
                 .thenComparing(Tile::getIsRed)
                 .compare(this, o);
@@ -102,7 +119,7 @@ public abstract class Tile implements Comparable<Tile> {
         if (o == null || o.getClass() != this.getClass()) {
             return false;
         }
-        return Comparator.comparing(Tile::getSuit)
+        return Comparator.comparing(Tile::getSuitRank)
                 .thenComparingInt(Tile::getNumber)
                 .thenComparing(Tile::getIsRed)
                 .compare(this, (Tile) o) == 0;

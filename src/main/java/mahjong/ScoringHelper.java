@@ -29,14 +29,14 @@ public class ScoringHelper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static ScoringResult scoreRound(Deadwall deadwall, Deck deck, String roundWind, Tile winningTile, Player winningPlayer, boolean isTsumo, int riichiSticks, int tsumiSticks) {
+    public static ScoringResult scoreRound(Deadwall deadwall, Deck deck, String roundWind, Tile winningTile, Player winningPlayer, boolean isTsumo, int riichiSticks, int tsumiSticks, boolean robbedKan) {
         try {
             StringBuilder pythonScript = new StringBuilder();
             String tiles = getTilesString(winningPlayer);
             String win_tile = getWinTileString(winningTile);
             String melds = getMeldsString(winningPlayer);
             String dora_indicators = getDoraIndicatorsString(deadwall);
-            String config = getConfigString(roundWind, deck, winningPlayer, isTsumo);
+            String config = getConfigString(roundWind, deck, winningPlayer, isTsumo, robbedKan);
             pythonScript.append("import json\n");
             pythonScript.append("import os\n");
             pythonScript.append("from mahjong.hand_calculating.hand import HandCalculator\n");
@@ -231,7 +231,7 @@ public class ScoringHelper {
         }
     }
 
-    public static String getConfigString(String roundWind, Deck deck, Player winningPlayer, boolean isTsumo) {
+    public static String getConfigString(String roundWind, Deck deck, Player winningPlayer, boolean isTsumo, boolean robbedKan) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("config = HandConfig(");
         if (isTsumo) {
@@ -242,6 +242,9 @@ public class ScoringHelper {
         }
         if (winningPlayer.isIppatsu()) {
             stringBuilder.append("is_ippatsu=True, ");
+        }
+        if (robbedKan) {
+            stringBuilder.append("is_chankan=True, ");
         }
         if (deck.getWall().isEmpty() && isTsumo) {
             stringBuilder.append("is_haitei=True, ");
