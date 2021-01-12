@@ -24,6 +24,7 @@ public class Player {
     private List<Tile> waits;
     private boolean isInTemporaryFuriten;
     private boolean isInPermanentFuriten;
+    private boolean isFirstTurn;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
         this.playArea = new PlayArea(playerNumber);
@@ -37,6 +38,7 @@ public class Player {
         waits = new ArrayList<>();
         isInTemporaryFuriten = false;
         isInPermanentFuriten = false;
+        isFirstTurn = true;
     }
 
     public Player(Player player) {
@@ -53,6 +55,7 @@ public class Player {
         this.waits = player.waits;
         this.isInTemporaryFuriten = player.isInTemporaryFuriten;
         this.isInPermanentFuriten = player.isInPermanentFuriten;
+        this.isFirstTurn = player.isFirstTurn;
     }
 
     public void takeTurn(Game game) {
@@ -89,7 +92,7 @@ public class Player {
                     waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
                     playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
                 }
-                isInRiichi = true;
+                isInRiichi = true; //check if first turn for double riichi here, need to verify how the python code deals with the double riichi flag since there is also a normal riichi flag
                 isIppatsu = true;
                 sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 isInPermanentFuriten = isInFuriten();
@@ -103,6 +106,7 @@ public class Player {
             isInTemporaryFuriten = isInFuriten();
             waits = YakuHandler.getWaitTiles(new Player(this));
         }
+        isFirstTurn = false;
         playArea.displayHandAndMelds();
     }
 
@@ -124,6 +128,7 @@ public class Player {
         isInTemporaryFuriten = false;
         isInPermanentFuriten = false;
         hasRiichiDeposit = false;
+        isFirstTurn = true;
     }
 
     public void newGame(String wind) {
@@ -212,5 +217,13 @@ public class Player {
 
     public void setIppatsu(boolean ippatsu) {
         isIppatsu = ippatsu;
+    }
+
+    public boolean isFirstTurn() {
+        return isFirstTurn;
+    }
+
+    public void setFirstTurn(boolean firstTurn) {
+        isFirstTurn = firstTurn;
     }
 }
