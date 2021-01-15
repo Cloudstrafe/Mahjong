@@ -19,6 +19,7 @@ public class Player {
     private boolean isInRiichi;
     private boolean isInDoubleRiichi;
     private boolean isIppatsu;
+    private boolean isReplacementDraw;
     private boolean hasRiichiTileInDiscard;
     private boolean hasRiichiDeposit;
     private int sizeOfDiscardAfterRiichi;
@@ -28,14 +29,15 @@ public class Player {
     private boolean isFirstTurn;
 
     public Player(String seat, boolean isDealer, int playerNumber) {
-        this.playArea = new PlayArea(playerNumber);
+        playArea = new PlayArea(playerNumber);
         this.seat = seat;
-        this.points = 25000;
+        points = 25000;
         this.isDealer = isDealer;
         this.playerNumber = playerNumber;
-        this.isInRiichi = false;
-        this.isInDoubleRiichi = false;
+        isInRiichi = false;
+        isInDoubleRiichi = false;
         isIppatsu = false;
+        isReplacementDraw = false;
         hasRiichiTileInDiscard = false;
         waits = new ArrayList<>();
         isInTemporaryFuriten = false;
@@ -54,6 +56,7 @@ public class Player {
         this.hasRiichiDeposit = player.hasRiichiDeposit;
         this.sizeOfDiscardAfterRiichi = player.sizeOfDiscardAfterRiichi;
         this.isIppatsu = player.isIppatsu;
+        this.isReplacementDraw = player.isReplacementDraw;
         this.hasRiichiTileInDiscard = player.hasRiichiTileInDiscard;
         this.waits = player.waits;
         this.isInTemporaryFuriten = player.isInTemporaryFuriten;
@@ -63,11 +66,13 @@ public class Player {
 
     public void takeTurn(Game game) {
         Tile drawnTile = playArea.draw(game, false);
+        isReplacementDraw = false;
         turnHandler(game.getWindow(), drawnTile, game);
     }
 
     public void takeTurnAfterKan(Game game) {
         Tile drawnTile = playArea.draw(game, true);
+        isReplacementDraw = true;
         turnHandler(game.getWindow(), drawnTile, game);
     }
 
@@ -240,5 +245,13 @@ public class Player {
 
     public void setInDoubleRiichi(boolean inDoubleRiichi) {
         isInDoubleRiichi = inDoubleRiichi;
+    }
+
+    public boolean isReplacementDraw() {
+        return isReplacementDraw;
+    }
+
+    public void setReplacementDraw(boolean replacementDraw) {
+        isReplacementDraw = replacementDraw;
     }
 }
