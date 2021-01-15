@@ -252,6 +252,9 @@ public class ScoringHelper {
         if (deck.getWall().isEmpty() && !isTsumo) {
             stringBuilder.append("is_houtei=True, ");
         }
+        if (winningPlayer.isInDoubleRiichi()) {
+            stringBuilder.append("is_daburu_riichi=True, ");
+        }
         if (winningPlayer.isFirstTurn() && isTsumo && winningPlayer.isDealer()) {
             stringBuilder.append("is_tenhou=True, ");
         }

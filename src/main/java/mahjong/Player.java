@@ -17,6 +17,7 @@ public class Player {
     private boolean isDealer;
     private final int playerNumber;
     private boolean isInRiichi;
+    private boolean isInDoubleRiichi;
     private boolean isIppatsu;
     private boolean hasRiichiTileInDiscard;
     private boolean hasRiichiDeposit;
@@ -33,6 +34,7 @@ public class Player {
         this.isDealer = isDealer;
         this.playerNumber = playerNumber;
         this.isInRiichi = false;
+        this.isInDoubleRiichi = false;
         isIppatsu = false;
         hasRiichiTileInDiscard = false;
         waits = new ArrayList<>();
@@ -48,6 +50,7 @@ public class Player {
         this.isDealer = player.isDealer;
         this.playerNumber = player.playerNumber;
         this.isInRiichi = player.isInRiichi;
+        this.isInDoubleRiichi = player.isInDoubleRiichi;
         this.hasRiichiDeposit = player.hasRiichiDeposit;
         this.sizeOfDiscardAfterRiichi = player.sizeOfDiscardAfterRiichi;
         this.isIppatsu = player.isIppatsu;
@@ -92,6 +95,9 @@ public class Player {
                     waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
                     playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
                 }
+                if (isFirstTurn) {
+                    isInDoubleRiichi = true;
+                }
                 isInRiichi = true; //check if first turn for double riichi here, need to verify how the python code deals with the double riichi flag since there is also a normal riichi flag
                 isIppatsu = true;
                 sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
@@ -123,6 +129,7 @@ public class Player {
 
     public void reset() {
         isInRiichi = false;
+        isInDoubleRiichi = false;
         hasRiichiTileInDiscard = false;
         waits.clear();
         isInTemporaryFuriten = false;
@@ -225,5 +232,13 @@ public class Player {
 
     public void setFirstTurn(boolean firstTurn) {
         isFirstTurn = firstTurn;
+    }
+
+    public boolean isInDoubleRiichi() {
+        return isInDoubleRiichi;
+    }
+
+    public void setInDoubleRiichi(boolean inDoubleRiichi) {
+        isInDoubleRiichi = inDoubleRiichi;
     }
 }
