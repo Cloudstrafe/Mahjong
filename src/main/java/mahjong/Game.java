@@ -126,7 +126,9 @@ public class Game {
     }
 
     public void ronHandler(Player currentPlayer, Tile ronTile, boolean robbedKan) {
-        turnQueue.add(currentPlayer);
+        if (robbedKan) {
+            turnQueue.add(currentPlayer);
+        }
         while (turnQueue.peek() != currentPlayer) {
             Player player = turnQueue.remove();
             player.getPlayArea().getHand().add(ronTile);
@@ -150,8 +152,9 @@ public class Game {
             }
             turnQueue.add(player);
         }
-        turnQueue.remove();
-        if (!robbedKan) {
+        if (robbedKan) {
+            turnQueue.remove();
+        } else {
             turnQueue.add(turnQueue.remove());
         }
     }
@@ -263,6 +266,7 @@ public class Game {
         turnQueue.add(callingPlayer);
         for (Player player : turnQueue) {
             player.setIppatsu(false);
+            player.setFirstTurn(false);
         }
         if (!isKan) {
             callingPlayer.getPlayArea().makeDiscardSelection(true, window);

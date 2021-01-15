@@ -252,6 +252,18 @@ public class ScoringHelper {
         if (deck.getWall().isEmpty() && !isTsumo) {
             stringBuilder.append("is_houtei=True, ");
         }
+        if (winningPlayer.isInDoubleRiichi()) {
+            stringBuilder.append("is_daburu_riichi=True, ");
+        }
+        if (winningPlayer.isFirstTurn() && isTsumo && winningPlayer.isDealer()) {
+            stringBuilder.append("is_tenhou=True, ");
+        }
+        if (winningPlayer.isFirstTurn() && !isTsumo && !winningPlayer.isDealer()) {
+            stringBuilder.append("is_renhou=True, ");
+        }
+        if (winningPlayer.isFirstTurn() && isTsumo && !winningPlayer.isDealer()) {
+            stringBuilder.append("is_chiihou=True, ");
+        }
         stringBuilder.append("player_wind=").append(HONORS_LIST.indexOf(winningPlayer.getSeat()) + WIND_OFFSET).append(", ");
         stringBuilder.append("round_wind=").append(HONORS_LIST.indexOf(roundWind) + WIND_OFFSET).append(")");
         return stringBuilder.toString();
