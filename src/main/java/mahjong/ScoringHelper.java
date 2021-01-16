@@ -243,6 +243,9 @@ public class ScoringHelper {
         if (winningPlayer.isIppatsu()) {
             stringBuilder.append("is_ippatsu=True, ");
         }
+        if (winningPlayer.isReplacementDraw() && isTsumo) {
+            stringBuilder.append("is_rinshan=True, ");
+        }
         if (robbedKan) {
             stringBuilder.append("is_chankan=True, ");
         }
