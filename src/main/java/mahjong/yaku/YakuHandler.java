@@ -112,7 +112,7 @@ public class YakuHandler {
     //TODO: make static variable holding all the hand details for current player
 
     public static boolean hasValidYaku(Player player) {
-        return yaku.stream().anyMatch(y -> y.isValid(player));
+        return yaku.stream().anyMatch(y -> y.isValid(new Player(player)));
     }
 
     public static Map<Tile, List<Tile>> getRiichiTiles(Player player) {
