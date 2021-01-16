@@ -65,6 +65,7 @@ public class YakuHandler {
     private static final HalfFlushYaku halfFlushYaku = new HalfFlushYaku();
     private static final LittleFourWindsYaku littleFourWindsYaku = new LittleFourWindsYaku();
     private static final NineGatesYaku nineGatesYaku = new NineGatesYaku();
+    private static final NoPointsYaku noPointsYaku = new NoPointsYaku();
     private static final RoundWindYaku roundWindYaku = new RoundWindYaku();
     private static final SeatWindYaku seatWindYaku = new SeatWindYaku();
     private static final SevenPairsYaku sevenPairsYaku = new SevenPairsYaku();
@@ -94,6 +95,7 @@ public class YakuHandler {
             halfFlushYaku,
             littleFourWindsYaku,
             nineGatesYaku,
+            noPointsYaku,
             roundWindYaku,
             seatWindYaku,
             sevenPairsYaku,
@@ -110,7 +112,7 @@ public class YakuHandler {
     //TODO: make static variable holding all the hand details for current player
 
     public static boolean hasValidYaku(Player player) {
-        return yaku.stream().anyMatch(y -> y.isValid(player));
+        return yaku.stream().anyMatch(y -> y.isValid(new Player(player)));
     }
 
     public static Map<Tile, List<Tile>> getRiichiTiles(Player player) {
