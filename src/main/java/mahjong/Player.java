@@ -66,7 +66,6 @@ public class Player {
 
     public void takeTurn(Game game) {
         Tile drawnTile = playArea.draw(game, false);
-        isReplacementDraw = false;
         turnHandler(game.getWindow(), drawnTile, game);
     }
 
@@ -86,6 +85,7 @@ public class Player {
             game.getTurnQueue().add(this);
             game.endRound(this, drawnTile, null, false);
         }
+        isReplacementDraw = false;
         if (isIppatsu) {
             isIppatsu = false;
         }
@@ -103,7 +103,7 @@ public class Player {
                 if (isFirstTurn) {
                     isInDoubleRiichi = true;
                 }
-                isInRiichi = true; //check if first turn for double riichi here, need to verify how the python code deals with the double riichi flag since there is also a normal riichi flag
+                isInRiichi = true;
                 isIppatsu = true;
                 sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
                 isInPermanentFuriten = isInFuriten();
