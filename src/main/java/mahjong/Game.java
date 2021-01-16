@@ -2,6 +2,7 @@ package mahjong;
 
 import mahjong.gui.GameWindow;
 import mahjong.tile.Tile;
+import mahjong.yaku.NoPointsYaku;
 import mahjong.yaku.RoundWindYaku;
 import mahjong.yaku.YakuHandler;
 
@@ -66,6 +67,7 @@ public class Game {
 
     private void setupRound() {
         RoundWindYaku.setRoundWind(roundWind);
+        NoPointsYaku.setRoundWind(roundWind);
         this.deck.reset();
         playerOne.reset();
         playerTwo.reset();
