@@ -141,7 +141,7 @@ public class Game {
                     player.getPlayArea().getHand().add(ronTile);
                     JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
                     turnQueue.add(player);
-                    endRound(player, ronTile, currentPlayer, robbedKan);
+                    endRound(player, ronTile, currentPlayer, robbedKan, false);
                 } else {
                     if (player.isInRiichi()) {
                         player.setInPermanentFuriten(true);
@@ -174,9 +174,9 @@ public class Game {
         }
     }
 
-    public void endRound(Player winningPlayer, Tile winningTile, Player discardingPlayer, boolean robbedKan) {
+    public void endRound(Player winningPlayer, Tile winningTile, Player discardingPlayer, boolean robbedKan, boolean isTsumo) {
         //scoring stuff
-        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, false, riichiSticks, tsumiSticks, robbedKan);
+        ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, isTsumo, riichiSticks, tsumiSticks, robbedKan);
         ScoringHelper.adjustScores(scoringResult, this, winningPlayer, discardingPlayer);
         riichiSticks = 0;
         if (!winningPlayer.isDealer()) {

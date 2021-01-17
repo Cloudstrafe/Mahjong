@@ -8,9 +8,32 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class WaitPanelHolder extends TilePanelHolder {
+
     public WaitPanelHolder(Tile key, List<Tile> waits) {
         super(2, 2, 1);
-        mainPanel.setLayout(new GridLayout(3, 2));
+        mainPanel.removeAll();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = .5;
+        mainPanel.add(panels[0][0], gridBagConstraints);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.weightx = .5;
+        gridBagConstraints.insets = new Insets(0, 0, 0, 5);
+        mainPanel.add(panels[0][1], gridBagConstraints);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = (double) 1 / (waits.size() + 1);
+        gridBagConstraints.insets = new Insets(0, 0, 0, 0);
+        mainPanel.add(panels[1][0], gridBagConstraints);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.weightx = (double) waits.size() / (waits.size() + 1);
+        gridBagConstraints.insets = new Insets(0, 0, 0, 5);
+        mainPanel.add(panels[1][1], gridBagConstraints);
         labels[0][0].setText("Discard:");
         labels[0][1].setText("Waits:");
         labels[1][0].setIcon(new ImageIcon(key.getMediumTileFacingDown()));
@@ -20,7 +43,11 @@ public class WaitPanelHolder extends TilePanelHolder {
             JOptionPane pane = getOptionPane((JComponent) e.getSource());
             pane.setValue(mainPanel);
         });
-        mainPanel.add(button);
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.weightx = 1.0;
+        mainPanel.add(button, gridBagConstraints);
     }
 
     //TODO: Add an on hover to the discard options that displays waits

@@ -55,7 +55,7 @@ public class TestScoringHelper {
         player.setPlayArea(playArea);
 
         //Expect
-        assertEquals("tiles = TilesConverter.string_to_136_array(sou='66688999', honors='666555')", ScoringHelper.getTilesString(player));
+        assertEquals("tiles = TilesConverter.string_to_136_array(sou='66688999', honors='666555', has_aka_dora=True)", ScoringHelper.getTilesString(player));
     }
 
     @Test
@@ -89,7 +89,7 @@ public class TestScoringHelper {
         player.setPlayArea(playArea);
 
         //Expect
-        assertEquals("tiles = TilesConverter.string_to_136_array(man='444', pin='234', sou='66678222')", ScoringHelper.getTilesString(player));
+        assertEquals("tiles = TilesConverter.string_to_136_array(man='444', pin='234', sou='66678222', has_aka_dora=True)", ScoringHelper.getTilesString(player));
     }
 
     @Test
@@ -376,9 +376,9 @@ public class TestScoringHelper {
         Tile t20 = new NumberTile(4, SuitConstants.DOTS, false);
         Tile t21 = new NumberTile(6, SuitConstants.BAMBOO, false);
         Tile t22 = new NumberTile(6, SuitConstants.BAMBOO, false);
-        Tile t23 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-        Tile t24 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-        Tile t25 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+        Tile t23 = new NumberTile(5, SuitConstants.CHARACTERS, false);
+        Tile t24 = new NumberTile(5, SuitConstants.CHARACTERS, true);
+        Tile t25 = new NumberTile(5, SuitConstants.CHARACTERS, false);
         Tile t26 = new NumberTile(6, SuitConstants.BAMBOO, false);
         Tile t27 = new NumberTile(7, SuitConstants.BAMBOO, false);
         Tile t28 = new NumberTile(8, SuitConstants.BAMBOO, false);
