@@ -95,7 +95,7 @@ public class GameWindow {
     public static BufferedImage joinBufferedImage(BufferedImage img1, BufferedImage img2) {
 
         //do some calculate first
-        int offset  = 5;
+        int offset  = 0;
         int wid = img1.getWidth()+img2.getWidth()+offset;
         int height = Math.max(img1.getHeight(),img2.getHeight())+offset;
         //create a new buffer and draw two image into the new image

@@ -83,7 +83,7 @@ public class Player {
         if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
-            game.endRound(this, drawnTile, null, false);
+            game.endRound(this, drawnTile, null, false, true);
         }
         isReplacementDraw = false;
         if (isIppatsu) {

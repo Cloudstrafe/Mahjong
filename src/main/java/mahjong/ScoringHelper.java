@@ -159,11 +159,9 @@ public class ScoringHelper {
             stringBuilder.append(sou.toString()).append(", ");
         }
         if (!"honors=''".equals(honors.toString())) {
-            stringBuilder.append(honors.toString());
-        } else {
-            stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
+            stringBuilder.append(honors.toString()).append(", ");
         }
-        stringBuilder.append(")");
+        stringBuilder.append("has_aka_dora=True)");
         return stringBuilder.toString();
     }
 
