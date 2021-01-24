@@ -112,6 +112,7 @@ public class Game {
             advanceRound();
         } else {
             tsumiSticks++;
+            window.getDoraPanelHolder().setTsumiStickCount(tsumiSticks);
         }
         beginNewRound();
     }
@@ -122,6 +123,7 @@ public class Game {
             currentPlayer.setPoints(currentPlayer.getPoints() - 1000);
             updateScoreDisplay(currentPlayer);
             riichiSticks++;
+            window.getDoraPanelHolder().setRiichiStickCount(riichiSticks);
             currentPlayer.setHasRiichiDeposit(true);
         }
         checkOpenKansAndPons(currentPlayer);
@@ -179,12 +181,14 @@ public class Game {
         ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, isTsumo, riichiSticks, tsumiSticks, robbedKan);
         ScoringHelper.adjustScores(scoringResult, this, winningPlayer, discardingPlayer);
         riichiSticks = 0;
+        window.getDoraPanelHolder().setRiichiStickCount(riichiSticks);
         if (!winningPlayer.isDealer()) {
             tsumiSticks = 0;
             advanceRound();
         } else {
             tsumiSticks++;
         }
+        window.getDoraPanelHolder().setTsumiStickCount(tsumiSticks);
         if (hasGameEnded()) {
             if (window.isPlayAgainConfirmed(MessageConstants.MSG_PLAY_AGAIN)) {
                 beginNewGame();
@@ -250,7 +254,6 @@ public class Game {
     }
 
     private void chi(Player currentPlayer, Player nextPlayer, Tile discarded, List<List<Tile>> possibleChi) {
-        //nextPlayer.getPlayArea().displayHandAndMelds();
         if (!nextPlayer.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
             turnQueue.remove();
             if (possibleChi.size() > 1) {
