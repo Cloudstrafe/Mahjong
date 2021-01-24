@@ -11,7 +11,7 @@ public class DoraPanelHolder extends TilePanelHolder {
     private static final int COL_MAX = 5;
     private static final int PANEL_WIDTH = 400;
     private static final int PANEL_HEIGHT = 175;
-    private static final String RIICHI_STICK_FILEPATH = "src/main/java/mahjong/gui/riichiStick.png";
+    public static final String RIICHI_STICK_FILEPATH = "src/main/java/mahjong/gui/riichiStick.png";
     private static final String TSUMI_STICK_FILEPATH = "src/main/java/mahjong/gui/tsumiStick.png";
 
     public DoraPanelHolder() {
@@ -20,8 +20,8 @@ public class DoraPanelHolder extends TilePanelHolder {
         currentCol = 0;
         mainPanel.setBorder(new TitledBorder("Dora"));
         labels[1][0].setIcon(new ImageIcon(RIICHI_STICK_FILEPATH));
-        labels[1][0].setText("x2");
-        labels[2][0].setText("x2");
+        labels[1][0].setText("x0");
+        labels[2][0].setText("x0");
         labels[2][0].setIcon(new ImageIcon(TSUMI_STICK_FILEPATH));
         reset();
         GridBagLayout gridBagLayout = new GridBagLayout();
@@ -50,21 +50,11 @@ public class DoraPanelHolder extends TilePanelHolder {
 //        gridBagConstraints.weightx = .8;
         gridBagConstraints.gridwidth = 6;
         mainPanel.add(panels[1][0], gridBagConstraints);
-//        gridBagConstraints.gridx = 4;
-//        gridBagConstraints.gridy = 1;
-//        gridBagConstraints.weightx = .2;
-//        gridBagConstraints.gridwidth = 1;
-//        mainPanel.add(panels[1][4], gridBagConstraints);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
 //        gridBagConstraints.weightx = .8;
         gridBagConstraints.gridwidth = 6;
         mainPanel.add(panels[2][0], gridBagConstraints);
-//        gridBagConstraints.gridx = 4;
-//        gridBagConstraints.gridy = 2;
-//        gridBagConstraints.weightx = .2;
-//        gridBagConstraints.gridwidth = 1;
-//        mainPanel.add(panels[2][4], gridBagConstraints);
         mainPanel.setBounds(350, 175, PANEL_WIDTH, PANEL_HEIGHT);
     }
 
@@ -88,4 +78,11 @@ public class DoraPanelHolder extends TilePanelHolder {
         reset();
     }
 
+    public void setRiichiStickCount(int riichiStickCount) {
+        labels[1][0].setText("x" + riichiStickCount);
+    }
+
+    public void setTsumiStickCount(int tsumiStickCount) {
+        labels[2][0].setText("x" + tsumiStickCount);
+    }
 }
