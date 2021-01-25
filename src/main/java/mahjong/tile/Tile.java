@@ -94,12 +94,12 @@ public abstract class Tile implements Comparable<Tile> {
         } catch (IOException e) {
             System.out.println("Failed to load image " + fileName);
         }
-        this.smallTileFacingLeft = RotateTile.rotate(smallTileFacingDown, 90.0d);
-        this.smallTileFacingUp = RotateTile.rotate(smallTileFacingDown, 180.0d);
-        this.smallTileFacingRight = RotateTile.rotate(smallTileFacingDown, 270.0d);
-        this.mediumTileFacingLeft = RotateTile.rotate(mediumTileFacingDown, 90.0d);
-        this.mediumTileFacingUp = RotateTile.rotate(mediumTileFacingDown, 180.0d);
-        this.mediumTileFacingRight = RotateTile.rotate(mediumTileFacingDown, 270.0d);
+        this.smallTileFacingLeft = RotateImage.rotate(smallTileFacingDown, 90.0d);
+        this.smallTileFacingUp = RotateImage.rotate(smallTileFacingDown, 180.0d);
+        this.smallTileFacingRight = RotateImage.rotate(smallTileFacingDown, 270.0d);
+        this.mediumTileFacingLeft = RotateImage.rotate(mediumTileFacingDown, 90.0d);
+        this.mediumTileFacingUp = RotateImage.rotate(mediumTileFacingDown, 180.0d);
+        this.mediumTileFacingRight = RotateImage.rotate(mediumTileFacingDown, 270.0d);
     }
 
     protected int getSuitRank() {

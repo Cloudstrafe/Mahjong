@@ -91,6 +91,10 @@ public class Game {
         this.window.getGameInfoPanel().getPlayerTwoSeat().setText(playerTwo.getSeat().toUpperCase());
         this.window.getGameInfoPanel().getPlayerThreeSeat().setText(playerThree.getSeat().toUpperCase());
         this.window.getGameInfoPanel().getPlayerFourSeat().setText(playerFour.getSeat().toUpperCase());
+        window.getPlayerOneRiichiIndicator().setVisible(false);
+        window.getPlayerTwoRiichiIndicator().setVisible(false);
+        window.getPlayerThreeRiichiIndicator().setVisible(false);
+        window.getPlayerFourRiichiIndicator().setVisible(false);
     }
 
     private void putDealerAtFrontOfPlayerQueue() {
@@ -124,6 +128,7 @@ public class Game {
             updateScoreDisplay(currentPlayer);
             riichiSticks++;
             window.getDoraPanelHolder().setRiichiStickCount(riichiSticks);
+            displayRiichiIndicator(currentPlayer);
             currentPlayer.setHasRiichiDeposit(true);
         }
         checkOpenKansAndPons(currentPlayer);
@@ -340,6 +345,19 @@ public class Game {
         roundWind = EAST_WIND;
         roundNumber = 1;
         beginNewRound();
+    }
+
+    private void displayRiichiIndicator(Player player) {
+        if (player.getPlayerNumber() == 1) {
+            window.getPlayerOneRiichiIndicator().setVisible(true);
+        } else if (player.getPlayerNumber() == 2) {
+            window.getPlayerTwoRiichiIndicator().setVisible(true);
+        } else if (player.getPlayerNumber() == 3) {
+            window.getPlayerThreeRiichiIndicator().setVisible(true);
+        } else {
+            window.getPlayerFourRiichiIndicator().setVisible(true);
+        }
+
     }
 
     public Player getPlayerFromNumber(int playerNumber) {
