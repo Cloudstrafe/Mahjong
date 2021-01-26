@@ -86,9 +86,7 @@ public class Player {
             game.endRound(this, drawnTile, null, false, true);
         }
         isReplacementDraw = false;
-        if (isIppatsu) {
-            isIppatsu = false;
-        }
+        isIppatsu = false;
         if (!isInRiichi) {
             Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
             if (!riichiTiles.isEmpty() && points >= 1000 && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
