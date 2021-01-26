@@ -40,7 +40,7 @@ public class ScoringHelper {
             pythonScript.append("import json\n");
             pythonScript.append("import os\n");
             pythonScript.append("from mahjong.hand_calculating.hand import HandCalculator\n");
-            pythonScript.append("from mahjong.hand_calculating.hand_config import HandConfig\n");
+            pythonScript.append("from mahjong.hand_calculating.hand_config import HandConfig, OptionalRules\n");
             pythonScript.append("from mahjong.meld import Meld\n");
             pythonScript.append("from mahjong.tile import TilesConverter\n");
             pythonScript.append("handCalculator = HandCalculator()\n");
@@ -105,7 +105,7 @@ public class ScoringHelper {
             stringBuilder.append("honors='");
         }
         convertTileToScoringString(stringBuilder, winningTile);
-        stringBuilder.append("')[0]");
+        stringBuilder.append("', has_aka_dora=True)[0]");
         return stringBuilder.toString();
     }
 
@@ -188,7 +188,7 @@ public class ScoringHelper {
             for (Tile tile : meld.getTiles()) {
                 convertTileToScoringString(stringBuilder, tile);
             }
-            stringBuilder.append("'), ");
+            stringBuilder.append("', has_aka_dora=True), ");
             if (meld.isOpen()) {
                 stringBuilder.append("opened=True");
             } else {
@@ -212,7 +212,7 @@ public class ScoringHelper {
                 stringBuilder.append("honors='");
             }
             convertTileToScoringString(stringBuilder, deadwall.getDoraTiles().get(i));
-            stringBuilder.append("')[0], ");
+            stringBuilder.append("', has_aka_dora=True)[0], ");
         }
         stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
         stringBuilder.append("]");
@@ -266,7 +266,8 @@ public class ScoringHelper {
             stringBuilder.append("is_chiihou=True, ");
         }
         stringBuilder.append("player_wind=").append(HONORS_LIST.indexOf(winningPlayer.getSeat()) + WIND_OFFSET).append(", ");
-        stringBuilder.append("round_wind=").append(HONORS_LIST.indexOf(roundWind) + WIND_OFFSET).append(")");
+        stringBuilder.append("round_wind=").append(HONORS_LIST.indexOf(roundWind) + WIND_OFFSET).append(", ");
+        stringBuilder.append("options=OptionalRules(has_aka_dora=True)").append(")");
         return stringBuilder.toString();
     }
 }

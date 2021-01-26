@@ -130,6 +130,12 @@ public class Game {
             window.getDoraPanelHolder().setRiichiStickCount(riichiSticks);
             displayRiichiIndicator(currentPlayer);
             currentPlayer.setHasRiichiDeposit(true);
+            if (playerOne.isInRiichi() &&
+                    playerTwo.isInRiichi() &&
+                    playerThree.isInRiichi() &&
+                    playerFour.isInRiichi()) {
+                beginNewRound();
+            }
         }
         checkOpenKansAndPons(currentPlayer);
     }
@@ -146,7 +152,6 @@ public class Game {
                 player.getPlayArea().displayHandAndMelds();
                 if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
                     player.getPlayArea().getHand().add(ronTile);
-                    JOptionPane.showMessageDialog(this.window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber()));
                     turnQueue.add(player);
                     endRound(player, ronTile, currentPlayer, robbedKan, false);
                 } else {
@@ -185,6 +190,7 @@ public class Game {
         //scoring stuff
         ScoringResult scoringResult = ScoringHelper.scoreRound(deadwall, deck, roundWind, winningTile, winningPlayer, isTsumo, riichiSticks, tsumiSticks, robbedKan);
         ScoringHelper.adjustScores(scoringResult, this, winningPlayer, discardingPlayer);
+        JOptionPane.showMessageDialog(this.window.getWindow(), window.getScoreWindowMessage(scoringResult, winningPlayer));
         riichiSticks = 0;
         window.getDoraPanelHolder().setRiichiStickCount(riichiSticks);
         if (!winningPlayer.isDealer()) {

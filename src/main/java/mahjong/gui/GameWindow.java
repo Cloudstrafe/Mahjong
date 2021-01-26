@@ -1,6 +1,8 @@
 package mahjong.gui;
 
+import mahjong.MessageConstants;
 import mahjong.Player;
+import mahjong.ScoringResult;
 import mahjong.tile.RotateImage;
 import mahjong.tile.Tile;
 
@@ -10,6 +12,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +109,17 @@ public class GameWindow {
             response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, panelArray[0]);
         }
         return response;
+    }
+
+    public String getScoreWindowMessage(ScoringResult scoringResult, Player player) {
+        StringBuilder message = new StringBuilder();
+        message.append(MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber(), player.getPlayerNumber()));
+        message.append("\n\n");
+        for (String yaku : scoringResult.getYaku()) {
+            message.append(yaku + "\n");
+        }
+        message.append("\n" + scoringResult.getHan() + " Han " + scoringResult.getFu() + " Fu");
+        return message.toString();
     }
 
     public Tile getRiichiDiscardChoice(String message, Map<Tile, List<Tile>> options) {
