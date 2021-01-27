@@ -98,7 +98,7 @@ public class TestScoringHelper {
         Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
 
         //Expect
-        assertEquals("win_tile = TilesConverter.string_to_136_array(sou='2')[0]", ScoringHelper.getWinTileString(t1));
+        assertEquals("win_tile = TilesConverter.string_to_136_array(sou='2', has_aka_dora=True)[0]", ScoringHelper.getWinTileString(t1));
     }
 
     @Test
@@ -107,7 +107,7 @@ public class TestScoringHelper {
         Tile t1 = new NumberTile(3, SuitConstants.DOTS, false);
 
         //Expect
-        assertEquals("win_tile = TilesConverter.string_to_136_array(pin='3')[0]", ScoringHelper.getWinTileString(t1));
+        assertEquals("win_tile = TilesConverter.string_to_136_array(pin='3', has_aka_dora=True)[0]", ScoringHelper.getWinTileString(t1));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class TestScoringHelper {
         Tile t1 = new NumberTile(3, SuitConstants.CHARACTERS, false);
 
         //Expect
-        assertEquals("win_tile = TilesConverter.string_to_136_array(man='3')[0]", ScoringHelper.getWinTileString(t1));
+        assertEquals("win_tile = TilesConverter.string_to_136_array(man='3', has_aka_dora=True)[0]", ScoringHelper.getWinTileString(t1));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class TestScoringHelper {
         Tile t1 = new NumberTile(5, SuitConstants.DOTS, true);
 
         //Expect
-        assertEquals("win_tile = TilesConverter.string_to_136_array(pin='r')[0]", ScoringHelper.getWinTileString(t1));
+        assertEquals("win_tile = TilesConverter.string_to_136_array(pin='r', has_aka_dora=True)[0]", ScoringHelper.getWinTileString(t1));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class TestScoringHelper {
         Tile t1 = new DragonTile(SuitConstants.RED_DRAGON);
 
         //Expect
-        assertEquals("win_tile = TilesConverter.string_to_136_array(honors='7')[0]", ScoringHelper.getWinTileString(t1));
+        assertEquals("win_tile = TilesConverter.string_to_136_array(honors='7', has_aka_dora=True)[0]", ScoringHelper.getWinTileString(t1));
     }
 
     @Test
@@ -174,10 +174,10 @@ public class TestScoringHelper {
         player.setPlayArea(playArea);
 
         //Expect
-        assertEquals("melds = [Meld(meld_type=Meld.CHI, tiles=TilesConverter.string_to_136_array(man='123'), opened=True), " +
-                "Meld(meld_type=Meld.PON, tiles=TilesConverter.string_to_136_array(pin='222'), opened=True), " +
-                "Meld(meld_type=Meld.KAN, tiles=TilesConverter.string_to_136_array(sou='4444'), opened=False), " +
-                "Meld(meld_type=Meld.KAN, tiles=TilesConverter.string_to_136_array(honors='1111'), opened=False)]", ScoringHelper.getMeldsString(player));
+        assertEquals("melds = [Meld(meld_type=Meld.CHI, tiles=TilesConverter.string_to_136_array(man='123', has_aka_dora=True), opened=True), " +
+                "Meld(meld_type=Meld.PON, tiles=TilesConverter.string_to_136_array(pin='222', has_aka_dora=True), opened=True), " +
+                "Meld(meld_type=Meld.KAN, tiles=TilesConverter.string_to_136_array(sou='4444', has_aka_dora=True), opened=False), " +
+                "Meld(meld_type=Meld.KAN, tiles=TilesConverter.string_to_136_array(honors='1111', has_aka_dora=True), opened=False)]", ScoringHelper.getMeldsString(player));
     }
 
     @Test
@@ -204,9 +204,9 @@ public class TestScoringHelper {
 
         //Expect
         assertEquals("dora_indicators = [" +
-                "TilesConverter.string_to_136_array(pin='2')[0], " +
-                "TilesConverter.string_to_136_array(pin='2')[0], " +
-                "TilesConverter.string_to_136_array(sou='6')[0]]", ScoringHelper.getDoraIndicatorsString(deadwall));
+                "TilesConverter.string_to_136_array(pin='2', has_aka_dora=True)[0], " +
+                "TilesConverter.string_to_136_array(pin='2', has_aka_dora=True)[0], " +
+                "TilesConverter.string_to_136_array(sou='6', has_aka_dora=True)[0]]", ScoringHelper.getDoraIndicatorsString(deadwall));
     }
 
     @Test
@@ -276,7 +276,7 @@ public class TestScoringHelper {
         assertEquals(0, scoringResult.getCost().getKyoutakuBonus());
         assertEquals(8000, scoringResult.getCost().getTotal());
         assertEquals("", scoringResult.getCost().getYakuLevel());
-        assertEquals("Yakuhai (chun)", scoringResult.getYaku().get(0));
+        assertEquals("Red Dragon", scoringResult.getYaku().get(0));
         assertEquals("Dora", scoringResult.getYaku().get(1));
     }
 
@@ -407,10 +407,10 @@ public class TestScoringHelper {
         ScoringHelper.adjustScores(scoringResult, game, p1, p2);
 
         //Then
-        assertEquals(13400, game.getTurnQueue().remove().getPoints());
+        assertEquals(13000, game.getTurnQueue().remove().getPoints());
         assertEquals(25000, game.getTurnQueue().remove().getPoints());
         assertEquals(25000, game.getTurnQueue().remove().getPoints());
-        assertEquals(36600, game.getTurnQueue().remove().getPoints());
+        assertEquals(37000, game.getTurnQueue().remove().getPoints());
     }
 
     @Test
@@ -998,7 +998,7 @@ public class TestScoringHelper {
         ScoringHelper.adjustScores(scoringResult, game, p1, null);
 
         //Then
-        assertEquals("config = HandConfig(is_tsumo=True, is_chiihou=True, player_wind=27, round_wind=27)",
+        assertEquals("config = HandConfig(is_tsumo=True, is_chiihou=True, player_wind=27, round_wind=27, options=OptionalRules(has_aka_dora=True))",
                 ScoringHelper.getConfigString(game.getRoundWind(), game.getDeck(), p1, true, false));
     }
 
@@ -1192,7 +1192,7 @@ public class TestScoringHelper {
         ScoringHelper.adjustScores(scoringResult, game, p1, null);
 
         //Then
-        assertEquals("config = HandConfig(is_tsumo=True, is_tenhou=True, player_wind=27, round_wind=27)",
+        assertEquals("config = HandConfig(is_tsumo=True, is_tenhou=True, player_wind=27, round_wind=27, options=OptionalRules(has_aka_dora=True))",
                 ScoringHelper.getConfigString(game.getRoundWind(), game.getDeck(), p1, true, false));
     }
 

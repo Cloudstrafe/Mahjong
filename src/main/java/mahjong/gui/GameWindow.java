@@ -118,7 +118,8 @@ public class GameWindow {
         for (String yaku : scoringResult.getYaku()) {
             message.append(yaku + "\n");
         }
-        message.append("\n" + scoringResult.getHan() + " Han " + scoringResult.getFu() + " Fu");
+        message.append("\n" + scoringResult.getHan() + " Han " + scoringResult.getFu() + " Fu\n");
+        message.append(scoringResult.getCost().getTotal() + " Points");
         return message.toString();
     }
 

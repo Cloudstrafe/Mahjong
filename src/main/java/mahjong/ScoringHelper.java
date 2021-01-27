@@ -69,6 +69,7 @@ public class ScoringHelper {
             scoringResult.getCost().setKyoutakuBonus(riichiSticks);
             scoringResult.getCost().setTsumiBonuses(tsumiSticks);
             scoringResult.getCost().setTotal();
+            scoringResult.setYaku(Translation.translateYaku(scoringResult.getYaku()));
             return scoringResult;
         } catch (Exception e) {
             e.printStackTrace();

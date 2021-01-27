@@ -9,6 +9,8 @@ public class ScoringResult {
     private Cost cost = null;
     private List<String> yaku = Collections.emptyList();
 
+
+
     public int getFu() {
         return fu;
     }
@@ -19,6 +21,10 @@ public class ScoringResult {
 
     public Cost getCost() {
         return cost;
+    }
+
+    public void setYaku(List<String> yaku) {
+        this.yaku = yaku;
     }
 
     public List<String> getYaku() {

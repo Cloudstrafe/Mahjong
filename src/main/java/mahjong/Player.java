@@ -133,11 +133,14 @@ public class Player {
     public void reset() {
         isInRiichi = false;
         isInDoubleRiichi = false;
+        isIppatsu = false;
+        isReplacementDraw = false;
         hasRiichiTileInDiscard = false;
+        hasRiichiDeposit = false;
+        sizeOfDiscardAfterRiichi = -1;
         waits.clear();
         isInTemporaryFuriten = false;
         isInPermanentFuriten = false;
-        hasRiichiDeposit = false;
         isFirstTurn = true;
     }
 
