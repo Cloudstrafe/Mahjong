@@ -16,21 +16,26 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 public class GameWindow {
     private final JFrame window = new JFrame("Mahjong");
-    private GameInfoPanel gameInfoPanel;
-    private DoraPanelHolder doraPanelHolder;
+    private final GameInfoPanel gameInfoPanel;
+    private final DoraPanelHolder doraPanelHolder;
     private BufferedImage playerOneRiichiImage;
     private BufferedImage playerTwoRiichiImage;
     private BufferedImage playerThreeRiichiImage;
     private BufferedImage playerFourRiichiImage;
-    private JLabel playerOneRiichiIndicator;
-    private JLabel playerTwoRiichiIndicator;
-    private JLabel playerThreeRiichiIndicator;
-    private JLabel playerFourRiichiIndicator;
+    private final JLabel playerOneRiichiIndicator;
+    private final JLabel playerTwoRiichiIndicator;
+    private final JLabel playerThreeRiichiIndicator;
+    private final JLabel playerFourRiichiIndicator;
+    private static final String OPTION_PANE_TITLE_TEXT = "OptionPane.titleText";
+    private static final Logger logger = Logger.getLogger(GameWindow.class.getName());
 
     public GameWindow(Player playerOne, Player playerTwo, Player playerThree, Player playerFour) {
         gameInfoPanel = new GameInfoPanel();
@@ -76,7 +81,7 @@ public class GameWindow {
             playerThreeRiichiImage = ImageIO.read(new File(DoraPanelHolder.RIICHI_STICK_FILEPATH));
             playerFourRiichiImage = ImageIO.read(new File(DoraPanelHolder.RIICHI_STICK_FILEPATH));
         } catch (IOException e) {
-            System.out.println("Failed to load image " + DoraPanelHolder.RIICHI_STICK_FILEPATH);
+            logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + DoraPanelHolder.RIICHI_STICK_FILEPATH));
         }
         playerTwoRiichiImage = RotateImage.rotate(playerTwoRiichiImage, 90.0d);
         playerFourRiichiImage = RotateImage.rotate(playerFourRiichiImage, 90.0d);
@@ -89,13 +94,8 @@ public class GameWindow {
         window.add(player.getPlayArea().getDiscardPanelHolder().getMainPanel());
     }
 
-    public boolean isCallConfirmed(String message) {
-        int response = JOptionPane.showConfirmDialog(this.window, message, UIManager.getString("OptionPane.titleText"), YES_NO_OPTION);
-        return response == JOptionPane.YES_OPTION;
-    }
-
-    public boolean isPlayAgainConfirmed(String message) {
-        int response = JOptionPane.showConfirmDialog(this.window, message, UIManager.getString("OptionPane.titleText"), YES_NO_OPTION);
+    public boolean isConfirmed(String message) {
+        int response = JOptionPane.showConfirmDialog(this.window, message, UIManager.getString(OPTION_PANE_TITLE_TEXT), YES_NO_OPTION);
         return response == JOptionPane.YES_OPTION;
     }
 
@@ -106,7 +106,7 @@ public class GameWindow {
         }
         int response = -1;
         while (response == -1) {
-            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, panelArray[0]);
+            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString(OPTION_PANE_TITLE_TEXT), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, panelArray[0]);
         }
         return response;
     }
@@ -116,10 +116,10 @@ public class GameWindow {
         message.append(MessageFormat.format(MessageConstants.MSG_WIN, player.getPlayerNumber(), player.getPlayerNumber()));
         message.append("\n\n");
         for (String yaku : scoringResult.getYaku()) {
-            message.append(yaku + "\n");
+            message.append(yaku).append("\n");
         }
-        message.append("\n" + scoringResult.getHan() + " Han " + scoringResult.getFu() + " Fu\n");
-        message.append(scoringResult.getCost().getTotal() + " Points");
+        message.append("\n").append(scoringResult.getHan()).append(" Han ").append(scoringResult.getFu()).append(" Fu\n");
+        message.append(scoringResult.getCost().getTotal()).append(" Points");
         return message.toString();
     }
 
@@ -132,14 +132,14 @@ public class GameWindow {
         }
         int response = -1;
         while (response == -1) {
-            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, null);
+            response = JOptionPane.showOptionDialog(this.window, message, UIManager.getString(OPTION_PANE_TITLE_TEXT), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, panelArray, null);
         }
         return keys.get(response);
     }
 
     public int isKanOrPonCallConfirmed(String message) {
         String[] options = new String[]{"Kan", "Pon", "Pass"};
-        return JOptionPane.showOptionDialog(this.window, message, UIManager.getString("OptionPane.titleText"), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+        return JOptionPane.showOptionDialog(this.window, message, UIManager.getString(OPTION_PANE_TITLE_TEXT), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
     }
 
     public JFrame getWindow() {

@@ -10,19 +10,18 @@ public class GameInfoPanel {
     private static final int PANEL_HEIGHT = 220;
     private static final int X_COORDINATE = 850;
     private static final int Y_COORDINATE = 400;
-    private final JLabel tileIcon = new JLabel(new ImageIcon(Tile.getBackOfTileSmall()));
-    private JPanel mainPanel;
-    private JLabel playerOneScore;
-    private JLabel playerTwoScore;
-    private JLabel playerThreeScore;
-    private JLabel playerFourScore;
-    private JLabel playerOneSeat;
-    private JLabel playerTwoSeat;
-    private JLabel playerThreeSeat;
-    private JLabel playerFourSeat;
-    private JLabel deckTileCount;
-    private JLabel currentRoundWind;
-    private JLabel currentRoundNumber;
+    private final JPanel mainPanel;
+    private final JLabel playerOneScore;
+    private final JLabel playerTwoScore;
+    private final JLabel playerThreeScore;
+    private final JLabel playerFourScore;
+    private final JLabel playerOneSeat;
+    private final JLabel playerTwoSeat;
+    private final JLabel playerThreeSeat;
+    private final JLabel playerFourSeat;
+    private final JLabel deckTileCount;
+    private final JLabel currentRoundWind;
+    private final JLabel currentRoundNumber;
 
     public GameInfoPanel() {
         this.mainPanel = new JPanel();
@@ -38,6 +37,7 @@ public class GameInfoPanel {
         this.playerThreeSeat = initializeLabel("P3Seat",105,15);
         this.playerFourSeat = initializeLabel("P4Seat",25,95);
         this.deckTileCount = initializeLabel("DeckCount",100,85);
+        JLabel tileIcon = new JLabel(new ImageIcon(Tile.getBackOfTileSmall()));
         tileIcon.setLocation(92, 85);
         tileIcon.setSize(37, 50);
         tileIcon.setVisible(true);

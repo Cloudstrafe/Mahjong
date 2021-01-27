@@ -206,13 +206,13 @@ public class PlayArea {
 
     private boolean isKan(Tile tile, Game game) {
         if (this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 4) {
-            if (game.getWindow().isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+            if (game.getWindow().isConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
                 meldKan(tile, false);
                 return true;
             }
         } else {
             List<Meld> meld = melds.stream().filter(m -> m.getTiles().stream().allMatch(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit()))).collect(Collectors.toList());
-            if (!meld.isEmpty() && game.getWindow().isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+            if (!meld.isEmpty() && game.getWindow().isConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
                 game.ronHandler(game.getPlayerFromNumber(playerNumber), tile, true);
                 meld.get(0).getTiles().add(tile);
                 hand.remove(tile);

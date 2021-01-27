@@ -150,7 +150,7 @@ public class Game {
             if (!player.isInPermanentFuriten() && !player.isInTemporaryFuriten() && YakuHandler.hasValidYaku(player)) {
                 player.getPlayArea().getHand().remove(ronTile);
                 player.getPlayArea().displayHandAndMelds();
-                if (this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
+                if (this.window.isConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
                     player.getPlayArea().getHand().add(ronTile);
                     turnQueue.add(player);
                     endRound(player, ronTile, currentPlayer, robbedKan, false);
@@ -201,7 +201,7 @@ public class Game {
         }
         window.getDoraPanelHolder().setTsumiStickCount(tsumiSticks);
         if (hasGameEnded()) {
-            if (window.isPlayAgainConfirmed(MessageConstants.MSG_PLAY_AGAIN)) {
+            if (window.isConfirmed(MessageConstants.MSG_PLAY_AGAIN)) {
                 beginNewGame();
             } else {
                 exit(0);
@@ -247,7 +247,7 @@ public class Game {
     }
 
     private boolean ponOnly(Player currentPlayer, Tile discarded, Player player) {
-        if (!player.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
+        if (!player.isInRiichi() && this.window.isConfirmed(MessageFormat.format(MessageConstants.MSG_PON, player.getPlayerNumber()))) {
             player.getPlayArea().meldPon(discarded, true);
             callHandler(currentPlayer, player, false);
             return true;
@@ -265,7 +265,7 @@ public class Game {
     }
 
     private void chi(Player currentPlayer, Player nextPlayer, Tile discarded, List<List<Tile>> possibleChi) {
-        if (!nextPlayer.isInRiichi() && this.window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
+        if (!nextPlayer.isInRiichi() && this.window.isConfirmed(MessageFormat.format(MessageConstants.MSG_CHI, nextPlayer.getPlayerNumber()))) {
             turnQueue.remove();
             if (possibleChi.size() > 1) {
                 int response = this.window.getChiCallChoice(MessageFormat.format(MessageConstants.MSG_SELECT_CHI_OPTION, nextPlayer.getPlayerNumber()), possibleChi);

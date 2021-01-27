@@ -80,7 +80,7 @@ public class Player {
         if (isInRiichi && !hasRiichiTileInDiscard) {
             hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
         }
-        if (YakuHandler.hasValidYaku(this) && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
+        if (YakuHandler.hasValidYaku(this) && window.isConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
             game.endRound(this, drawnTile, null, false, true);
@@ -89,7 +89,7 @@ public class Player {
         isIppatsu = false;
         if (!isInRiichi) {
             Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
-            if (!riichiTiles.isEmpty() && points >= 1000 && window.isCallConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
+            if (!riichiTiles.isEmpty() && points >= 1000 && window.isConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
                 if (riichiTiles.size() > 1) {
                     Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
                     waits = riichiTiles.get(discardTile);

@@ -10,6 +10,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public abstract class Tile implements Comparable<Tile> {
 
@@ -31,6 +34,7 @@ public abstract class Tile implements Comparable<Tile> {
     protected static final BufferedImage BACK_OF_TILE_SMALL;
     protected static final BufferedImage BACK_OF_TILE_MEDIUM;
     protected static Map<String, Integer> rankMap = new HashMap<>();
+    protected static Logger logger = Logger.getLogger(Tile.class.getName());
 
     static {
         BufferedImage BACK_OF_TILE_MEDIUM1;
@@ -56,7 +60,7 @@ public abstract class Tile implements Comparable<Tile> {
         rankMap.put(SuitConstants.RED_DRAGON, 10);
     }
 
-    public Tile(int number, String suit, boolean isRed, boolean isDora) {
+    protected Tile(int number, String suit, boolean isRed, boolean isDora) {
         this.number = number;
         this.suit = suit;
         this.isRed = isRed;
@@ -66,7 +70,7 @@ public abstract class Tile implements Comparable<Tile> {
         setImages();
     }
 
-    public Tile(Tile tile) {
+    protected Tile(Tile tile) {
         this.number = tile.number;
         this.suit = tile.suit;
         this.isRed = tile.isRed;
@@ -92,7 +96,7 @@ public abstract class Tile implements Comparable<Tile> {
             this.smallTileFacingDown = ImageIO.read(new File(smallTilePath));
             this.mediumTileFacingDown = ImageIO.read(new File(mediumTilePath));
         } catch (IOException e) {
-            System.out.println("Failed to load image " + fileName);
+            logger.log(new LogRecord(Level.SEVERE ,"Failed to load image " + fileName));
         }
         this.smallTileFacingLeft = RotateImage.rotate(smallTileFacingDown, 90.0d);
         this.smallTileFacingUp = RotateImage.rotate(smallTileFacingDown, 180.0d);
