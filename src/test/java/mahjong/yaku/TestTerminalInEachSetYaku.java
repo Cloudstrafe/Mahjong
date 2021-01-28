@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestTerminalInEachSetYaku {
     TerminalInEachSetYaku terminalInEachSetYaku;
@@ -24,18 +25,6 @@ public class TestTerminalInEachSetYaku {
     public void setUp() {
         terminalInEachSetYaku = new TerminalInEachSetYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 1);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(terminalInEachSetYaku.isMangan());
-        assertEquals(3, terminalInEachSetYaku.getClosedPoints());
-        assertEquals(2, terminalInEachSetYaku.getOpenPoints());
-        assertEquals(0, terminalInEachSetYaku.getCurrentPoints(player));
-        assertFalse(terminalInEachSetYaku.isStackable());
-        assertFalse(terminalInEachSetYaku.isYakuman());
-        assertFalse(terminalInEachSetYaku.isDoubleYakuman());
     }
 
     @Test

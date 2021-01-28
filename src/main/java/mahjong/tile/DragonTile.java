@@ -2,7 +2,7 @@ package mahjong.tile;
 
 public class DragonTile extends Tile {
 
-    public DragonTile(String suit)  {
+    public DragonTile(String suit) {
         super(0, suit, false, false);
     }
 

@@ -96,7 +96,7 @@ public abstract class Tile implements Comparable<Tile> {
             this.smallTileFacingDown = ImageIO.read(new File(smallTilePath));
             this.mediumTileFacingDown = ImageIO.read(new File(mediumTilePath));
         } catch (IOException e) {
-            logger.log(new LogRecord(Level.SEVERE ,"Failed to load image " + fileName));
+            logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + fileName));
         }
         this.smallTileFacingLeft = RotateImage.rotate(smallTileFacingDown, 90.0d);
         this.smallTileFacingUp = RotateImage.rotate(smallTileFacingDown, 180.0d);

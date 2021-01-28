@@ -9,21 +9,7 @@ import java.util.function.Predicate;
 
 public abstract class AbstractYaku {
 
-    public abstract boolean isMangan();
-
-    public abstract int getClosedPoints();
-
-    public abstract int getOpenPoints();
-
-    public abstract int getCurrentPoints(Player player);
-
     public abstract boolean isValid(Player player);
-
-    public abstract boolean isStackable();
-
-    public abstract boolean isYakuman();
-
-    public abstract boolean isDoubleYakuman();
 
     protected static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();

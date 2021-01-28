@@ -2,7 +2,7 @@ package mahjong.tile;
 
 public class NumberTile extends Tile {
 
-    public NumberTile(int number, String suit, boolean isRed)  {
+    public NumberTile(int number, String suit, boolean isRed) {
         super(number, suit, isRed, isRed);
     }
 

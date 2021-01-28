@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 import static mahjong.SuitConstants.*;
 
 public class HandDetail {
-    private List<Tile> pair;
-    private List<Meld> runs;
-    private List<Meld> sets;
-    private List<Tile> remainder;
-    private int setsAndRunsLeft;
-    private List<List<Meld>> validHands;
-    private List<Meld> melds;
+    private final List<Tile> pair;
+    private final List<Meld> runs;
+    private final List<Meld> sets;
+    private final List<Tile> remainder;
+    private final int setsAndRunsLeft;
+    private final List<List<Meld>> validHands;
+    private final List<Meld> melds;
 
     public HandDetail(List<Tile> pair, List<Tile> remainder, int setsAndRunsLeft, List<Meld> melds) {
         this.pair = pair;
@@ -42,7 +42,7 @@ public class HandDetail {
 
     private void getAllValidCombinations(List<Meld> combined, int setsAndRunsLeft, int startPosition, List<Meld> result) {
         if (setsAndRunsLeft == 0) {
-            if (remainder.equals(result.stream().flatMap(m-> m.getTiles().stream()).sorted().collect(Collectors.toList()))) {
+            if (remainder.equals(result.stream().flatMap(m -> m.getTiles().stream()).sorted().collect(Collectors.toList()))) {
                 result.addAll(melds);
                 validHands.add(result);
             }
@@ -69,10 +69,12 @@ public class HandDetail {
             Tile first = remainder.get(i);
             for (int j = i + 1; j < remainder.size() - 1; j++) {
                 Tile second = remainder.get(j);
-                if (first.getNumber() == second.getNumber() && first.getSuit().equals(second.getSuit())) {
+                if (first.getNumber() == second.getNumber() &&
+                        first.getSuit().equals(second.getSuit())) {
                     for (int k = j + 1; k < remainder.size(); k++) {
                         Tile third = remainder.get(k);
-                        if (second.getNumber() == third.getNumber() && second.getSuit().equals(third.getSuit())) {
+                        if (second.getNumber() == third.getNumber() &&
+                                second.getSuit().equals(third.getSuit())) {
                             List<Tile> run = new ArrayList<>();
                             run.add(first);
                             run.add(second);
@@ -92,10 +94,12 @@ public class HandDetail {
             Tile first = numberTiles.get(i);
             for (int j = i + 1; j < numberTiles.size() - 1; j++) {
                 Tile second = numberTiles.get(j);
-                if (first.getNumber() == second.getNumber() - 1 && first.getSuit().equals(second.getSuit())) {
+                if (first.getNumber() == second.getNumber() - 1 &&
+                        first.getSuit().equals(second.getSuit())) {
                     for (int k = j + 1; k < numberTiles.size(); k++) {
                         Tile third = numberTiles.get(k);
-                        if (second.getNumber() == third.getNumber() - 1 && second.getSuit().equals(third.getSuit())) {
+                        if (second.getNumber() == third.getNumber() - 1 &&
+                                second.getSuit().equals(third.getSuit())) {
                             List<Tile> run = new ArrayList<>();
                             run.add(first);
                             run.add(second);

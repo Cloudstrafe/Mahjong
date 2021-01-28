@@ -12,26 +12,6 @@ public class NoPointsYaku extends AbstractYaku {
     private static String roundWind;
 
     @Override
-    public boolean isMangan() {
-        return false;
-    }
-
-    @Override
-    public int getClosedPoints() {
-        return 1;
-    }
-
-    @Override
-    public int getOpenPoints() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentPoints(Player player) {
-        return 0;
-    }
-
-    @Override
     public boolean isValid(Player player) {
         if (player.getPlayArea().getMelds().isEmpty()) {
             Tile lastTile = player.getPlayArea().getHand().remove(player.getPlayArea().getHand().size() - 1);
@@ -44,19 +24,26 @@ public class NoPointsYaku extends AbstractYaku {
                             !roundWind.equals(handDetail.getPair().get(0).getSuit()) &&
                             !handDetail.getPair().get(0).isDragon()) {
                         for (List<Meld> validHand : handDetail.getValidHands()) {
-                            if (validHand.stream().allMatch(Meld::isRun)) {
-                                player.getPlayArea().getHand().remove(lastTile);
-                                if (player.getPlayArea().getHand().stream().filter(t -> handDetail.getPair().get(0).getSuit().equals(t.getSuit()) &&
-                                        handDetail.getPair().get(0).getNumber() == t.getNumber()).count() >= 2) {
-                                    player.getPlayArea().getHand().add(lastTile);
-                                    return true;
-                                }
-                                player.getPlayArea().getHand().add(lastTile);
+                            if (isPinfu(player, lastTile, handDetail, validHand)) {
+                                return true;
                             }
                         }
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    private boolean isPinfu(Player player, Tile lastTile, HandDetail handDetail, List<Meld> validHand) {
+        if (validHand.stream().allMatch(Meld::isRun)) {
+            player.getPlayArea().getHand().remove(lastTile);
+            if (player.getPlayArea().getHand().stream().filter(t -> handDetail.getPair().get(0).getSuit().equals(t.getSuit()) &&
+                    handDetail.getPair().get(0).getNumber() == t.getNumber()).count() >= 2) {
+                player.getPlayArea().getHand().add(lastTile);
+                return true;
+            }
+            player.getPlayArea().getHand().add(lastTile);
         }
         return false;
     }
@@ -74,21 +61,6 @@ public class NoPointsYaku extends AbstractYaku {
                 }
             }
         }
-        return false;
-    }
-
-    @Override
-    public boolean isStackable() {
-        return true;
-    }
-
-    @Override
-    public boolean isYakuman() {
-        return false;
-    }
-
-    @Override
-    public boolean isDoubleYakuman() {
         return false;
     }
 

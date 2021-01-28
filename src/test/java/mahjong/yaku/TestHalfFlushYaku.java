@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestHalfFlushYaku {
     HalfFlushYaku halfFlushYaku;
@@ -25,18 +26,6 @@ public class TestHalfFlushYaku {
     public void setUp() {
         halfFlushYaku = new HalfFlushYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 4);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(halfFlushYaku.isMangan());
-        assertEquals(3, halfFlushYaku.getClosedPoints());
-        assertEquals(2, halfFlushYaku.getOpenPoints());
-        assertEquals(0, halfFlushYaku.getCurrentPoints(player));
-        assertFalse(halfFlushYaku.isStackable());
-        assertFalse(halfFlushYaku.isYakuman());
-        assertFalse(halfFlushYaku.isDoubleYakuman());
     }
 
     @Test

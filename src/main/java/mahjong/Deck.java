@@ -50,7 +50,7 @@ public class Deck {
         return null;
     }
 
-    public void buildDeck()  {
+    public void buildDeck() {
         createDragonTiles(this.wall);
         createWindTiles(this.wall);
         createNumberTiles(this.wall);
@@ -63,20 +63,20 @@ public class Deck {
         Collections.shuffle(this.wall);
     }
 
-    private void createDragonTiles(List<Tile> deck)  {
+    private void createDragonTiles(List<Tile> deck) {
         List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.RED_DRAGON);
         suits.add(SuitConstants.WHITE_DRAGON);
         suits.add(SuitConstants.GREEN_DRAGON);
         for (int i = 0; i < 4; i++) {
-            for (String suit: suits) {
+            for (String suit : suits) {
                 DragonTile tile = new DragonTile(suit);
                 deck.add(tile);
             }
         }
     }
 
-    private void createWindTiles(List<Tile> deck)  {
+    private void createWindTiles(List<Tile> deck) {
         List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.EAST_WIND);
         suits.add(SuitConstants.SOUTH_WIND);
@@ -90,7 +90,7 @@ public class Deck {
         }
     }
 
-    private void createNumberTiles(List<Tile> deck)  {
+    private void createNumberTiles(List<Tile> deck) {
         List<String> suits = new ArrayList<>();
         suits.add(SuitConstants.BAMBOO);
         suits.add(SuitConstants.CHARACTERS);

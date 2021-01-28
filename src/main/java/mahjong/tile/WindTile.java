@@ -2,7 +2,7 @@ package mahjong.tile;
 
 public class WindTile extends Tile {
 
-    public WindTile(String suit)  {
+    public WindTile(String suit) {
         super(0, suit, false, false);
     }
 

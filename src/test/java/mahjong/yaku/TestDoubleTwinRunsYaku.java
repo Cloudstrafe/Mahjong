@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestDoubleTwinRunsYaku {
     DoubleTwinRunsYaku doubleTwinRunsYaku;
@@ -23,18 +24,6 @@ public class TestDoubleTwinRunsYaku {
     public void setUp() {
         doubleTwinRunsYaku = new DoubleTwinRunsYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 4);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(doubleTwinRunsYaku.isMangan());
-        assertEquals(3, doubleTwinRunsYaku.getClosedPoints());
-        assertEquals(0, doubleTwinRunsYaku.getOpenPoints());
-        assertEquals(0, doubleTwinRunsYaku.getCurrentPoints(player));
-        assertFalse(doubleTwinRunsYaku.isStackable());
-        assertFalse(doubleTwinRunsYaku.isYakuman());
-        assertFalse(doubleTwinRunsYaku.isDoubleYakuman());
     }
 
     @Test

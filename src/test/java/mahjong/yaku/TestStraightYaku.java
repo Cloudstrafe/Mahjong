@@ -15,7 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestStraightYaku {
     StraightYaku straightYaku;
@@ -25,18 +26,6 @@ public class TestStraightYaku {
     public void setUp() {
         straightYaku = new StraightYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 4);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(straightYaku.isMangan());
-        assertEquals(2, straightYaku.getClosedPoints());
-        assertEquals(1, straightYaku.getOpenPoints());
-        assertEquals(0, straightYaku.getCurrentPoints(player));
-        assertFalse(straightYaku.isStackable());
-        assertFalse(straightYaku.isYakuman());
-        assertFalse(straightYaku.isDoubleYakuman());
     }
 
     @Test
@@ -142,7 +131,7 @@ public class TestStraightYaku {
         Tile t14 = new NumberTile(9, SuitConstants.BAMBOO, false);
 
         List<Tile> hand = new ArrayList<>(Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10));
-        List<Tile> tiles = new ArrayList<>(Arrays.asList(t11,t12,t13,t14));
+        List<Tile> tiles = new ArrayList<>(Arrays.asList(t11, t12, t13, t14));
         Meld meld = new Meld(tiles, true, false, 3);
         PlayArea playArea = new PlayArea(1);
         playArea.setHand(hand);

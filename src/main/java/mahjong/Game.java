@@ -14,14 +14,14 @@ import static java.lang.System.exit;
 import static mahjong.SuitConstants.*;
 
 public class Game {
-    private Player playerOne;
-    private Player playerTwo;
-    private Player playerThree;
-    private Player playerFour;
+    private final Player playerOne;
+    private final Player playerTwo;
+    private final Player playerThree;
+    private final Player playerFour;
     private Deck deck;
-    private Queue<Player> turnQueue;
+    private final Queue<Player> turnQueue;
     private Deadwall deadwall;
-    private GameWindow window;
+    private final GameWindow window;
     private int riichiSticks;
     private int tsumiSticks;
     private int roundNumber;
@@ -147,7 +147,9 @@ public class Game {
         while (turnQueue.peek() != currentPlayer) {
             Player player = turnQueue.remove();
             player.getPlayArea().getHand().add(ronTile);
-            if (!player.isInPermanentFuriten() && !player.isInTemporaryFuriten() && YakuHandler.hasValidYaku(player)) {
+            if (!player.isInPermanentFuriten() &&
+                    !player.isInTemporaryFuriten() &&
+                    YakuHandler.hasValidYaku(player)) {
                 player.getPlayArea().getHand().remove(ronTile);
                 player.getPlayArea().displayHandAndMelds();
                 if (this.window.isConfirmed(MessageFormat.format(MessageConstants.MSG_RON, player.getPlayerNumber()))) {
@@ -155,11 +157,7 @@ public class Game {
                     turnQueue.add(player);
                     endRound(player, ronTile, currentPlayer, robbedKan, false);
                 } else {
-                    if (player.isInRiichi()) {
-                        player.setInPermanentFuriten(true);
-                    } else {
-                        player.setInTemporaryFuriten(true);
-                    }
+                    setFuritenState(player);
                 }
             } else {
                 player.getPlayArea().getHand().remove(ronTile);
@@ -170,6 +168,14 @@ public class Game {
             turnQueue.remove();
         } else {
             turnQueue.add(turnQueue.remove());
+        }
+    }
+
+    private void setFuritenState(Player player) {
+        if (player.isInRiichi()) {
+            player.setInPermanentFuriten(true);
+        } else {
+            player.setInTemporaryFuriten(true);
         }
     }
 

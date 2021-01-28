@@ -10,25 +10,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ThreeColorTripletsYaku extends AbstractYaku {
-    @Override
-    public boolean isMangan() {
-        return false;
-    }
-
-    @Override
-    public int getClosedPoints() {
-        return 2;
-    }
-
-    @Override
-    public int getOpenPoints() {
-        return 2;
-    }
-
-    @Override
-    public int getCurrentPoints(Player player) {
-        return 0;
-    }
 
     @Override
     public boolean isValid(Player player) {
@@ -39,7 +20,7 @@ public class ThreeColorTripletsYaku extends AbstractYaku {
                 if (tilesWithSameNumber.size() > 8) {
                     List<String> suits = new ArrayList<>(Arrays.asList(SuitConstants.BAMBOO, SuitConstants.CHARACTERS, SuitConstants.DOTS));
                     for (String suit : suits) {
-                        if (tilesWithSameNumber.stream().filter(t-> suit.equals(t.getSuit())).count() < 3) {
+                        if (tilesWithSameNumber.stream().filter(t -> suit.equals(t.getSuit())).count() < 3) {
                             return false;
                         }
                     }
@@ -47,21 +28,6 @@ public class ThreeColorTripletsYaku extends AbstractYaku {
                 }
             }
         }
-        return false;
-    }
-
-    @Override
-    public boolean isStackable() {
-        return false;
-    }
-
-    @Override
-    public boolean isYakuman() {
-        return false;
-    }
-
-    @Override
-    public boolean isDoubleYakuman() {
         return false;
     }
 }

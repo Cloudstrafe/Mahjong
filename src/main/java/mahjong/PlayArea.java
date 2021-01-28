@@ -333,10 +333,6 @@ public class PlayArea {
         discard(discardIndex, false);
     }
 
-    public boolean isHandOpen() {
-        return !this.melds.isEmpty();
-    }
-
     public void reset() {
         this.hand.clear();
         this.discard.clear();
@@ -362,53 +358,6 @@ public class PlayArea {
 
     public void setMyTurn(boolean myTurn) {
         isMyTurn = myTurn;
-    }
-
-    public String getHandAsString() {
-        StringBuilder str = new StringBuilder();
-        int i = 1;
-        for (Tile tile : this.hand) {
-            str.append("(").append(i).append(") ");
-            if (tile.getNumber() != 0) {
-                str.append(tile.getNumber()).append(" ");
-            }
-            str.append(tile.getSuit()).append(", ");
-            i++;
-        }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
-    }
-
-    public String getMeldsAsString() {
-        StringBuilder str = new StringBuilder();
-        for (Meld meld : this.melds) {
-            for (Tile tile : meld.getTiles()) {
-                if (tile.getNumber() != 0) {
-                    str.append(tile.getNumber()).append(" ");
-                }
-                str.append(tile.getSuit()).append(", ");
-            }
-            int length = str.length();
-            str.delete(length - 2, length);
-            str.append("; ");
-        }
-        return str.toString();
-    }
-
-    public String getDiscardAsString() {
-        StringBuilder str = new StringBuilder();
-        for (Tile tile : this.discard) {
-            if (tile.getNumber() != 0) {
-                str.append(tile.getNumber());
-                str.append(" ");
-            }
-            str.append(tile.getSuit());
-            str.append(", ");
-        }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
     }
 
     public void displayHandAndMelds() {
