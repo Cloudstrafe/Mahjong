@@ -21,16 +21,6 @@ public class NumberTile extends Tile {
     }
 
     @Override
-    public boolean isPrevailingWind() {
-        return false;
-    }
-
-    @Override
-    public boolean isSeatWind() {
-        return false;
-    }
-
-    @Override
     public boolean isNumber() {
         return true;
     }

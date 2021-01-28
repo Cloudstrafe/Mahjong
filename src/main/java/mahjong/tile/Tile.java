@@ -37,17 +37,17 @@ public abstract class Tile implements Comparable<Tile> {
     protected static Logger logger = Logger.getLogger(Tile.class.getName());
 
     static {
-        BufferedImage BACK_OF_TILE_MEDIUM1;
-        BufferedImage BACK_OF_TILE_SMALL1;
+        BufferedImage backOfTileMedium1;
+        BufferedImage backOfTileSmall1;
         try {
-            BACK_OF_TILE_SMALL1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/small/back.png"));
-            BACK_OF_TILE_MEDIUM1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/medium/back.png"));
+            backOfTileSmall1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/small/back.png"));
+            backOfTileMedium1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/medium/back.png"));
         } catch (IOException e) {
-            BACK_OF_TILE_SMALL1 = null;
-            BACK_OF_TILE_MEDIUM1 = null;
+            backOfTileSmall1 = null;
+            backOfTileMedium1 = null;
         }
-        BACK_OF_TILE_MEDIUM = BACK_OF_TILE_MEDIUM1;
-        BACK_OF_TILE_SMALL = BACK_OF_TILE_SMALL1;
+        BACK_OF_TILE_MEDIUM = backOfTileMedium1;
+        BACK_OF_TILE_SMALL = backOfTileSmall1;
         rankMap.put(SuitConstants.CHARACTERS, 1);
         rankMap.put(SuitConstants.DOTS, 2);
         rankMap.put(SuitConstants.BAMBOO, 3);
@@ -138,10 +138,6 @@ public abstract class Tile implements Comparable<Tile> {
 
     public abstract boolean isWind();
 
-    public abstract boolean isPrevailingWind();
-
-    public abstract boolean isSeatWind();
-
     public abstract boolean isNumber();
 
     public abstract boolean isTerminal();
@@ -149,10 +145,6 @@ public abstract class Tile implements Comparable<Tile> {
     public abstract boolean isHonor();
 
     public abstract boolean isGreen();
-
-    public boolean getIsDora() {
-        return isDora;
-    }
 
     public void setIsDora(boolean isDora) {
         this.isDora = isDora;
@@ -178,14 +170,6 @@ public abstract class Tile implements Comparable<Tile> {
         return smallTileFacingRight;
     }
 
-    public BufferedImage getSmallTileFacingUp() {
-        return smallTileFacingUp;
-    }
-
-    public BufferedImage getSmallTileFacingLeft() {
-        return smallTileFacingLeft;
-    }
-
     public BufferedImage getMediumTileFacingDown() {
         return mediumTileFacingDown;
     }
@@ -204,10 +188,6 @@ public abstract class Tile implements Comparable<Tile> {
 
     public static BufferedImage getBackOfTileSmall() {
         return BACK_OF_TILE_SMALL;
-    }
-
-    public static BufferedImage getBackOfTileMedium() {
-        return BACK_OF_TILE_MEDIUM;
     }
 
     public String getTileFileName() {

@@ -22,13 +22,11 @@ public class PlayerTwoHandPanelHolder extends AbstractHandPanelHolder {
     protected void onMouseClick(MouseEvent e) {
         if (playArea.isMyTurn()) {
             for (int j = 0; j < rows; j++) {
-                if (e.getSource() == labels[j][0]) {
-                    if (labels[j][0] != null) {
-                        playArea.setMyTurn(false);
-                        labels[j][0].setIcon(null);
-                        playArea.setDiscardIndex(playArea.getHand().size() - j - 1);
-                        playArea.setDiscardSelected(true);
-                    }
+                if (e.getSource() == labels[j][0] && labels[j][0] != null) {
+                    playArea.setMyTurn(false);
+                    labels[j][0].setIcon(null);
+                    playArea.setDiscardIndex(playArea.getHand().size() - j - 1);
+                    playArea.setDiscardSelected(true);
                 }
             }
         }

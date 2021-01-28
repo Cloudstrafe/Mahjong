@@ -22,13 +22,11 @@ public class PlayerThreeHandPanelHolder extends AbstractHandPanelHolder {
     protected void onMouseClick(MouseEvent e) {
         if (playArea.isMyTurn()) {
             for (int j = 0; j < cols; j++) {
-                if (e.getSource() == labels[0][j]) {
-                    if (labels[0][j] != null) {
-                        playArea.setMyTurn(false);
-                        labels[0][j].setIcon(null);
-                        playArea.setDiscardIndex(playArea.getHand().size() - j - 1);
-                        playArea.setDiscardSelected(true);
-                    }
+                if (e.getSource() == labels[0][j] && labels[0][j] != null) {
+                    playArea.setMyTurn(false);
+                    labels[0][j].setIcon(null);
+                    playArea.setDiscardIndex(playArea.getHand().size() - j - 1);
+                    playArea.setDiscardSelected(true);
                 }
             }
         }

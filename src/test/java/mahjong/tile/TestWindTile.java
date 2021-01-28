@@ -15,8 +15,6 @@ public class TestWindTile {
         //Expect
         assertFalse(tile.isDragon());
         assertTrue(tile.isWind());
-        assertFalse(tile.isPrevailingWind());
-        assertFalse(tile.isSeatWind());
         assertFalse(tile.isNumber());
         assertFalse(tile.isTerminal());
         assertTrue(tile.isHonor());

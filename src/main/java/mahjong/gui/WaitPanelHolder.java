@@ -51,8 +51,6 @@ public class WaitPanelHolder extends TilePanelHolder {
         mainPanel.add(button, gridBagConstraints);
     }
 
-    //TODO: Add an on hover to the discard options that displays waits
-
     private BufferedImage combineWaitIcons(List<Tile> waits) {
         if (!waits.isEmpty()) {
             BufferedImage finalImage = waits.get(0).getMediumTileFacingDown();
