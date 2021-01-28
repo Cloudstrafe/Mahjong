@@ -291,7 +291,7 @@ public class Game {
             player.setFirstTurn(false);
         }
         if (!isKan) {
-            callingPlayer.getPlayArea().makeDiscardSelection(true, window);
+            callingPlayer.getPlayArea().makeDiscardSelection(true);
             callingPlayer.setWaits(YakuHandler.getWaitTiles(new Player(callingPlayer)));
             callingPlayer.setInTemporaryFuriten(callingPlayer.isInFuriten());
         } else {

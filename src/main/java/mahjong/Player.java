@@ -77,46 +77,66 @@ public class Player {
 
     private void turnHandler(GameWindow window, Tile drawnTile, Game game) {
         isInTemporaryFuriten = false;
-        if (isInRiichi && !hasRiichiTileInDiscard) {
-            hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
+        updateRiichiDiscardStatus();
+        tsumoHandler(window, drawnTile, game);
+        isReplacementDraw = false;
+        isIppatsu = false;
+        if (!isInRiichi) {
+            manualTurn(window);
+        } else {
+            automaticTurn(drawnTile);
         }
+        isFirstTurn = false;
+        playArea.displayHandAndMelds();
+    }
+
+    private void automaticTurn(Tile drawnTile) {
+        playArea.discard(playArea.getHand().indexOf(drawnTile), !hasRiichiTileInDiscard);
+        isInTemporaryFuriten = isInFuriten();
+        waits = YakuHandler.getWaitTiles(new Player(this));
+    }
+
+    private void manualTurn(GameWindow window) {
+        Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
+        if (!riichiTiles.isEmpty() && points >= 1000 && window.isConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
+            riichiHandler(window, riichiTiles);
+        } else {
+            playArea.makeDiscardSelection(false);
+            isInTemporaryFuriten = isInFuriten();
+            waits = YakuHandler.getWaitTiles(new Player(this));
+        }
+    }
+
+    private void riichiHandler(GameWindow window, Map<Tile, List<Tile>> riichiTiles) {
+        if (riichiTiles.size() > 1) {
+            Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
+            waits = riichiTiles.get(discardTile);
+            playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
+        } else {
+            waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
+            playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
+        }
+        if (isFirstTurn) {
+            isInDoubleRiichi = true;
+        }
+        isInRiichi = true;
+        isIppatsu = true;
+        sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
+        isInPermanentFuriten = isInFuriten();
+    }
+
+    private void tsumoHandler(GameWindow window, Tile drawnTile, Game game) {
         if (YakuHandler.hasValidYaku(this) && window.isConfirmed(MessageFormat.format(MessageConstants.MSG_TSUMO, this.playerNumber))) {
             JOptionPane.showMessageDialog(window.getWindow(), MessageFormat.format(MessageConstants.MSG_WIN, this.playerNumber));
             game.getTurnQueue().add(this);
             game.endRound(this, drawnTile, null, false, true);
         }
-        isReplacementDraw = false;
-        isIppatsu = false;
-        if (!isInRiichi) {
-            Map<Tile, List<Tile>> riichiTiles = YakuHandler.getRiichiTiles(this);
-            if (!riichiTiles.isEmpty() && points >= 1000 && window.isConfirmed(MessageFormat.format(MessageConstants.MSG_RIICHI, this.playerNumber))) {
-                if (riichiTiles.size() > 1) {
-                    Tile discardTile = window.getRiichiDiscardChoice(MessageFormat.format(MessageConstants.MSG_SELECT_RIICHI_DISCARD, this.playerNumber), riichiTiles);
-                    waits = riichiTiles.get(discardTile);
-                    playArea.discard(this.getPlayArea().getHand().indexOf(discardTile), true);
-                } else {
-                    waits = riichiTiles.get(new ArrayList<>(riichiTiles.keySet()).get(0));
-                    playArea.discard(this.getPlayArea().getHand().indexOf(new ArrayList<>(riichiTiles.keySet()).get(0)), true);
-                }
-                if (isFirstTurn) {
-                    isInDoubleRiichi = true;
-                }
-                isInRiichi = true;
-                isIppatsu = true;
-                sizeOfDiscardAfterRiichi = playArea.getDiscard().size();
-                isInPermanentFuriten = isInFuriten();
-            } else {
-                playArea.makeDiscardSelection(false, window);
-                isInTemporaryFuriten = isInFuriten();
-                waits = YakuHandler.getWaitTiles(new Player(this));
-            }
-        } else {
-            playArea.discard(playArea.getHand().indexOf(drawnTile), !hasRiichiTileInDiscard);
-            isInTemporaryFuriten = isInFuriten();
-            waits = YakuHandler.getWaitTiles(new Player(this));
+    }
+
+    private void updateRiichiDiscardStatus() {
+        if (isInRiichi && !hasRiichiTileInDiscard) {
+            hasRiichiTileInDiscard = sizeOfDiscardAfterRiichi == playArea.getDiscard().size();
         }
-        isFirstTurn = false;
-        playArea.displayHandAndMelds();
     }
 
     public boolean isInFuriten() {
