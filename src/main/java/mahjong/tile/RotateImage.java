@@ -5,6 +5,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public class RotateImage {
+
+    private RotateImage() {
+        throw new IllegalStateException("Utility Class");
+    }
+
     public static BufferedImage rotate(BufferedImage image, Double degrees) {
         double radians = Math.toRadians(degrees);
         double sin = Math.abs(Math.sin(radians));
@@ -17,7 +22,7 @@ public class RotateImage {
         int x = (newWidth - image.getWidth()) / 2;
         int y = (newHeight - image.getHeight()) / 2;
         AffineTransform at = new AffineTransform();
-        at.setToRotation(radians, x + (image.getWidth() / 2), y + (image.getHeight() / 2));
+        at.setToRotation(radians, x + ((double) image.getWidth() / 2), y + ((double) image.getHeight() / 2));
         at.translate(x, y);
         g2d.setTransform(at);
         g2d.drawImage(image, 0, 0, null);

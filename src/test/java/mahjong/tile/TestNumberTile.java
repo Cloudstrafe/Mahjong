@@ -22,8 +22,6 @@ public class TestNumberTile {
         //Expect
         assertFalse(t1.isDragon());
         assertFalse(t1.isWind());
-        assertFalse(t1.isPrevailingWind());
-        assertFalse(t1.isSeatWind());
         assertTrue(t1.isNumber());
         assertTrue(t1.isTerminal());
         assertFalse(t1.isHonor());
@@ -34,8 +32,6 @@ public class TestNumberTile {
 
         assertFalse(t2.isDragon());
         assertFalse(t2.isWind());
-        assertFalse(t2.isPrevailingWind());
-        assertFalse(t2.isSeatWind());
         assertTrue(t2.isNumber());
         assertFalse(t2.isTerminal());
         assertFalse(t2.isHonor());

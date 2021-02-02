@@ -2,7 +2,7 @@ package mahjong.tile;
 
 public class NumberTile extends Tile {
 
-    public NumberTile(int number, String suit, boolean isRed)  {
+    public NumberTile(int number, String suit, boolean isRed) {
         super(number, suit, isRed, isRed);
     }
 
@@ -17,16 +17,6 @@ public class NumberTile extends Tile {
 
     @Override
     public boolean isWind() {
-        return false;
-    }
-
-    @Override
-    public boolean isPrevailingWind() {
-        return false;
-    }
-
-    @Override
-    public boolean isSeatWind() {
         return false;
     }
 

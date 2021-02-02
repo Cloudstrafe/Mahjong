@@ -8,6 +8,10 @@ import java.util.Queue;
 
 public class ExhaustiveDraw {
 
+    private ExhaustiveDraw() {
+        throw new IllegalStateException("Utility Class");
+    }
+
     public static boolean tenpaiPayout(Queue<Player> turnQueue) {
         List<Player> inTenpai = new ArrayList<>();
         List<Player> notInTenpai = new ArrayList<>();

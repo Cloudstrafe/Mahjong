@@ -2,7 +2,7 @@ package mahjong.tile;
 
 public class WindTile extends Tile {
 
-    public WindTile(String suit)  {
+    public WindTile(String suit) {
         super(0, suit, false, false);
     }
 
@@ -18,18 +18,6 @@ public class WindTile extends Tile {
     @Override
     public boolean isWind() {
         return true;
-    }
-
-    @Override
-    public boolean isPrevailingWind() {
-        return false;
-        //TODO return dealerWind == this.suit;
-    }
-
-    @Override
-    public boolean isSeatWind() {
-        return false;
-        //TODO return thisSeatWind == this.suit;
     }
 
     @Override

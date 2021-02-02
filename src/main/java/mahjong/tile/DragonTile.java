@@ -2,7 +2,7 @@ package mahjong.tile;
 
 public class DragonTile extends Tile {
 
-    public DragonTile(String suit)  {
+    public DragonTile(String suit) {
         super(0, suit, false, false);
     }
 
@@ -17,16 +17,6 @@ public class DragonTile extends Tile {
 
     @Override
     public boolean isWind() {
-        return false;
-    }
-
-    @Override
-    public boolean isPrevailingWind() {
-        return false;
-    }
-
-    @Override
-    public boolean isSeatWind() {
         return false;
     }
 

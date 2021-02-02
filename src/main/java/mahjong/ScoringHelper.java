@@ -33,9 +33,9 @@ public class ScoringHelper {
         try {
             StringBuilder pythonScript = new StringBuilder();
             String tiles = getTilesString(winningPlayer);
-            String win_tile = getWinTileString(winningTile);
+            String winTile = getWinTileString(winningTile);
             String melds = getMeldsString(winningPlayer);
-            String dora_indicators = getDoraIndicatorsString(deadwall);
+            String doraIndicators = getDoraIndicatorsString(deadwall);
             String config = getConfigString(roundWind, deck, winningPlayer, isTsumo, robbedKan);
             pythonScript.append("import json\n");
             pythonScript.append("import os\n");
@@ -44,7 +44,7 @@ public class ScoringHelper {
             pythonScript.append("from mahjong.meld import Meld\n");
             pythonScript.append("from mahjong.tile import TilesConverter\n");
             pythonScript.append("handCalculator = HandCalculator()\n");
-            pythonScript.append("result = handCalculator.estimate_hand_value(").append(tiles).append(", ").append(win_tile).append(", ").append(melds).append(", ").append(dora_indicators).append(", ").append(config).append(")\n");
+            pythonScript.append("result = handCalculator.estimate_hand_value(").append(tiles).append(", ").append(winTile).append(", ").append(melds).append(", ").append(doraIndicators).append(", ").append(config).append(")\n");
             pythonScript.append("resultDict = {}\n");
             pythonScript.append("resultDict[\"fu\"] = result.fu\n");
             pythonScript.append("resultDict[\"han\"] = result.han\n");
@@ -121,31 +121,8 @@ public class ScoringHelper {
         pin.append("pin='");
         sou.append("sou='");
         honors.append("honors='");
-        for (Tile tile : winningPlayer.getPlayArea().getHand()) {
-            if (SuitConstants.CHARACTERS.equals(tile.getSuit())) {
-                convertTileToScoringString(man, tile);
-            } else if (SuitConstants.DOTS.equals(tile.getSuit())) {
-                convertTileToScoringString(pin, tile);
-            } else if (SuitConstants.BAMBOO.equals(tile.getSuit())) {
-                convertTileToScoringString(sou, tile);
-            } else if (tile.isHonor()) {
-                convertTileToScoringString(honors, tile);
-            }
-        }
-        for (Meld meld : winningPlayer.getPlayArea().getMelds()) {
-            for (int i = 0; i < 3; i++) {
-                Tile tile = meld.getTiles().get(i);
-                if (SuitConstants.CHARACTERS.equals(tile.getSuit())) {
-                    convertTileToScoringString(man, tile);
-                } else if (SuitConstants.DOTS.equals(tile.getSuit())) {
-                    convertTileToScoringString(pin, tile);
-                } else if (SuitConstants.BAMBOO.equals(tile.getSuit())) {
-                    convertTileToScoringString(sou, tile);
-                } else if (tile.isHonor()) {
-                    convertTileToScoringString(honors, tile);
-                }
-            }
-        }
+        getHandTilesString(winningPlayer, man, pin, sou, honors);
+        getMeldTilesString(winningPlayer, man, pin, sou, honors);
         man.append("'");
         pin.append("'");
         sou.append("'");
@@ -164,6 +141,37 @@ public class ScoringHelper {
         }
         stringBuilder.append("has_aka_dora=True)");
         return stringBuilder.toString();
+    }
+
+    private static void getMeldTilesString(Player winningPlayer, StringBuilder man, StringBuilder pin, StringBuilder sou, StringBuilder honors) {
+        for (Meld meld : winningPlayer.getPlayArea().getMelds()) {
+            for (int i = 0; i < 3; i++) {
+                Tile tile = meld.getTiles().get(i);
+                if (SuitConstants.CHARACTERS.equals(tile.getSuit())) {
+                    convertTileToScoringString(man, tile);
+                } else if (SuitConstants.DOTS.equals(tile.getSuit())) {
+                    convertTileToScoringString(pin, tile);
+                } else if (SuitConstants.BAMBOO.equals(tile.getSuit())) {
+                    convertTileToScoringString(sou, tile);
+                } else if (tile.isHonor()) {
+                    convertTileToScoringString(honors, tile);
+                }
+            }
+        }
+    }
+
+    private static void getHandTilesString(Player winningPlayer, StringBuilder man, StringBuilder pin, StringBuilder sou, StringBuilder honors) {
+        for (Tile tile : winningPlayer.getPlayArea().getHand()) {
+            if (SuitConstants.CHARACTERS.equals(tile.getSuit())) {
+                convertTileToScoringString(man, tile);
+            } else if (SuitConstants.DOTS.equals(tile.getSuit())) {
+                convertTileToScoringString(pin, tile);
+            } else if (SuitConstants.BAMBOO.equals(tile.getSuit())) {
+                convertTileToScoringString(sou, tile);
+            } else if (tile.isHonor()) {
+                convertTileToScoringString(honors, tile);
+            }
+        }
     }
 
     public static String getMeldsString(Player winningPlayer) {

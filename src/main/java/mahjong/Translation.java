@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Translation {
-    public static final Map<String, String> japaneseToEnglish;
+    protected static final Map<String, String> japaneseToEnglish;
 
     static {
         japaneseToEnglish = new HashMap<>();
@@ -67,6 +67,10 @@ public class Translation {
         japaneseToEnglish.put("Suu Kantsu", "Four Kans");
         japaneseToEnglish.put("Tenhou", "Hand Of Heaven");
         japaneseToEnglish.put("Tsuu Iisou", "All Honors");
+    }
+
+    private Translation() {
+        throw new IllegalStateException("Utility Class");
     }
 
     public static List<String> translateYaku(List<String> yakuList) {

@@ -17,13 +17,13 @@ public class PlayArea {
     private List<Meld> melds;
     private List<Tile> discard;
     private static final int STARTING_HAND_SIZE = 13;
-    private AbstractHandPanelHolder handPanelHolder;
-    private MeldPanelHolder meldPanelHolder;
-    private DiscardPanelHolder discardPanelHolder;
+    private final AbstractHandPanelHolder handPanelHolder;
+    private final MeldPanelHolder meldPanelHolder;
+    private final DiscardPanelHolder discardPanelHolder;
     private volatile boolean isDiscardSelected;
     private volatile int discardIndex;
     private boolean isMyTurn;
-    private int playerNumber;
+    private final int playerNumber;
 
     public PlayArea(int playerNumber) {
         this.hand = new ArrayList<>();
@@ -158,45 +158,45 @@ public class PlayArea {
         return tile;
     }
 
-//        public void setup(Deck deck) {
-//        reset();
-//        for (int i = 0; i < getStartingHandSize(); i++) {
-//            initialDraw(deck);
-//        }
-//        handPanelHolder.displayHand();
-//    }
-
-//    This is a debug method, set to put players in riichi instantly
     public void setup(Deck deck) {
         reset();
-        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
-        Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
-        Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
-        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
-        Tile t5 = new NumberTile(3, SuitConstants.DOTS, false);
-        Tile t6 = new NumberTile(4, SuitConstants.DOTS, false);
-        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
-        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
-        Tile t9 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-        Tile t10 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-        Tile t11 = new NumberTile(4, SuitConstants.CHARACTERS, false);
-        Tile t12 = new NumberTile(3, SuitConstants.BAMBOO, false);
-        Tile t13 = new NumberTile(4, SuitConstants.BAMBOO, false);
-        this.hand.add(t1);
-        this.hand.add(t2);
-        this.hand.add(t3);
-        this.hand.add(t4);
-        this.hand.add(t5);
-        this.hand.add(t6);
-        this.hand.add(t7);
-        this.hand.add(t8);
-        this.hand.add(t9);
-        this.hand.add(t10);
-        this.hand.add(t11);
-        this.hand.add(t12);
-        this.hand.add(t13);
-        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
+        for (int i = 0; i < getStartingHandSize(); i++) {
+            initialDraw(deck);
+        }
+        handPanelHolder.displayHand();
     }
+
+//    This is a debug method, set to put players in riichi instantly
+//    public void setup(Deck deck) {
+//        reset();
+//        Tile t1 = new NumberTile(2, SuitConstants.BAMBOO, false);
+//        Tile t2 = new NumberTile(2, SuitConstants.BAMBOO, false);
+//        Tile t3 = new NumberTile(2, SuitConstants.BAMBOO, false);
+//        Tile t4 = new NumberTile(2, SuitConstants.DOTS, false);
+//        Tile t5 = new NumberTile(3, SuitConstants.DOTS, false);
+//        Tile t6 = new NumberTile(4, SuitConstants.DOTS, false);
+//        Tile t7 = new NumberTile(6, SuitConstants.BAMBOO, false);
+//        Tile t8 = new NumberTile(6, SuitConstants.BAMBOO, false);
+//        Tile t9 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+//        Tile t10 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+//        Tile t11 = new NumberTile(4, SuitConstants.CHARACTERS, false);
+//        Tile t12 = new NumberTile(3, SuitConstants.BAMBOO, false);
+//        Tile t13 = new NumberTile(4, SuitConstants.BAMBOO, false);
+//        this.hand.add(t1);
+//        this.hand.add(t2);
+//        this.hand.add(t3);
+//        this.hand.add(t4);
+//        this.hand.add(t5);
+//        this.hand.add(t6);
+//        this.hand.add(t7);
+//        this.hand.add(t8);
+//        this.hand.add(t9);
+//        this.hand.add(t10);
+//        this.hand.add(t11);
+//        this.hand.add(t12);
+//        this.hand.add(t13);
+//        this.hand = this.hand.stream().sorted().collect(Collectors.toList());
+//    }
 
     private void initialDraw(Deck deck) {
         Tile tile = deck.draw();
@@ -206,13 +206,13 @@ public class PlayArea {
 
     private boolean isKan(Tile tile, Game game) {
         if (this.hand.stream().filter(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit())).count() == 4) {
-            if (game.getWindow().isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+            if (game.getWindow().isConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
                 meldKan(tile, false);
                 return true;
             }
         } else {
             List<Meld> meld = melds.stream().filter(m -> m.getTiles().stream().allMatch(t -> t.getNumber() == tile.getNumber() && t.getSuit().equals(tile.getSuit()))).collect(Collectors.toList());
-            if (!meld.isEmpty() && game.getWindow().isCallConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
+            if (!meld.isEmpty() && game.getWindow().isConfirmed(MessageFormat.format(MessageConstants.MSG_KAN, this.playerNumber))) {
                 game.ronHandler(game.getPlayerFromNumber(playerNumber), tile, true);
                 meld.get(0).getTiles().add(tile);
                 hand.remove(tile);
@@ -290,22 +290,26 @@ public class PlayArea {
             chiTiles.add(minusOneTiles);
             chiTiles.add(plusOneTiles);
             chiTiles.add(plusTwoTiles);
-            for (int i = 0; i < 3; i++) {
-                for (Tile firstTile : chiTiles.get(i)) {
-                    for (Tile secondTile : chiTiles.get(i + 1)) {
-                        if (combinations.stream().noneMatch(c -> c.get(0).getTileFileName().equals(firstTile.getTileFileName())
-                                && c.get(1).getTileFileName().equals(secondTile.getTileFileName()))) {
-                            List<Tile> newCombination = new ArrayList<>();
-                            newCombination.add(firstTile);
-                            newCombination.add(secondTile);
-                            combinations.add(newCombination);
-                        }
-                    }
-                }
-            }
+            getChiCombinations(combinations, chiTiles);
             return combinations.stream().distinct().collect(Collectors.toList());
         }
         return Collections.emptyList();
+    }
+
+    private void getChiCombinations(List<List<Tile>> combinations, List<List<Tile>> chiTiles) {
+        for (int i = 0; i < 3; i++) {
+            for (Tile firstTile : chiTiles.get(i)) {
+                for (Tile secondTile : chiTiles.get(i + 1)) {
+                    if (combinations.stream().noneMatch(c -> c.get(0).getTileFileName().equals(firstTile.getTileFileName())
+                            && c.get(1).getTileFileName().equals(secondTile.getTileFileName()))) {
+                        List<Tile> newCombination = new ArrayList<>();
+                        newCombination.add(firstTile);
+                        newCombination.add(secondTile);
+                        combinations.add(newCombination);
+                    }
+                }
+            }
+        }
     }
 
     public Tile getLastDiscard() {
@@ -320,7 +324,7 @@ public class PlayArea {
         discardPanelHolder.removeLastDiscard();
     }
 
-    public void makeDiscardSelection(boolean displayHand, GameWindow window) {
+    public void makeDiscardSelection(boolean displayHand) {
         if (displayHand) {
             displayHandAndMelds();
         }
@@ -331,10 +335,6 @@ public class PlayArea {
             //Waiting for the player to click on the tile they want to discard
         }
         discard(discardIndex, false);
-    }
-
-    public boolean isHandOpen() {
-        return !this.melds.isEmpty();
     }
 
     public void reset() {
@@ -362,53 +362,6 @@ public class PlayArea {
 
     public void setMyTurn(boolean myTurn) {
         isMyTurn = myTurn;
-    }
-
-    public String getHandAsString() {
-        StringBuilder str = new StringBuilder();
-        int i = 1;
-        for (Tile tile : this.hand) {
-            str.append("(").append(i).append(") ");
-            if (tile.getNumber() != 0) {
-                str.append(tile.getNumber()).append(" ");
-            }
-            str.append(tile.getSuit()).append(", ");
-            i++;
-        }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
-    }
-
-    public String getMeldsAsString() {
-        StringBuilder str = new StringBuilder();
-        for (Meld meld : this.melds) {
-            for (Tile tile : meld.getTiles()) {
-                if (tile.getNumber() != 0) {
-                    str.append(tile.getNumber()).append(" ");
-                }
-                str.append(tile.getSuit()).append(", ");
-            }
-            int length = str.length();
-            str.delete(length - 2, length);
-            str.append("; ");
-        }
-        return str.toString();
-    }
-
-    public String getDiscardAsString() {
-        StringBuilder str = new StringBuilder();
-        for (Tile tile : this.discard) {
-            if (tile.getNumber() != 0) {
-                str.append(tile.getNumber());
-                str.append(" ");
-            }
-            str.append(tile.getSuit());
-            str.append(", ");
-        }
-        int length = str.length();
-        str.delete(length - 2, length);
-        return str.toString();
     }
 
     public void displayHandAndMelds() {

@@ -9,7 +9,6 @@ import java.awt.*;
 public class DiscardPanelHolder extends TilePanelHolder {
     private int currentRow;
     private int currentCol;
-    private static final int ROW_MAX = 4;
     private static final int COL_MAX = 6;
     private static final int PANEL_WIDTH = 252;
     private static final int PANEL_HEIGHT = 220;

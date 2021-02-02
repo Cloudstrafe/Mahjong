@@ -15,9 +15,9 @@ public abstract class AbstractHandPanelHolder extends TilePanelHolder {
     protected PlayArea playArea;
     private final Border myTurnBorder;
     private final Border notMyTurnBorder;
-    private TitledBorder handBorder;
+    private final TitledBorder handBorder;
 
-    public AbstractHandPanelHolder(int rows, int cols, int playerNumber, int x, int y, PlayArea playArea, int width, int height) {
+    protected AbstractHandPanelHolder(int rows, int cols, int playerNumber, int x, int y, PlayArea playArea, int width, int height) {
         super(rows, cols, playerNumber);
         this.panelWidth = width;
         this.panelHeight = height;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Deadwall {
-    private List<Tile> doraTiles;
+    private final List<Tile> doraTiles;
     private int revealed;
     private Deck drawTiles;
     private static final int DEADWALL_SIZE = 10;

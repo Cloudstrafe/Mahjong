@@ -111,6 +111,10 @@ public class YakuHandler {
 
     //TODO: make static variable holding all the hand details for current player
 
+    private YakuHandler() {
+        throw new IllegalStateException("Utility Class");
+    }
+
     public static boolean hasValidYaku(Player player) {
         return yaku.stream().anyMatch(y -> y.isValid(new Player(player)));
     }
@@ -199,20 +203,25 @@ public class YakuHandler {
         List<Tile> hand = player.getPlayArea().getHand();
         for (int i = 0; i < hand.size() - 1; i++) {
             for (int j = i + 1; j < hand.size(); j++) {
-                if (hand.get(i).getSuit().equals(hand.get(j).getSuit()) && hand.get(i).getNumber() == hand.get(j).getNumber()) {
+                if (hand.get(i).getSuit().equals(hand.get(j).getSuit()) &&
+                        hand.get(i).getNumber() == hand.get(j).getNumber()) {
                     List<Tile> pair = new ArrayList<>();
                     List<Tile> rest = new ArrayList<>();
                     pair.add(hand.get(i));
                     pair.add(hand.get(j));
-                    for (int k = 0; k < hand.size(); k++) {
-                        if (k != i && k != j) {
-                            rest.add(hand.get(k));
-                        }
-                    }
+                    getRemainingTiles(hand, i, j, rest);
                     handDetails.add(new HandDetail(pair, rest, 4 - player.getPlayArea().getMelds().size(), player.getPlayArea().getMelds()));
                 }
             }
         }
         return handDetails;
+    }
+
+    private static void getRemainingTiles(List<Tile> hand, int i, int j, List<Tile> rest) {
+        for (int k = 0; k < hand.size(); k++) {
+            if (k != i && k != j) {
+                rest.add(hand.get(k));
+            }
+        }
     }
 }

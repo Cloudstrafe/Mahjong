@@ -15,7 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestThreeClosedTripletsYaku {
     ThreeClosedTripletsYaku threeClosedTripletsYaku;
@@ -25,18 +26,6 @@ public class TestThreeClosedTripletsYaku {
     public void setUp() {
         threeClosedTripletsYaku = new ThreeClosedTripletsYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 4);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(threeClosedTripletsYaku.isMangan());
-        assertEquals(2, threeClosedTripletsYaku.getClosedPoints());
-        assertEquals(2, threeClosedTripletsYaku.getOpenPoints());
-        assertEquals(0, threeClosedTripletsYaku.getCurrentPoints(player));
-        assertFalse(threeClosedTripletsYaku.isStackable());
-        assertFalse(threeClosedTripletsYaku.isYakuman());
-        assertFalse(threeClosedTripletsYaku.isDoubleYakuman());
     }
 
     @Test

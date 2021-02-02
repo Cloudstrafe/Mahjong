@@ -24,14 +24,10 @@ public class DoraPanelHolder extends TilePanelHolder {
         labels[2][0].setText("x0");
         labels[2][0].setIcon(new ImageIcon(TSUMI_STICK_FILEPATH));
         reset();
-        GridBagLayout gridBagLayout = new GridBagLayout();
-//        gridBagLayout.columnWeights = new double[] {.2, .1, .5, .1, .1};
         mainPanel.setLayout(new GridBagLayout());
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
-//        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-//        gridBagConstraints.weightx = .2;
         mainPanel.add(panels[0][0], gridBagConstraints);
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -47,12 +43,10 @@ public class DoraPanelHolder extends TilePanelHolder {
         mainPanel.add(panels[0][4], gridBagConstraints);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-//        gridBagConstraints.weightx = .8;
         gridBagConstraints.gridwidth = 6;
         mainPanel.add(panels[1][0], gridBagConstraints);
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-//        gridBagConstraints.weightx = .8;
         gridBagConstraints.gridwidth = 6;
         mainPanel.add(panels[2][0], gridBagConstraints);
         mainPanel.setBounds(350, 175, PANEL_WIDTH, PANEL_HEIGHT);
@@ -71,6 +65,7 @@ public class DoraPanelHolder extends TilePanelHolder {
         currentCol = 0;
     }
 
+    @Override
     public void clearAll() {
         super.clearAll();
         labels[1][0].setIcon(new ImageIcon(RIICHI_STICK_FILEPATH));

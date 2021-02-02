@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestRoundWindYaku {
     RoundWindYaku roundWindYaku;
@@ -26,18 +27,6 @@ public class TestRoundWindYaku {
         roundWindYaku = new RoundWindYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 4);
         RoundWindYaku.setRoundWind(SuitConstants.EAST_WIND);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(roundWindYaku.isMangan());
-        assertEquals(1, roundWindYaku.getClosedPoints());
-        assertEquals(1, roundWindYaku.getOpenPoints());
-        assertEquals(0, roundWindYaku.getCurrentPoints(player));
-        assertFalse(roundWindYaku.isStackable());
-        assertFalse(roundWindYaku.isYakuman());
-        assertFalse(roundWindYaku.isDoubleYakuman());
     }
 
     @Test

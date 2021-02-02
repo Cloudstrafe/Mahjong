@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestThirteenOrphansYaku {
     ThirteenOrphansYaku thirteenOrphansYaku;
@@ -24,18 +25,6 @@ public class TestThirteenOrphansYaku {
     public void setUp() {
         thirteenOrphansYaku = new ThirteenOrphansYaku();
         player = new Player(SuitConstants.WEST_WIND, false, 4);
-    }
-
-    @Test
-    public void happyPathGetters() {
-        //Expect
-        assertFalse(thirteenOrphansYaku.isMangan());
-        assertEquals(0, thirteenOrphansYaku.getClosedPoints());
-        assertEquals(0, thirteenOrphansYaku.getOpenPoints());
-        assertEquals(0, thirteenOrphansYaku.getCurrentPoints(player));
-        assertFalse(thirteenOrphansYaku.isStackable());
-        assertTrue(thirteenOrphansYaku.isYakuman());
-        assertFalse(thirteenOrphansYaku.isDoubleYakuman());
     }
 
     @Test

@@ -7,10 +7,10 @@ public class Cost {
     private int additionalBonus = 0;
     private int kyoutakuBonus = 0;
     private int total = 0;
-    private String yakuLevel ="";
+    private String yakuLevel = "";
 
     public void setTotal() {
-        total = main + mainBonus + 2*(additional + additionalBonus) + kyoutakuBonus;
+        total = main + mainBonus + 2 * (additional + additionalBonus) + kyoutakuBonus;
     }
 
     public void setKyoutakuBonus(int riichiSticks) {

@@ -10,6 +10,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public abstract class Tile implements Comparable<Tile> {
 
@@ -31,19 +34,20 @@ public abstract class Tile implements Comparable<Tile> {
     protected static final BufferedImage BACK_OF_TILE_SMALL;
     protected static final BufferedImage BACK_OF_TILE_MEDIUM;
     protected static Map<String, Integer> rankMap = new HashMap<>();
+    protected static Logger logger = Logger.getLogger(Tile.class.getName());
 
     static {
-        BufferedImage BACK_OF_TILE_MEDIUM1;
-        BufferedImage BACK_OF_TILE_SMALL1;
+        BufferedImage backOfTileMedium1;
+        BufferedImage backOfTileSmall1;
         try {
-            BACK_OF_TILE_SMALL1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/small/back.png"));
-            BACK_OF_TILE_MEDIUM1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/medium/back.png"));
+            backOfTileSmall1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/small/back.png"));
+            backOfTileMedium1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/medium/back.png"));
         } catch (IOException e) {
-            BACK_OF_TILE_SMALL1 = null;
-            BACK_OF_TILE_MEDIUM1 = null;
+            backOfTileSmall1 = null;
+            backOfTileMedium1 = null;
         }
-        BACK_OF_TILE_MEDIUM = BACK_OF_TILE_MEDIUM1;
-        BACK_OF_TILE_SMALL = BACK_OF_TILE_SMALL1;
+        BACK_OF_TILE_MEDIUM = backOfTileMedium1;
+        BACK_OF_TILE_SMALL = backOfTileSmall1;
         rankMap.put(SuitConstants.CHARACTERS, 1);
         rankMap.put(SuitConstants.DOTS, 2);
         rankMap.put(SuitConstants.BAMBOO, 3);
@@ -56,7 +60,7 @@ public abstract class Tile implements Comparable<Tile> {
         rankMap.put(SuitConstants.RED_DRAGON, 10);
     }
 
-    public Tile(int number, String suit, boolean isRed, boolean isDora) {
+    protected Tile(int number, String suit, boolean isRed, boolean isDora) {
         this.number = number;
         this.suit = suit;
         this.isRed = isRed;
@@ -66,7 +70,7 @@ public abstract class Tile implements Comparable<Tile> {
         setImages();
     }
 
-    public Tile(Tile tile) {
+    protected Tile(Tile tile) {
         this.number = tile.number;
         this.suit = tile.suit;
         this.isRed = tile.isRed;
@@ -92,7 +96,7 @@ public abstract class Tile implements Comparable<Tile> {
             this.smallTileFacingDown = ImageIO.read(new File(smallTilePath));
             this.mediumTileFacingDown = ImageIO.read(new File(mediumTilePath));
         } catch (IOException e) {
-            System.out.println("Failed to load image " + fileName);
+            logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + fileName));
         }
         this.smallTileFacingLeft = RotateImage.rotate(smallTileFacingDown, 90.0d);
         this.smallTileFacingUp = RotateImage.rotate(smallTileFacingDown, 180.0d);
@@ -134,10 +138,6 @@ public abstract class Tile implements Comparable<Tile> {
 
     public abstract boolean isWind();
 
-    public abstract boolean isPrevailingWind();
-
-    public abstract boolean isSeatWind();
-
     public abstract boolean isNumber();
 
     public abstract boolean isTerminal();
@@ -145,10 +145,6 @@ public abstract class Tile implements Comparable<Tile> {
     public abstract boolean isHonor();
 
     public abstract boolean isGreen();
-
-    public boolean getIsDora() {
-        return isDora;
-    }
 
     public void setIsDora(boolean isDora) {
         this.isDora = isDora;
@@ -174,14 +170,6 @@ public abstract class Tile implements Comparable<Tile> {
         return smallTileFacingRight;
     }
 
-    public BufferedImage getSmallTileFacingUp() {
-        return smallTileFacingUp;
-    }
-
-    public BufferedImage getSmallTileFacingLeft() {
-        return smallTileFacingLeft;
-    }
-
     public BufferedImage getMediumTileFacingDown() {
         return mediumTileFacingDown;
     }
@@ -200,10 +188,6 @@ public abstract class Tile implements Comparable<Tile> {
 
     public static BufferedImage getBackOfTileSmall() {
         return BACK_OF_TILE_SMALL;
-    }
-
-    public static BufferedImage getBackOfTileMedium() {
-        return BACK_OF_TILE_MEDIUM;
     }
 
     public String getTileFileName() {

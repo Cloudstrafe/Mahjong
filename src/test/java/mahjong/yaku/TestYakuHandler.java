@@ -172,7 +172,7 @@ public class TestYakuHandler {
             assertEquals(entry.getValue().size(), actualValue.size());
             entry.getValue().stream().sorted().collect(Collectors.toList());
             for (int i = 0; i < entry.getValue().size(); i++) {
-               assertEquals(entry.getValue().stream().sorted().collect(Collectors.toList()).get(i), actualValue.get(i));
+                assertEquals(entry.getValue().stream().sorted().collect(Collectors.toList()).get(i), actualValue.get(i));
             }
         }
     }

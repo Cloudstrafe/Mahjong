@@ -39,22 +39,6 @@ public class TilePanelHolder {
         }
     }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public int getCols() {
-        return cols;
-    }
-
-    public JLabel[][] getLabels() {
-        return labels;
-    }
-
-    public JPanel[][] getPanels() {
-        return panels;
-    }
-
     public JPanel getMainPanel() {
         return mainPanel;
     }
