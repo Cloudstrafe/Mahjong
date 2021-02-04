@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static mahjong.gui.DoraPanelHolder.RIICHI_STICK_FILEPATH;
 
 public class GameWindow {
     private final JFrame window = new JFrame("Mahjong");
@@ -76,12 +76,12 @@ public class GameWindow {
 
     protected void setImages() {
         try {
-            playerOneRiichiImage = ImageIO.read(new File(DoraPanelHolder.RIICHI_STICK_FILEPATH));
-            playerTwoRiichiImage = ImageIO.read(new File(DoraPanelHolder.RIICHI_STICK_FILEPATH));
-            playerThreeRiichiImage = ImageIO.read(new File(DoraPanelHolder.RIICHI_STICK_FILEPATH));
-            playerFourRiichiImage = ImageIO.read(new File(DoraPanelHolder.RIICHI_STICK_FILEPATH));
+            playerOneRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
+            playerTwoRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
+            playerThreeRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
+            playerFourRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
         } catch (IOException e) {
-            logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + DoraPanelHolder.RIICHI_STICK_FILEPATH));
+            logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + RIICHI_STICK_FILEPATH));
         }
         playerTwoRiichiImage = RotateImage.rotate(playerTwoRiichiImage, 90.0d);
         playerFourRiichiImage = RotateImage.rotate(playerFourRiichiImage, 90.0d);

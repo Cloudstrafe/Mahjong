@@ -4,7 +4,6 @@ import mahjong.SuitConstants;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -40,8 +39,8 @@ public abstract class Tile implements Comparable<Tile> {
         BufferedImage backOfTileMedium1;
         BufferedImage backOfTileSmall1;
         try {
-            backOfTileSmall1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/small/back.png"));
-            backOfTileMedium1 = ImageIO.read(new File("src/main/java/mahjong/tile/images/international/medium/back.png"));
+            backOfTileSmall1 = ImageIO.read(Tile.class.getResource("images/international/small/back.png"));
+            backOfTileMedium1 = ImageIO.read(Tile.class.getResource("images/international/medium/back.png"));
         } catch (IOException e) {
             backOfTileSmall1 = null;
             backOfTileMedium1 = null;
@@ -90,11 +89,11 @@ public abstract class Tile implements Comparable<Tile> {
 
     protected void setImages() {
         String fileName = getTileFileName();
-        this.smallTilePath = "src/main/java/mahjong/tile/images/international/small/" + fileName;
-        this.mediumTilePath = "src/main/java/mahjong/tile/images/international/medium/" + fileName;
+        this.smallTilePath = "/mahjong/tile/images/international/small/" + fileName;
+        this.mediumTilePath = "/mahjong/tile/images/international/medium/" + fileName;
         try {
-            this.smallTileFacingDown = ImageIO.read(new File(smallTilePath));
-            this.mediumTileFacingDown = ImageIO.read(new File(mediumTilePath));
+            this.smallTileFacingDown = ImageIO.read(getClass().getResource(smallTilePath));
+            this.mediumTileFacingDown = ImageIO.read(getClass().getResource(mediumTilePath));
         } catch (IOException e) {
             logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + fileName));
         }
