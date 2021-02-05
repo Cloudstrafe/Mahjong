@@ -55,15 +55,15 @@ public class ScoringHelper {
             pythonScript.append("filename = os.path.join(dirname, 'result.json')\n");
             pythonScript.append("with open(filename, \"w\") as f:\n");
             pythonScript.append("    f.write(jsonResult)\n");
-            File pythonFile = new File("src/main/java/mahjong/main.py");
+            File pythonFile = new File("main.py");
             pythonFile.createNewFile(); // if file already exists will do nothing
             FileOutputStream oFile = new FileOutputStream(pythonFile, false);
             oFile.write(pythonScript.toString().getBytes(StandardCharsets.UTF_8));
             oFile.close();
-            ProcessBuilder processBuilder = new ProcessBuilder("python", "src/main/java/mahjong/main.py");
+            ProcessBuilder processBuilder = new ProcessBuilder("python", "main.py");
             Process process = processBuilder.start();
             process.waitFor();
-            String jsonContents = Files.readString(Paths.get("src/main/java/mahjong/result.json"));
+            String jsonContents = Files.readString(Paths.get("result.json"));
             Gson gson = new Gson();
             ScoringResult scoringResult = gson.fromJson(jsonContents, ScoringResult.class);
             scoringResult.getCost().setKyoutakuBonus(riichiSticks);

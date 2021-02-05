@@ -2,27 +2,41 @@ package mahjong.gui;
 
 import mahjong.tile.Tile;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public class DoraPanelHolder extends TilePanelHolder {
     private int currentCol;
     private static final int COL_MAX = 5;
     private static final int PANEL_WIDTH = 400;
     private static final int PANEL_HEIGHT = 175;
-    public static final String RIICHI_STICK_FILEPATH = "src/main/java/mahjong/gui/riichiStick.png";
-    private static final String TSUMI_STICK_FILEPATH = "src/main/java/mahjong/gui/tsumiStick.png";
+    public static final String RIICHI_STICK_FILEPATH = "resources/mahjong/gui/riichiStick.png";
+    private static final String TSUMI_STICK_FILEPATH = "resources/mahjong/gui/tsumiStick.png";
+    private static Logger logger = Logger.getLogger(DoraPanelHolder.class.getName());
 
     public DoraPanelHolder() {
         super(3, 6, 0);
         mainPanel.removeAll();
         currentCol = 0;
         mainPanel.setBorder(new TitledBorder("Dora"));
-        labels[1][0].setIcon(new ImageIcon(RIICHI_STICK_FILEPATH));
+        try {
+            BufferedImage riichiStickImage = ImageIO.read(new FileInputStream(RIICHI_STICK_FILEPATH));
+            BufferedImage tsumiStickImage = ImageIO.read(new FileInputStream(TSUMI_STICK_FILEPATH));
+            labels[1][0].setIcon(new ImageIcon(riichiStickImage));
+            labels[2][0].setIcon(new ImageIcon(tsumiStickImage));
+        } catch (IOException e) {
+            logger.log(new LogRecord(Level.SEVERE, "Failed to load riichi or tsumi stick image"));
+        }
         labels[1][0].setText("x0");
         labels[2][0].setText("x0");
-        labels[2][0].setIcon(new ImageIcon(TSUMI_STICK_FILEPATH));
         reset();
         mainPanel.setLayout(new GridBagLayout());
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
