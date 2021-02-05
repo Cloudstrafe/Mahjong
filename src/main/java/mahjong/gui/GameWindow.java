@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -76,10 +77,10 @@ public class GameWindow {
 
     protected void setImages() {
         try {
-            playerOneRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
-            playerTwoRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
-            playerThreeRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
-            playerFourRiichiImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
+            playerOneRiichiImage = ImageIO.read(new FileInputStream(RIICHI_STICK_FILEPATH));
+            playerTwoRiichiImage = ImageIO.read(new FileInputStream(RIICHI_STICK_FILEPATH));
+            playerThreeRiichiImage = ImageIO.read(new FileInputStream(RIICHI_STICK_FILEPATH));
+            playerFourRiichiImage = ImageIO.read(new FileInputStream(RIICHI_STICK_FILEPATH));
         } catch (IOException e) {
             logger.log(new LogRecord(Level.SEVERE, "Failed to load image " + RIICHI_STICK_FILEPATH));
         }

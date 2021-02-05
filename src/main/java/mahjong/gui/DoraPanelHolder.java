@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -17,8 +18,8 @@ public class DoraPanelHolder extends TilePanelHolder {
     private static final int COL_MAX = 5;
     private static final int PANEL_WIDTH = 400;
     private static final int PANEL_HEIGHT = 175;
-    public static final String RIICHI_STICK_FILEPATH = "/mahjong/gui/riichiStick.png";
-    private static final String TSUMI_STICK_FILEPATH = "/mahjong/gui/tsumiStick.png";
+    public static final String RIICHI_STICK_FILEPATH = "resources/mahjong/gui/riichiStick.png";
+    private static final String TSUMI_STICK_FILEPATH = "resources/mahjong/gui/tsumiStick.png";
     private static Logger logger = Logger.getLogger(DoraPanelHolder.class.getName());
 
     public DoraPanelHolder() {
@@ -27,8 +28,8 @@ public class DoraPanelHolder extends TilePanelHolder {
         currentCol = 0;
         mainPanel.setBorder(new TitledBorder("Dora"));
         try {
-            BufferedImage riichiStickImage = ImageIO.read(getClass().getResource(RIICHI_STICK_FILEPATH));
-            BufferedImage tsumiStickImage = ImageIO.read(getClass().getResource(TSUMI_STICK_FILEPATH));
+            BufferedImage riichiStickImage = ImageIO.read(new FileInputStream(RIICHI_STICK_FILEPATH));
+            BufferedImage tsumiStickImage = ImageIO.read(new FileInputStream(TSUMI_STICK_FILEPATH));
             labels[1][0].setIcon(new ImageIcon(riichiStickImage));
             labels[2][0].setIcon(new ImageIcon(tsumiStickImage));
         } catch (IOException e) {
